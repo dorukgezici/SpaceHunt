@@ -1,12 +1,5 @@
-declare function require(asset: string): any;
-
-declare module "*.png";
-declare module "*.bmp";
-declare module "*.jpg";
-declare module "*.jpeg";
-declare module "*.gif";
-declare module "*.svg";
-declare module "*.css";
-declare module "*.scss";
-declare module "*.txt";
-declare module "*.json";
+declare const require: {
+	<T>(path: string): T;
+	(paths: string[], callback: (...modules: any[]) => void): void;
+	ensure: (paths: string[], callback: (require: <T>(path: string) => T) => void) => void;
+};

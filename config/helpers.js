@@ -6,18 +6,20 @@ const resolve = p => path.resolve(root, p);
 exports.root = root;
 exports.resolve = resolve;
 
+exports.normalisePath = path => path.replace(/\\/g, "/");
+
 exports.paths = {
 	root,
-	src: {
+	code: {
 		dir: resolve("code"),
+		src: resolve("code/src"),
 		entryPoints: {
 			app: resolve("code/app.ts"),
 			polyfills: resolve("code/polyfills.ts")
 		},
 		static: resolve("code/static"),
-		assets: resolve("code/assets"),
 		html: resolve("code/index.html"),
-		favicon: resolve("code/static/favicon/favicon.png")
+		favicon: resolve("code/favicon.png")
 	},
 	build: {
 		dir: resolve("build"),

@@ -5,14 +5,14 @@ const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlug
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const { paths } = require("./helpers");
+const { paths, normalisePath } = require("./helpers");
 
 const sassExtractPlugin = new ExtractTextPlugin({
 	filename: "style.css"
 });
 
-module.exports = {
-	entry: paths.src.entryPoints,
+module.exports = options => ({
+	entry: paths.code.entryPoints,
 	output: {
 		path: paths.build.dir,
 		filename: "[name].js",
@@ -23,45 +23,41 @@ module.exports = {
 	},
 	module: {
 		rules: [{
-			include: paths.src.assets,
+			test: /\.(?!(?:ts|js|json|txt|s?css)$)/,
+			include: paths.code.src,
 			use: {
 				loader: "file-loader",
 				options: {
 					outputPath: "assets/",
 					relative: true,
-					name: file => path.relative(paths.src.assets, file)
+					name: options.assetName
 				}
 			}
 		}, {
-			test: /\.(png|bmp|jpg|jpeg|gif|svg)$/,
-			exclude: paths.src.assets,
+			test: /\.(?!(?:ts|js|json|txt|s?css)$)/,
+			include: paths.code.static,
 			use: {
 				loader: "file-loader",
 				options: {
-					outputPath: "img/",
 					relative: true,
-					name: "[name].[hash].[ext]"
+					emitFile: false,
+					name: file => console.log(file) || normalisePath(path.join("static", path.relative(paths.code.static, file)))
 				}
 			}
 		}, {
 			test: /\.txt$/,
-			exclude: paths.src.assets,
 			use: "raw-loader"
 		}, {
 			test: /\.ts$/,
-			exclude: paths.src.assets,
 			use: "ts-loader"
 		}, {
 			test: /\.json$/,
-			exclude: paths.src.assets,
 			use: "json-loader"
 		}, {
 			test: /\.html$/,
-			exclude: paths.src.assets,
 			use: "html-loader"
 		}, {
 			test: /\.s?css$/,
-			exclude: paths.src.assets,
 			use: sassExtractPlugin.extract({
 				use: [{
 					loader: "css-loader",
@@ -86,14 +82,14 @@ module.exports = {
 	},
 	plugins: [
 		new CopyWebpackPlugin([{
-			from: paths.src.static,
+			from: paths.code.static,
 			to: paths.build.static
 		}]),
 		new HtmlWebpackPlugin({
-			template: paths.src.html,
+			template: paths.code.html,
 			filename: "index.html",
 			inject: "head",
-			favicon: paths.src.favicon
+			favicon: paths.code.favicon
 		}),
 		new CommonsChunkPlugin({
 			name: "polyfills",
@@ -105,4 +101,4 @@ module.exports = {
 			sourceRoot: "source:///"
 		})
 	]
-};
+});

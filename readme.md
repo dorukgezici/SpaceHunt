@@ -16,22 +16,22 @@ Please see [setup.md](doc/setup.md).
 ## Project Structure
 
 - `build/` includes production build of the project, once built
-	- `img/` images
 	- `assets/` assets imported from `code/assets/`
 	- `static/` static resouces copied from `code/static/`
 	- other files
 - `code/` includes project source code and assets
-	- `assets/` includes additional project assets
 	- `src/` includes application source code
 	- `static/` includes static resources (this directory is copied to build project)
 	- `types/` includes additional TypeScript Type Definitions
-	- `index.html` html template and webapp entry point 
-	- `style.scss` main application stylesheets (note that custom stylesheets may be included)
 	- `app.ts` main application entry point
+	- `favicon.png` project's favicon (display icon)
+	- `index.html` html template and webapp entry point 
 	- `polyfills.ts` polyfill includes entry point (should not contain any game logic, only polyfill inclusion) 
+	- `style.scss` main application stylesheets (note that custom stylesheets may be included)
 - `config/` includes configuration files for building and running the project
 - `doc/` includes documentation, notes and Project Plan
 	- `G10_project_plan.docx` Project Plan and Diary
+	- other notes and documentation files
 - `internal/` includes personal files, notes and whatnots, that are not pushed to git
 - `node_modules/` npm packages are installed here
 - `.gitignore` git ignore list

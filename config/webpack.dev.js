@@ -1,5 +1,11 @@
 const { HotModuleReplacementPlugin } = require("webpack");
-const config = require("./webpack.base");
+const configFactory = require("./webpack.base");
+const path = require("path");
+const { paths, normalisePath } = require("./helpers");
+
+const config = configFactory({
+	assetName: file => normalisePath(path.relative(paths.code.src, file))
+});
 
 module.exports = {
 	...config,
