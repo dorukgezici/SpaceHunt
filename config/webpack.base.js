@@ -19,11 +19,11 @@ module.exports = options => ({
 		sourceMapFilename: "[file].map",
 	},
 	resolve: {
-		extensions: [".html", ".css", ".scss", ".ts", ".js"]
+		extensions: [".html", ".css", ".scss", ".ts", ".tsx", ".js", ".jsx"]
 	},
 	module: {
 		rules: [{
-			test: /\.(?!(?:ts|js|json|txt|s?css)$)/,
+			test: /\.(?!(?:tsx?|jsx?|json|txt|s?css)$)/,
 			include: paths.code.src,
 			use: {
 				loader: "file-loader",
@@ -34,7 +34,7 @@ module.exports = options => ({
 				}
 			}
 		}, {
-			test: /\.(?!(?:ts|js|json|txt|s?css)$)/,
+			test: /\.(?!(?:tsx?|jsx?|json|txt|s?css)$)/,
 			include: paths.code.static,
 			use: {
 				loader: "file-loader",
@@ -48,7 +48,7 @@ module.exports = options => ({
 			test: /\.txt$/,
 			use: "raw-loader"
 		}, {
-			test: /\.ts$/,
+			test: /\.tsx?$/,
 			use: "ts-loader"
 		}, {
 			test: /\.json$/,

@@ -5,3 +5,9 @@ Please find attached the G10 _TheGroup_'s project plan as [G10_project_plan](./G
 # Project Documentation
 
 This directory should include project documentation and notes. Add you own `.md` files to anotate what you feel needs some extra explanation.
+
+Topics:
+
+- [Dependency Management and Imports](dependency-management.md),
+- [DOM Manipulation](dom-manipulation.md),
+- [Project Setup](setup.md).
