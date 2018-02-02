@@ -1,0 +1,12 @@
+{
+	"name": "SpaceHunt",
+	"short_name": "SpaceHunt",
+	"start_url": ".",
+	"display": "standalone",
+	"background_color": "#4caf50",
+	"lang": "en",
+	"description": "SpaceHunt project for Software Engineering Methodologies course at Tampere University of Technology (TIE-21106 2017-01)",
+	"icons": [{
+		"src": "../favicon.png"
+	}]
+}
