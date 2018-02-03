@@ -160,25 +160,29 @@ export class InvalidChildElement extends Error {
  */
 export namespace InterfaceBuilder {
 
+	export const canvasId = "canvas";
+	export const appId = "app";
+	export const canvasHolderId = "canvas-holder";
+
 	/**
 	 * Gets the `#canvas-holder` DOM element.
 	 */
 	export function getCanvasHolder() {
-		return document.getElementById("canvas-holder") as HTMLDivElement;
+		return document.getElementById(canvasHolderId) as HTMLDivElement;
 	}
 
 	/**
 	 * Gets the `#canvas` DOM element.
 	 */
 	export function getCanvas() {
-		return document.getElementById("canvas") as HTMLCanvasElement;
+		return document.getElementById(canvasId) as HTMLCanvasElement;
 	}
 
 	/**
 	 * Gets the `#app` DOM element.
 	 */
 	export function getApp() {
-		return document.getElementById("app") as HTMLDivElement;
+		return document.getElementById(appId) as HTMLDivElement;
 	}
 
 	/**
