@@ -41,7 +41,6 @@
     "test": "npm run lint:prod",
     "start": "npm run webserver",
     "webserver:noopen": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/",
-    "webserver": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open",
-    "nginx": "webpack-dev-server -d --colors --progress --watch --content-base code/ --public spacehunt.tk"
+    "webserver": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open"
   }
 }
