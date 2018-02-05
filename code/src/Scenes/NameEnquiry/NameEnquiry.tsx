@@ -60,7 +60,7 @@ export class NameEnquiry extends Class implements IGameElement {
 								autoFocus
 								maxLength={32}
 							/>
-							<button className="submit" onclick={this.onClick.bind(this)}>Let's go!</button>
+							<button className="submit" onpointerdown={this.onClick.bind(this)}>Let's go!</button>
 						</div>
 					</div>
 				</div>
