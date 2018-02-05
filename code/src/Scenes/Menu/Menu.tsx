@@ -20,7 +20,7 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 		void (0); // do nothing
 	}
 
-	itemClick(id: number, name: string) {
+	private itemClick(id: number, name: string) {
 		this.emit("click", {
 			target: this,
 			id,

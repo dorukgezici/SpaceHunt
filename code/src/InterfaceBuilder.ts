@@ -263,10 +263,10 @@ export namespace InterfaceBuilder {
 			return;
 		for (let attr in attrs) {
 			if (attr === "ref")
-				return;
+				continue;
 			const value = attrs[attr];
 			if (value === null || value === undefined)
-				return;
+				continue;
 			if (attr === "style")
 				assignStyle(value, element.style);
 			else
