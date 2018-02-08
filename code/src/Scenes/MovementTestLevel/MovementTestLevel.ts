@@ -1,5 +1,6 @@
-import {BoundingBox, Engine, Loader, Physics, Scene} from "excalibur";
+import * as ex from "excalibur";
 import {Class} from "../../Class";
+import LockLevelCameraStrategy from "../../Common/LockLevelCameraStrategy";
 import {GameBootstrap, IGameElement, IGameElementEvents} from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
@@ -7,35 +8,31 @@ import Player from "./Player";
 export default class MovementTestLevel extends Class<IGameElementEvents> implements IGameElement {
 
 	readonly sceneKey: string = "movementtestlevel";
+	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
 
-	engine: Engine;
-	scene: Scene;
-	bounds: BoundingBox;
+	engine: ex.Engine;
+	scene: ex.Scene;
+	bounds: ex.BoundingBox;
 	ground: Ground;
 	player: Player;
-	loader: Loader;
+	loader: ex.Loader;
 
 	init(bootstrap: GameBootstrap): void {
 		this.engine = bootstrap.engine;
-		this.scene = new Scene(this.engine);
+		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100);
+		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds);
+
 		this.loadResources();
 	}
 
 	start(): void {
-		Physics.acc.setTo(0, 3000);
-		let that = this;
-
-		this.loader.load().then(function() {
-			that.scene.add(that.ground);
-			that.scene.add(that.player);
-			that.engine.addScene(that.sceneKey, that.scene);
-			that.engine.goToScene(that.sceneKey);
-		});
-
+		ex.Physics.acc.setTo(0, 3000);
+		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
+		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+		this.loader.load().then(this.buildScene);
 	}
 
 	dispose(): void {
@@ -43,7 +40,14 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	}
 
 	private loadResources() {
-		this.loader = new Loader();
+		this.loader = new ex.Loader();
 		this.loader.addResources(this.ground.resources);
+	}
+
+	private buildScene = () => {
+		this.scene.add(this.ground);
+		this.scene.add(this.player);
+		this.engine.addScene(this.sceneKey, this.scene);
+		this.engine.goToScene(this.sceneKey);
 	}
 }

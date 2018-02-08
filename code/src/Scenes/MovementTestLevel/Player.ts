@@ -3,9 +3,14 @@ import * as ex from "excalibur";
 export default class Player extends ex.Actor {
 
 	static readonly size = {w: 25, h: 100};
+	static readonly speed: number = 8;
+	private minX: number;
+	private maxX: number;
 
-	constructor(x: number, y: number) {
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.Azure);
+		this.minX = levelBounds.left + Player.size.w / 2;
+		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.collisionType = ex.CollisionType.Active;
 	}
 
@@ -34,10 +39,12 @@ export default class Player extends ex.Actor {
 	}
 
 	private goLeft() {
-		this.pos.x -= 8;
+		this.pos.x -= Player.speed;
+		this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
 	}
 
 	private goRight() {
-		this.pos.x += 8;
+		this.pos.x += Player.speed;
+		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 	}
 }
