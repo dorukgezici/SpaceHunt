@@ -1876,21 +1876,185 @@ declare namespace JSX {
 		| "top"
 		| "width";
 
-	type EventHandler<E extends Event = Event> = (e: E) => void;
+	interface Event<T> {
+		readonly bubbles: boolean;
+		readonly cancelable: boolean;
+		cancelBubble: boolean;
+		readonly currentTarget: EventTarget;
+		readonly defaultPrevented: boolean;
+		readonly eventPhase: number;
+		readonly isTrusted: boolean;
+		returnValue: boolean;
+		readonly srcElement: Element | null;
+		readonly target: T;
+		readonly timeStamp: number;
+		readonly type: string;
+		readonly scoped: boolean;
+		initEvent(eventTypeArg: string, canBubbleArg: boolean, cancelableArg: boolean): void;
+		preventDefault(): void;
+		stopImmediatePropagation(): void;
+		stopPropagation(): void;
+		deepPath(): EventTarget[];
+		readonly AT_TARGET: number;
+		readonly BUBBLING_PHASE: number;
+		readonly CAPTURING_PHASE: number;
+	}
 
-	type ClipboardEventHandler = EventHandler<ClipboardEvent>;
-	type CompositionEventHandler = EventHandler<CompositionEvent>;
-	type DragEventHandler = EventHandler<DragEvent>;
-	type FocusEventHandler = EventHandler<FocusEvent>;
-	type FormEventHandler = EventHandler<Event>;
-	type ChangeEventHandler = EventHandler<Event>;
-	type KeyboardEventHandler = EventHandler<KeyboardEvent>;
-	type MouseEventHandler = EventHandler<MouseEvent>;
-	type TouchEventHandler = EventHandler<TouchEvent>;
-	type UIEventHandler = EventHandler<UIEvent>;
-	type WheelEventHandler = EventHandler<WheelEvent>;
-	type AnimationEventHandler = EventHandler<AnimationEvent>;
-	type TransitionEventHandler = EventHandler<TransitionEvent>;
+	interface UIEvent<T> extends Event<T> {
+		readonly detail: number;
+		readonly view: Window;
+		initUIEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number): void;
+	}
+
+	interface MouseEvent<T> extends UIEvent<T> {
+		readonly altKey: boolean;
+		readonly button: number;
+		readonly buttons: number;
+		readonly clientX: number;
+		readonly clientY: number;
+		readonly ctrlKey: boolean;
+		readonly fromElement: Element;
+		readonly layerX: number;
+		readonly layerY: number;
+		readonly metaKey: boolean;
+		readonly movementX: number;
+		readonly movementY: number;
+		readonly offsetX: number;
+		readonly offsetY: number;
+		readonly pageX: number;
+		readonly pageY: number;
+		readonly relatedTarget: EventTarget;
+		readonly screenX: number;
+		readonly screenY: number;
+		readonly shiftKey: boolean;
+		readonly toElement: Element;
+		readonly which: number;
+		readonly x: number;
+		readonly y: number;
+		getModifierState(keyArg: string): boolean;
+		initMouseEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number, screenXArg: number, screenYArg: number, clientXArg: number, clientYArg: number, ctrlKeyArg: boolean, altKeyArg: boolean, shiftKeyArg: boolean, metaKeyArg: boolean, buttonArg: number, relatedTargetArg: EventTarget | null): void;
+	}
+
+	interface ClipboardEvent<T> extends Event<T> {
+		readonly clipboardData: DataTransfer;
+	}
+
+	interface CompositionEvent<T> extends UIEvent<T> {
+		readonly data: string;
+		readonly locale: string;
+		initCompositionEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, dataArg: string, locale: string): void;
+	}
+
+	interface DragEvent<T> extends MouseEvent<T> {
+		readonly dataTransfer: DataTransfer;
+		initDragEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number, screenXArg: number, screenYArg: number, clientXArg: number, clientYArg: number, ctrlKeyArg: boolean, altKeyArg: boolean, shiftKeyArg: boolean, metaKeyArg: boolean, buttonArg: number, relatedTargetArg: EventTarget, dataTransferArg: DataTransfer): void;
+		msConvertURL(file: File, targetType: string, targetURL?: string): void;
+	}
+
+	interface FocusEvent<T> extends UIEvent<T> {
+		readonly relatedTarget: EventTarget;
+		initFocusEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number, relatedTargetArg: EventTarget): void;
+	}
+
+	interface KeyboardEvent<T> extends UIEvent<T> {
+		readonly altKey: boolean;
+		readonly char: string | null;
+		readonly charCode: number;
+		readonly ctrlKey: boolean;
+		readonly key: string;
+		readonly keyCode: number;
+		readonly locale: string;
+		readonly location: number;
+		readonly metaKey: boolean;
+		readonly repeat: boolean;
+		readonly shiftKey: boolean;
+		readonly which: number;
+		readonly code: string;
+		getModifierState(keyArg: string): boolean;
+		initKeyboardEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, keyArg: string, locationArg: number, modifiersListArg: string, repeat: boolean, locale: string): void;
+		readonly DOM_KEY_LOCATION_JOYSTICK: number;
+		readonly DOM_KEY_LOCATION_LEFT: number;
+		readonly DOM_KEY_LOCATION_MOBILE: number;
+		readonly DOM_KEY_LOCATION_NUMPAD: number;
+		readonly DOM_KEY_LOCATION_RIGHT: number;
+		readonly DOM_KEY_LOCATION_STANDARD: number;
+	}
+
+	interface TouchEvent<T> extends UIEvent<T> {
+		readonly altKey: boolean;
+		readonly changedTouches: TouchList;
+		readonly charCode: number;
+		readonly ctrlKey: boolean;
+		readonly keyCode: number;
+		readonly metaKey: boolean;
+		readonly shiftKey: boolean;
+		readonly targetTouches: TouchList;
+		readonly touches: TouchList;
+		readonly which: number;
+	}
+
+	interface WheelEvent<T> extends MouseEvent<T> {
+		readonly deltaMode: number;
+		readonly deltaX: number;
+		readonly deltaY: number;
+		readonly deltaZ: number;
+		readonly wheelDelta: number;
+		readonly wheelDeltaX: number;
+		readonly wheelDeltaY: number;
+		getCurrentPoint(element: Element): void;
+		initWheelEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number, screenXArg: number, screenYArg: number, clientXArg: number, clientYArg: number, buttonArg: number, relatedTargetArg: EventTarget, modifiersListArg: string, deltaXArg: number, deltaYArg: number, deltaZArg: number, deltaMode: number): void;
+		readonly DOM_DELTA_LINE: number;
+		readonly DOM_DELTA_PAGE: number;
+		readonly DOM_DELTA_PIXEL: number;
+	}
+
+	interface AnimationEvent<T> extends Event<T> {
+		readonly animationName: string;
+		readonly elapsedTime: number;
+		initAnimationEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, animationNameArg: string, elapsedTimeArg: number): void;
+	}
+
+	interface TransitionEvent<T> extends Event<T> {
+		readonly elapsedTime: number;
+		readonly propertyName: string;
+		initTransitionEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, propertyNameArg: string, elapsedTimeArg: number): void;
+	}
+
+	interface PointerEvent<T> extends MouseEvent<T> {
+		readonly currentPoint: any;
+		readonly height: number;
+		readonly hwTimestamp: number;
+		readonly intermediatePoints: any;
+		readonly isPrimary: boolean;
+		readonly pointerId: number;
+		readonly pointerType: any;
+		readonly pressure: number;
+		readonly rotation: number;
+		readonly tiltX: number;
+		readonly tiltY: number;
+		readonly width: number;
+		getCurrentPoint(element: Element): void;
+		getIntermediatePoints(element: Element): void;
+		initPointerEvent(typeArg: string, canBubbleArg: boolean, cancelableArg: boolean, viewArg: Window, detailArg: number, screenXArg: number, screenYArg: number, clientXArg: number, clientYArg: number, ctrlKeyArg: boolean, altKeyArg: boolean, shiftKeyArg: boolean, metaKeyArg: boolean, buttonArg: number, relatedTargetArg: EventTarget, offsetXArg: number, offsetYArg: number, widthArg: number, heightArg: number, pressure: number, rotation: number, tiltX: number, tiltY: number, pointerIdArg: number, pointerType: any, hwTimestampArg: number, isPrimary: boolean): void;
+	}
+
+	type EventHandler<T> = CustomEventHandler<Event<T>>;
+	type CustomEventHandler<E extends Event<any>> = (e: E) => void;
+
+	type ClipboardEventHandler<T> = CustomEventHandler<ClipboardEvent<T>>;
+	type CompositionEventHandler<T> = CustomEventHandler<CompositionEvent<T>>;
+	type DragEventHandler<T> = CustomEventHandler<DragEvent<T>>;
+	type FocusEventHandler<T> = CustomEventHandler<FocusEvent<T>>;
+	type FormEventHandler<T> = CustomEventHandler<Event<T>>;
+	type ChangeEventHandler<T> = CustomEventHandler<Event<T>>;
+	type KeyboardEventHandler<T> = CustomEventHandler<KeyboardEvent<T>>;
+	type MouseEventHandler<T> = CustomEventHandler<MouseEvent<T>>;
+	type TouchEventHandler<T> = CustomEventHandler<TouchEvent<T>>;
+	type UIEventHandler<T> = CustomEventHandler<UIEvent<T>>;
+	type WheelEventHandler<T> = CustomEventHandler<WheelEvent<T>>;
+	type AnimationEventHandler<T> = CustomEventHandler<AnimationEvent<T>>;
+	type TransitionEventHandler<T> = CustomEventHandler<TransitionEvent<T>>;
+	type PointerEventHandler<T> = CustomEventHandler<PointerEvent<T>>;
 
 	interface ClassAttributes<T extends DOMElement> {
 		ref?: (element: T) => void
@@ -1902,168 +2066,178 @@ declare namespace JSX {
 		// children?: Element | Element[];
 
 		// Clipboard Events
-		oncopy?: ClipboardEventHandler;
-		oncopycapture?: ClipboardEventHandler;
-		oncut?: ClipboardEventHandler;
-		oncutcapture?: ClipboardEventHandler;
-		onpaste?: ClipboardEventHandler;
-		onpastecapture?: ClipboardEventHandler;
+		oncopy?: ClipboardEventHandler<T>;
+		oncopycapture?: ClipboardEventHandler<T>;
+		oncut?: ClipboardEventHandler<T>;
+		oncutcapture?: ClipboardEventHandler<T>;
+		onpaste?: ClipboardEventHandler<T>;
+		onpastecapture?: ClipboardEventHandler<T>;
 
 		// Composition Events
-		oncompositionend?: CompositionEventHandler;
-		oncompositionendcapture?: CompositionEventHandler;
-		oncompositionstart?: CompositionEventHandler;
-		oncompositionstartcapture?: CompositionEventHandler;
-		oncompositionupdate?: CompositionEventHandler;
-		oncompositionupdatecapture?: CompositionEventHandler;
+		oncompositionend?: CompositionEventHandler<T>;
+		oncompositionendcapture?: CompositionEventHandler<T>;
+		oncompositionstart?: CompositionEventHandler<T>;
+		oncompositionstartcapture?: CompositionEventHandler<T>;
+		oncompositionupdate?: CompositionEventHandler<T>;
+		oncompositionupdatecapture?: CompositionEventHandler<T>;
 
 		// Focus Events
-		onfocus?: FocusEventHandler;
-		onfocuscapture?: FocusEventHandler;
-		onblur?: FocusEventHandler;
-		onblurcapture?: FocusEventHandler;
+		onfocus?: FocusEventHandler<T>;
+		onfocuscapture?: FocusEventHandler<T>;
+		onblur?: FocusEventHandler<T>;
+		onblurcapture?: FocusEventHandler<T>;
 
 		// Form Events
-		onchange?: FormEventHandler;
-		onchangecapture?: FormEventHandler;
-		oninput?: FormEventHandler;
-		oninputcapture?: FormEventHandler;
-		onreset?: FormEventHandler;
-		onresetcapture?: FormEventHandler;
-		onsubmit?: FormEventHandler;
-		onsubmitcapture?: FormEventHandler;
-		oninvalid?: FormEventHandler;
-		oninvalidcapture?: FormEventHandler;
+		onchange?: FormEventHandler<T>;
+		onchangecapture?: FormEventHandler<T>;
+		oninput?: FormEventHandler<T>;
+		oninputcapture?: FormEventHandler<T>;
+		onreset?: FormEventHandler<T>;
+		onresetcapture?: FormEventHandler<T>;
+		onsubmit?: FormEventHandler<T>;
+		onsubmitcapture?: FormEventHandler<T>;
+		oninvalid?: FormEventHandler<T>;
+		oninvalidcapture?: FormEventHandler<T>;
 
 		// Image Events
-		onload?: EventHandler;
-		onloadcapture?: EventHandler;
-		onerror?: EventHandler; // also a Media Event
-		onerrorcapture?: EventHandler; // also a Media Event
+		onload?: EventHandler<T>;
+		onloadcapture?: EventHandler<T>;
+		onerror?: EventHandler<T>; // also a Media Event
+		onerrorcapture?: EventHandler<T>; // also a Media Event
 
 		// Keyboard Events
-		onkeydown?: KeyboardEventHandler;
-		onkeydowncapture?: KeyboardEventHandler;
-		onkeypress?: KeyboardEventHandler;
-		onkeypresscapture?: KeyboardEventHandler;
-		onkeyup?: KeyboardEventHandler;
-		onkeyupcapture?: KeyboardEventHandler;
+		onkeydown?: KeyboardEventHandler<T>;
+		onkeydowncapture?: KeyboardEventHandler<T>;
+		onkeypress?: KeyboardEventHandler<T>;
+		onkeypresscapture?: KeyboardEventHandler<T>;
+		onkeyup?: KeyboardEventHandler<T>;
+		onkeyupcapture?: KeyboardEventHandler<T>;
 
 		// Media Events
-		onabort?: EventHandler;
-		onabortcapture?: EventHandler;
-		oncanplay?: EventHandler;
-		oncanplaycapture?: EventHandler;
-		oncanplaythrough?: EventHandler;
-		oncanplaythroughcapture?: EventHandler;
-		ondurationchange?: EventHandler;
-		ondurationchangecapture?: EventHandler;
-		onemptied?: EventHandler;
-		onemptiedcapture?: EventHandler;
-		onencrypted?: EventHandler;
-		onencryptedcapture?: EventHandler;
-		onended?: EventHandler;
-		onendedcapture?: EventHandler;
-		onloadeddata?: EventHandler;
-		onloadeddatacapture?: EventHandler;
-		onloadedmetadata?: EventHandler;
-		onloadedmetadatacapture?: EventHandler;
-		onloadstart?: EventHandler;
-		onloadstartcapture?: EventHandler;
-		onpause?: EventHandler;
-		onpausecapture?: EventHandler;
-		onplay?: EventHandler;
-		onplaycapture?: EventHandler;
-		onplaying?: EventHandler;
-		onplayingcapture?: EventHandler;
-		onprogress?: EventHandler;
-		onprogresscapture?: EventHandler;
-		onratechange?: EventHandler;
-		onratechangecapture?: EventHandler;
-		onseeked?: EventHandler;
-		onseekedcapture?: EventHandler;
-		onseeking?: EventHandler;
-		onseekingcapture?: EventHandler;
-		onstalled?: EventHandler;
-		onstalledcapture?: EventHandler;
-		onsuspend?: EventHandler;
-		onsuspendcapture?: EventHandler;
-		ontimeupdate?: EventHandler;
-		ontimeupdatecapture?: EventHandler;
-		onvolumechange?: EventHandler;
-		onvolumechangecapture?: EventHandler;
-		onwaiting?: EventHandler;
-		onwaitingcapture?: EventHandler;
+		onabort?: EventHandler<T>;
+		onabortcapture?: EventHandler<T>;
+		oncanplay?: EventHandler<T>;
+		oncanplaycapture?: EventHandler<T>;
+		oncanplaythrough?: EventHandler<T>;
+		oncanplaythroughcapture?: EventHandler<T>;
+		ondurationchange?: EventHandler<T>;
+		ondurationchangecapture?: EventHandler<T>;
+		onemptied?: EventHandler<T>;
+		onemptiedcapture?: EventHandler<T>;
+		onencrypted?: EventHandler<T>;
+		onencryptedcapture?: EventHandler<T>;
+		onended?: EventHandler<T>;
+		onendedcapture?: EventHandler<T>;
+		onloadeddata?: EventHandler<T>;
+		onloadeddatacapture?: EventHandler<T>;
+		onloadedmetadata?: EventHandler<T>;
+		onloadedmetadatacapture?: EventHandler<T>;
+		onloadstart?: EventHandler<T>;
+		onloadstartcapture?: EventHandler<T>;
+		onpause?: EventHandler<T>;
+		onpausecapture?: EventHandler<T>;
+		onplay?: EventHandler<T>;
+		onplaycapture?: EventHandler<T>;
+		onplaying?: EventHandler<T>;
+		onplayingcapture?: EventHandler<T>;
+		onprogress?: EventHandler<T>;
+		onprogresscapture?: EventHandler<T>;
+		onratechange?: EventHandler<T>;
+		onratechangecapture?: EventHandler<T>;
+		onseeked?: EventHandler<T>;
+		onseekedcapture?: EventHandler<T>;
+		onseeking?: EventHandler<T>;
+		onseekingcapture?: EventHandler<T>;
+		onstalled?: EventHandler<T>;
+		onstalledcapture?: EventHandler<T>;
+		onsuspend?: EventHandler<T>;
+		onsuspendcapture?: EventHandler<T>;
+		ontimeupdate?: EventHandler<T>;
+		ontimeupdatecapture?: EventHandler<T>;
+		onvolumechange?: EventHandler<T>;
+		onvolumechangecapture?: EventHandler<T>;
+		onwaiting?: EventHandler<T>;
+		onwaitingcapture?: EventHandler<T>;
 
 		// MouseEvents
-		onclick?: MouseEventHandler;
-		onclickcapture?: MouseEventHandler;
-		oncontextmenu?: MouseEventHandler;
-		oncontextmenucapture?: MouseEventHandler;
-		ondoubleclick?: MouseEventHandler;
-		ondoubleclickcapture?: MouseEventHandler;
-		ondrag?: DragEventHandler;
-		ondragcapture?: DragEventHandler;
-		ondragend?: DragEventHandler;
-		ondragendcapture?: DragEventHandler;
-		ondragenter?: DragEventHandler;
-		ondragentercapture?: DragEventHandler;
-		ondragexit?: DragEventHandler;
-		ondragexitcapture?: DragEventHandler;
-		ondragleave?: DragEventHandler;
-		ondragleavecapture?: DragEventHandler;
-		ondragover?: DragEventHandler;
-		ondragovercapture?: DragEventHandler;
-		ondragstart?: DragEventHandler;
-		ondragstartcapture?: DragEventHandler;
-		ondrop?: DragEventHandler;
-		ondropcapture?: DragEventHandler;
-		onmousedown?: MouseEventHandler;
-		onmousedowncapture?: MouseEventHandler;
-		onmouseenter?: MouseEventHandler;
-		onmouseleave?: MouseEventHandler;
-		onmousemove?: MouseEventHandler;
-		onmousemovecapture?: MouseEventHandler;
-		onmouseout?: MouseEventHandler;
-		onmouseoutcapture?: MouseEventHandler;
-		onmouseover?: MouseEventHandler;
-		onmouseovercapture?: MouseEventHandler;
-		onmouseup?: MouseEventHandler;
-		onmouseupcapture?: MouseEventHandler;
+		onclick?: MouseEventHandler<T>;
+		onclickcapture?: MouseEventHandler<T>;
+		oncontextmenu?: MouseEventHandler<T>;
+		oncontextmenucapture?: MouseEventHandler<T>;
+		ondoubleclick?: MouseEventHandler<T>;
+		ondoubleclickcapture?: MouseEventHandler<T>;
+		ondrag?: DragEventHandler<T>;
+		ondragcapture?: DragEventHandler<T>;
+		ondragend?: DragEventHandler<T>;
+		ondragendcapture?: DragEventHandler<T>;
+		ondragenter?: DragEventHandler<T>;
+		ondragentercapture?: DragEventHandler<T>;
+		ondragexit?: DragEventHandler<T>;
+		ondragexitcapture?: DragEventHandler<T>;
+		ondragleave?: DragEventHandler<T>;
+		ondragleavecapture?: DragEventHandler<T>;
+		ondragover?: DragEventHandler<T>;
+		ondragovercapture?: DragEventHandler<T>;
+		ondragstart?: DragEventHandler<T>;
+		ondragstartcapture?: DragEventHandler<T>;
+		ondrop?: DragEventHandler<T>;
+		ondropcapture?: DragEventHandler<T>;
+		onmousedown?: MouseEventHandler<T>;
+		onmousedowncapture?: MouseEventHandler<T>;
+		onmouseenter?: MouseEventHandler<T>;
+		onmouseleave?: MouseEventHandler<T>;
+		onmousemove?: MouseEventHandler<T>;
+		onmousemovecapture?: MouseEventHandler<T>;
+		onmouseout?: MouseEventHandler<T>;
+		onmouseoutcapture?: MouseEventHandler<T>;
+		onmouseover?: MouseEventHandler<T>;
+		onmouseovercapture?: MouseEventHandler<T>;
+		onmouseup?: MouseEventHandler<T>;
+		onmouseupcapture?: MouseEventHandler<T>;
+
+		// Pointer events
+		onpointercancel?: PointerEventHandler<T>;
+		onpointerdown?: PointerEventHandler<T>;
+		onpointerenter?: PointerEventHandler<T>;
+		onpointerleave?: PointerEventHandler<T>;
+		onpointermove?: PointerEventHandler<T>;
+		onpointerout?: PointerEventHandler<T>;
+		onpointerover?: PointerEventHandler<T>;
+		onpointerup?: PointerEventHandler<T>;
 
 		// Selection Events
-		onselect?: EventHandler;
-		onselectcapture?: EventHandler;
+		onselect?: EventHandler<T>;
+		onselectcapture?: EventHandler<T>;
 
 		// Touch Events
-		ontouchcancel?: TouchEventHandler;
-		ontouchcancelcapture?: TouchEventHandler;
-		ontouchend?: TouchEventHandler;
-		ontouchendcapture?: TouchEventHandler;
-		ontouchmove?: TouchEventHandler;
-		ontouchmovecapture?: TouchEventHandler;
-		ontouchstart?: TouchEventHandler;
-		ontouchstartcapture?: TouchEventHandler;
+		ontouchcancel?: TouchEventHandler<T>;
+		ontouchcancelcapture?: TouchEventHandler<T>;
+		ontouchend?: TouchEventHandler<T>;
+		ontouchendcapture?: TouchEventHandler<T>;
+		ontouchmove?: TouchEventHandler<T>;
+		ontouchmovecapture?: TouchEventHandler<T>;
+		ontouchstart?: TouchEventHandler<T>;
+		ontouchstartcapture?: TouchEventHandler<T>;
 
 		// UI Events
-		onscroll?: UIEventHandler;
-		onscrollcapture?: UIEventHandler;
+		onscroll?: UIEventHandler<T>;
+		onscrollcapture?: UIEventHandler<T>;
 
 		// Wheel Events
-		onwheel?: WheelEventHandler;
-		onwheelcapture?: WheelEventHandler;
+		onwheel?: WheelEventHandler<T>;
+		onwheelcapture?: WheelEventHandler<T>;
 
 		// Animation Events
-		onanimationstart?: AnimationEventHandler;
-		onanimationstartcapture?: AnimationEventHandler;
-		onanimationend?: AnimationEventHandler;
-		onanimationendcapture?: AnimationEventHandler;
-		onanimationiteration?: AnimationEventHandler;
-		onanimationiterationcapture?: AnimationEventHandler;
+		onanimationstart?: AnimationEventHandler<T>;
+		onanimationstartcapture?: AnimationEventHandler<T>;
+		onanimationend?: AnimationEventHandler<T>;
+		onanimationendcapture?: AnimationEventHandler<T>;
+		onanimationiteration?: AnimationEventHandler<T>;
+		onanimationiterationcapture?: AnimationEventHandler<T>;
 
 		// Transition Events
-		ontransitionend?: TransitionEventHandler;
-		ontransitionendcapture?: TransitionEventHandler;
+		ontransitionend?: TransitionEventHandler<T>;
+		ontransitionendcapture?: TransitionEventHandler<T>;
 	}
 
 	interface HTMLAttributes<T> extends DOMAttributes<T> {
@@ -2574,7 +2748,7 @@ declare namespace JSX {
 		value?: string | string[] | number;
 		width?: number | string;
 
-		onchange?: ChangeEventHandler;
+		onchange?: ChangeEventHandler<T>;
 	}
 
 	interface KeygenHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -2715,7 +2889,7 @@ declare namespace JSX {
 		required?: boolean;
 		size?: number;
 		value?: string | string[] | number;
-		onchange?: ChangeEventHandler;
+		onchange?: ChangeEventHandler<T>;
 	}
 
 	interface SourceHTMLAttributes<T> extends HTMLAttributes<T> {
@@ -2756,7 +2930,7 @@ declare namespace JSX {
 		value?: string | string[] | number;
 		wrap?: string;
 
-		onchange?: ChangeEventHandler;
+		onchange?: ChangeEventHandler<T>;
 	}
 
 	interface TdHTMLAttributes<T> extends HTMLAttributes<T> {
