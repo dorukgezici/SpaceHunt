@@ -1,4 +1,4 @@
-import { GameEvent, Scene, Actor, Color, CollisionType } from "excalibur";
+import { Loader, Scene, Actor, Color, CollisionType } from "excalibur";
 import { IGameElement, GameBootstrap, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import { Class } from "../../Class";
 

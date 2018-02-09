@@ -2,6 +2,7 @@ import { Engine, GameEvent, Color } from "excalibur";
 import { IEvented } from "./Class";
 import Menu from "./Scenes/Menu/Menu";
 import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
+import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 
 /**
  * Event interface used by `IGameElement`.
@@ -63,10 +64,11 @@ export class GameBootstrap {
 	readonly rootSceneKey = "root";
 
 	private menu = new Menu();
-	private levels = [{
-		name: "Play a Game!",
-		element: new ExampleLevel()
-	}];
+
+	private levels = [
+		{name: "Play a Game!", element: new ExampleLevel()},
+		{name: "Test player movement", element: new MovementTestLevel()},
+	];
 
 	constructor(
 		public readonly canvasId: string,
