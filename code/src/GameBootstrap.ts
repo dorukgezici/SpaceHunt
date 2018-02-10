@@ -111,6 +111,8 @@ export class GameBootstrap {
 
 		// create the game engine
 		this.engine = new Engine({
+			width: 800,
+			height: 600,
 			canvasElementId: canvasId,
 			backgroundColor: Color.Black
 		});
