@@ -1,6 +1,7 @@
-import { Engine, GameEvent, Color } from "excalibur";
+import { Input, Engine, GameEvent, Color } from "excalibur";
 import { IEvented, Class } from "./Class";
 import Menu from "./Scenes/Menu/Menu";
+import Intro from "./Scenes/Intro/Intro";
 import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
 import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
@@ -21,7 +22,7 @@ export interface IGameElementDoneEvent extends GameEvent<IGameElement> {
 }
 
 /**
- * Determines the reason for GameElement to be done. 
+ * Determines the reason for GameElement to be done.
  */
 export enum GameElementDoneType {
 	/**
@@ -36,7 +37,7 @@ export enum GameElementDoneType {
 
 /**
  * Default event-mapping for `IGameElement` interface.
- * 
+ *
  * It is recommended to inherit from this interface when new `IGameElement`s are made.
  */
 export interface IGameElementEvents {
@@ -61,7 +62,7 @@ export class IGameBootstrapState {
 
 /**
  * Game bootstrap object.
- * 
+ *
  * Handles the logic behind switching levels and wiring everything up.
  */
 export class GameBootstrap {
@@ -84,7 +85,7 @@ export class GameBootstrap {
 	readonly rootSceneKey = "root";
 
 	private menu = new Menu();
-
+	private intro = new Intro();
 	private exampleLevel = new ExampleLevel();
 	private nameEnquiry = new NameEnquiry();
 	private levels = [{
@@ -96,6 +97,9 @@ export class GameBootstrap {
 	}, {
 		name: "Change your name!",
 		element: this.nameEnquiry
+	}, {
+		name: "Intro (Story)",
+		element: this.intro
 	}];
 
 	constructor(
@@ -110,10 +114,11 @@ export class GameBootstrap {
 		// create the game engine
 		this.engine = new Engine({
 			canvasElementId: canvasId,
-			backgroundColor: Color.Black
+			backgroundColor: Color.Black,
+			pointerScope: Input.PointerScope.Canvas
 		});
 
-		const { state, levels, menu, nameEnquiry, exampleLevel, stateListener } = this;
+		const { state, levels, menu, intro, nameEnquiry, exampleLevel, stateListener } = this;
 
 		// custom event listenere logic
 		exampleLevel.on("done", e => {

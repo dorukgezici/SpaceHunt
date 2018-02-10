@@ -25,7 +25,7 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 			target: this,
 			id,
 			name
-		});		
+		});
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished
@@ -38,7 +38,7 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 				<div className="dialog">
 					<div className="items">
 						{this.items.map((t, i) => (
-							<div className="item" onpointerdown={e => this.itemClick(i, t)}>{t}</div>
+							<div className="item" onclick={e => this.itemClick(i, t)}>{t}</div>
 						))}
 					</div>
 				</div>
