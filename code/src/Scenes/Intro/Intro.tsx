@@ -1,19 +1,19 @@
 import { Class } from "../../Class";
 import { IGameElement, GameBootstrap, IGameElementEvents, IGameEventValue, GameElementDoneType } from "../../GameBootstrap";
 import { InterfaceBuilder } from "../../InterfaceBuilder";
-import { IStory, intro } from "./Story";
+import { IStory, intro, level1, level2, level3, level4, end, death } from "./Story";
 require("./style.scss");
 
 export default class Intro extends Class implements IGameElement {
 
 	private gameBoostrap: GameBootstrap;
 	private storyElement: HTMLElement;
-	private story: IStory;
+	private story: [IStory];
 	private storyPage: number; // index of a page of a story
 
 	init(bootstrap: GameBootstrap) {
 		this.gameBoostrap = bootstrap;
-		this.story = intro;
+		this.story = [intro, level1, level2, level3, level4, end, death];
 		this.storyPage = 0;
 	}
 
@@ -31,6 +31,7 @@ export default class Intro extends Class implements IGameElement {
 	}
 
 	private done() {
+		this.storyPage = 0;
 		this.emit("done", { target: this, type: GameElementDoneType.Finished });
 	}
 
