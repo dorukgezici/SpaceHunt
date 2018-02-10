@@ -1,20 +1,29 @@
 import { Class } from "../../Class";
 import { IGameElement, GameBootstrap, IGameElementEvents, IGameEventValue, GameElementDoneType } from "../../GameBootstrap";
 import { InterfaceBuilder } from "../../InterfaceBuilder";
+import { IStory, intro } from "./Story";
 require("./style.scss");
 
 export default class Intro extends Class implements IGameElement {
 
 	private gameBoostrap: GameBootstrap;
-	private storyElement: HTMLParagraphElement;
+	private storyElement: HTMLElement;
+	private story: IStory;
+	private storyPage: number; // index of a page of a story
 
 	init(bootstrap: GameBootstrap) {
 		this.gameBoostrap = bootstrap;
-		//this.storyElement.innerText = "The year 3020 is written, and travel between planets and galaxies is finally becoming common, but this fact carries some pitfalls. The technological war between the Earth and the planet Eslan from a nearby galaxy broke out. During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband Freddy Mikelson.";
+		this.story = intro;
+		this.storyPage = 0;
+	}
+
+	private renderStoryPage() {
+		InterfaceBuilder.replaceContent(this.storyElement, this.story[this.storyPage]);
 	}
 
 	start() {
 		InterfaceBuilder.dispalyDefault(this.render());
+		this.renderStoryPage();
 	}
 
 	dispose() {
@@ -26,12 +35,11 @@ export default class Intro extends Class implements IGameElement {
 	}
 
 	private onClick() {
-
-	}
-
-	private onKeyPress(keyCode: number) {
-		if (keyCode === 13) // enter
+		this.storyPage++;
+		if (this.storyPage >= this.story.length)
 			this.done();
+		else
+			this.renderStoryPage();
 	}
 
 	private render() {
@@ -41,9 +49,7 @@ export default class Intro extends Class implements IGameElement {
 				<div className="content-holder">
 					<div className="dialog">
 						<div className="story">
-							<h1>SpaceHunt - Episode 1</h1>
-							<h2>Unexpected kidnap</h2>
-							<p>The year 3020 is written, and travel between planets and galaxies is finally becoming common, but this fact carries some pitfalls. The technological war between the Earth and the planet Eslan from a nearby galaxy broke out. During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband Freddy Mikelson.</p>
+							<div ref={elt => this.storyElement = elt}></div>
 							<button className="submit" onclick={this.onClick.bind(this)}>Continue to read the story!</button>
 						</div>
 					</div>
