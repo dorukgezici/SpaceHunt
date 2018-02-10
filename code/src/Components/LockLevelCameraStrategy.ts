@@ -12,6 +12,8 @@ export default class LockLevelCameraStrategy implements ex.ICameraStrategy<ex.Ac
 	}
 
 	action(target: ex.Actor, cam: ex.BaseCamera, _eng: ex.Engine, _delta: number): ex.Vector {
+		this.target = target;
+
 		let newPosition = cam.pos;
 		newPosition.x = newPosition.x < this.minX ? this.minX : newPosition.x;
 		newPosition.x = newPosition.x > this.maxX ? this.maxX : newPosition.x;

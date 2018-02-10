@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import {Class} from "../../Class";
-import LockLevelCameraStrategy from "../../Common/LockLevelCameraStrategy";
+import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import {GameBootstrap, IGameElement, IGameElementEvents} from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
@@ -21,26 +21,26 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
+		this.loader = bootstrap.loader;
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds);
 
-		this.loadResources();
+		this.registerResources();
 	}
 
 	start(): void {
 		ex.Physics.acc.setTo(0, 3000);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
-		this.loader.load().then(this.buildScene);
+		this.buildScene();
 	}
 
 	dispose(): void {
 		this.ground.kill();
 	}
 
-	private loadResources() {
-		this.loader = new ex.Loader();
+	private registerResources() {
 		this.loader.addResources(this.ground.resources);
 	}
 

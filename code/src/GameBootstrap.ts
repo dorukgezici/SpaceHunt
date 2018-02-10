@@ -1,5 +1,5 @@
-import { Engine, GameEvent, Color } from "excalibur";
-import { IEvented, Class } from "./Class";
+import { Engine, GameEvent, Color, Loader } from "excalibur";
+import { IEvented } from "./Class";
 import Menu from "./Scenes/Menu/Menu";
 import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
 import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
@@ -83,6 +83,8 @@ export class GameBootstrap {
 	 */
 	readonly rootSceneKey = "root";
 
+	readonly loader: Loader;
+
 	private menu = new Menu();
 
 	private exampleLevel = new ExampleLevel();
@@ -91,11 +93,11 @@ export class GameBootstrap {
 		name: "Play a Game!",
 		element: this.exampleLevel
 	}, {
-		name: "Test player movement",
-		element: new MovementTestLevel()
-	}, {
 		name: "Change your name!",
 		element: this.nameEnquiry
+	}, {
+		name: "Test player movement",
+		element: new MovementTestLevel()
 	}];
 
 	constructor(
@@ -113,7 +115,9 @@ export class GameBootstrap {
 			backgroundColor: Color.Black
 		});
 
-		const { state, levels, menu, nameEnquiry, exampleLevel, stateListener } = this;
+		this.loader = new Loader();
+
+		const { levels, menu, exampleLevel, stateListener } = this;
 
 		// custom event listenere logic
 		exampleLevel.on("done", e => {
@@ -138,18 +142,10 @@ export class GameBootstrap {
 			});
 		});
 
-		// init menu as any other game element
+		// init menu as any other game elementWW
 		menu.init(this);
 		// assign custom properties
 		menu.items = levels.map(t => t.name);
-		// subscribe custom listeners
-		menu.on("click", e => {
-			const level = levels.find(t => t.name === e.name);
-			menu.dispose(); // stop displaying menu
-			if (!level)
-				throw new Error("level not found");
-			level.element.start(); // start the level
-		});
 	}
 
 	/**
@@ -157,7 +153,19 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-		this.engine.start();
+
+		this.engine.start(this.loader).then(() => {
+			this.menu.on("click", e => {
+				const level = this.levels.find(t => t.name === e.name);
+				this.menu.dispose(); // stop displaying menu
+
+				if (!level) {
+					throw new Error("level not found");
+				}
+
+				level.element.start(); // start the level
+			});
+		});
 	}
 
 }
