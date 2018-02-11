@@ -24,7 +24,7 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 			target: this,
 			id,
 			name
-		});		
+		});
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished

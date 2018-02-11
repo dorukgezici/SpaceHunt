@@ -1,8 +1,9 @@
 import { Engine, GameEvent, Color, Input, Loader } from "excalibur";
-import { IEvented } from "./Class";
+import { IEvented, Class } from "./Class";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
 import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
 import Menu from "./Scenes/Menu/Menu";
+import Intro from "./Scenes/Intro/Intro";
 import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 
@@ -21,7 +22,7 @@ export interface IGameElementDoneEvent extends GameEvent<IGameElement> {
 }
 
 /**
- * Determines the reason for GameElement to be done. 
+ * Determines the reason for GameElement to be done.
  */
 export enum GameElementDoneType {
 	/**
@@ -36,7 +37,7 @@ export enum GameElementDoneType {
 
 /**
  * Default event-mapping for `IGameElement` interface.
- * 
+ *
  * It is recommended to inherit from this interface when new `IGameElement`s are made.
  */
 export interface IGameElementEvents {
@@ -70,7 +71,7 @@ export class IGameBootstrapState {
 
 /**
  * Game bootstrap object.
- * 
+ *
  * Handles the logic behind switching levels and wiring everything up.
  */
 export class GameBootstrap {
@@ -95,7 +96,7 @@ export class GameBootstrap {
 	readonly loader: Loader;
 
 	private menu = new Menu();
-
+	private intro = new Intro();
 	private exampleLevel = new ExampleLevel();
 	private nameEnquiry = new NameEnquiry();
 	private levels = [{
@@ -107,6 +108,9 @@ export class GameBootstrap {
 	}, {
 		name: "Test player movement",
 		element: new MovementTestLevel()
+	}, {
+		name: "Intro (Story)",
+		element: this.intro
 	}];
 
 	constructor(
@@ -129,7 +133,7 @@ export class GameBootstrap {
 
 		this.loader = new Loader();
 
-		const { levels, menu, exampleLevel, nameEnquiry, stateListener } = this;
+		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
 
 		// custom event listenere logic
 		exampleLevel.on("done", e => {
