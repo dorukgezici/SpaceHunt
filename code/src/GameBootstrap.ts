@@ -1,9 +1,9 @@
-import { Engine, GameEvent, Color, Loader } from "excalibur";
+import { Engine, GameEvent, Color, Input, Loader } from "excalibur";
 import { IEvented } from "./Class";
-import Menu from "./Scenes/Menu/Menu";
-import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
-import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
+import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
+import Menu from "./Scenes/Menu/Menu";
+import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 
 /**
@@ -47,8 +47,17 @@ export interface IGameElementEvents {
  * Base game element interface. Include event mapping template paramtere for strongly-typed events.
  */
 export interface IGameElement<T extends IGameElementEvents = IGameElementEvents> extends IEvented<T> {
+	/**
+	 * Called when the component should run initialisation logic.
+	 */
 	init(bootstrap: GameBootstrap): void;
+	/**
+	 * Called when the component should be run and display its content. Note that this may be called multiple times per component instance.
+	 */
 	start(): void;
+	/**
+	 * Called when the component should hide its content and stop its execution. Note that this may be called multiple times per component instance.
+	 */
 	dispose(): void;
 }
 
@@ -114,12 +123,13 @@ export class GameBootstrap {
 			width: 800,
 			height: 600,
 			canvasElementId: canvasId,
-			backgroundColor: Color.Black
+			backgroundColor: Color.Black,
+			pointerScope: Input.PointerScope.Canvas
 		});
 
 		this.loader = new Loader();
 
-		const { levels, menu, exampleLevel, stateListener } = this;
+		const { levels, menu, exampleLevel, nameEnquiry, stateListener } = this;
 
 		// custom event listenere logic
 		exampleLevel.on("done", e => {
@@ -129,7 +139,9 @@ export class GameBootstrap {
 
 		// state change event bindings
 		stateListener.on("name", e => {
-			levels[1].name = `Change your name, ${e.newValue}!`;
+			const level = levels.find(t => t.element === nameEnquiry);
+			if (level)
+				level.name = `Change your name, ${e.newValue}!`;
 			menu.items = levels.map(t => t.name);
 		});
 

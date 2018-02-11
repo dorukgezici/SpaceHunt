@@ -1,7 +1,7 @@
-import { GameEvent, EventDispatcher, Class as EClass } from "excalibur";
+import { EventDispatcher } from "excalibur";
 
 interface IEventMapping<T = any> {
-	[key: string]: any;
+	[key: string]: T;
 }
 
 /**

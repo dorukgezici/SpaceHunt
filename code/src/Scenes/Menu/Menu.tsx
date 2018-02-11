@@ -1,4 +1,3 @@
-import { GameEvent } from "excalibur";
 import { IGameElement, GameBootstrap, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import { InterfaceBuilder } from "../../InterfaceBuilder";
 import { Class } from "../../Class";
@@ -38,7 +37,7 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 				<div className="dialog">
 					<div className="items">
 						{this.items.map((t, i) => (
-							<div className="item" onpointerdown={e => this.itemClick(i, t)}>{t}</div>
+							<div className="item" onclick={e => this.itemClick(i, t)}>{t}</div>
 						))}
 					</div>
 				</div>

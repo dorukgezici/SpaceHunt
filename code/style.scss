@@ -1,23 +1,28 @@
 body {
 	font-family: sans-serif;
 	margin: 0;
+	height: 100%;
 	background-image: url("src/Resources/Images/BgSaturn.jpg");
 	background-size: cover;
 	background-position: center;
 }
 
 #app,
-#content {
+#canvas-holder {
 	height: 100%;
 	width: 100%;
 	position: absolute;
+	display: block;
 }
 
-#canvas-holder {
-	height: 600px;
-	width: 800px;
-	position: absolute;
-	left: 50%;
-	top: 20px;
-	margin-left: -400px;
+#canvas-wrapper {
+	display: flex;
+	height: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+#canvas {
+	max-width: 100%;
+	max-height: 100%;
 }

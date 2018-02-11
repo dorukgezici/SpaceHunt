@@ -10,4 +10,10 @@ async function init() {
 	gb.start();
 }
 
-init();
+// check whether the user is using Internet Explorer
+if (navigator.userAgent.match(/MSIE|Trident/))
+	// criticise the user
+	alert("Internet Explorer is currently not supported.");
+else
+	// start everything
+	init();

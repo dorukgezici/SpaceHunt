@@ -34,7 +34,7 @@ export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, E ex
 /**
  * Static methods of the JSX `Component` class for using the default constructor.
  */
-export interface IComponentClassDefault<T extends JSX.AttrsType, C extends Component<T, any>, E extends JSX.ElementBase = JSX.ElementBase> {
+export interface IComponentClassDefault<T extends JSX.AttrsType, E extends JSX.ElementBase = JSX.ElementBase> {
 	new(): Component<T, E>;
 	new(attrs: JSX.AttrsValue<T>): Component<T, E>;
 	prototype: Component<T, E>;
@@ -57,7 +57,7 @@ export interface IComponentClassDefault<T extends JSX.AttrsType, C extends Compo
 /**
  * Static methods of the JSX `Component` class for using `instance` field.
  */
-export interface IComponentClassInstance<T extends JSX.AttrsType, C extends Component<T, any>, E extends JSX.ElementBase = JSX.ElementBase> {
+export interface IComponentClassInstance<T extends JSX.AttrsType, E extends JSX.ElementBase = JSX.ElementBase> {
 	prototype: Component<T, E>;
 	/**
 	 * Instance of the component for JSX engine to re-use instead of creating a new instance.
@@ -78,7 +78,7 @@ export interface IComponentClassInstance<T extends JSX.AttrsType, C extends Comp
 /**
  * Static methods of the JSX `Component` class for using `instanceProvider` method.
  */
-export interface IComponentClassInstanceProvider<T extends JSX.AttrsType, C extends Component<T, any>, E extends JSX.ElementBase = JSX.ElementBase> {
+export interface IComponentClassInstanceProvider<T extends JSX.AttrsType, E extends JSX.ElementBase = JSX.ElementBase> {
 	prototype: Component<T, E>;
 	/**
 	 * Instance of the component for JSX engine to re-use instead of creating a new instance.
@@ -99,10 +99,10 @@ export interface IComponentClassInstanceProvider<T extends JSX.AttrsType, C exte
 /**
  * Static methods of the JSX `Component` class.
  */
-export type IComponentClass<T extends JSX.AttrsType, C extends Component<T, any>, E extends JSX.ElementBase = JSX.ElementBase> =
-	| IComponentClassDefault<T, Component<T, E>, E>
-	| IComponentClassInstance<T, Component<T, E>, E>
-	| IComponentClassInstanceProvider<T, Component<T, E>, E>;
+export type IComponentClass<T extends JSX.AttrsType, E extends JSX.ElementBase = JSX.ElementBase> =
+	| IComponentClassDefault<T, E>
+	| IComponentClassInstance<T, E>
+	| IComponentClassInstanceProvider<T, E>;
 
 /**
  * CSS properties which get assigned the `px` suffix.
@@ -252,7 +252,7 @@ export namespace InterfaceBuilder {
 	function assignStyle(given: JSX.CSSProperties, actual: CSSStyleDeclaration): void {
 		for (let prop in given) {
 			let value = given[prop];
-			if (typeof prop === "number" && numericCSSProperties.includes(prop))
+			if (typeof value === "number" && numericCSSProperties.includes(prop))
 				value = value + "px";
 			(actual as KeyValueObject)[prop] = given[prop];
 		}
@@ -264,7 +264,7 @@ export namespace InterfaceBuilder {
 		for (let attr in attrs) {
 			if (attr === "ref")
 				continue;
-			const value = attrs[attr];
+			const value = attrs[attr] as (typeof attrs) | null | undefined;
 			if (value === null || value === undefined)
 				continue;
 			if (attr === "style")
@@ -327,7 +327,7 @@ export namespace InterfaceBuilder {
 	 * @param attrs Attributes to assign.
 	 * @param children Children to append.
 	 */
-	export function createComponentClassElement<T extends JSX.AttrsType, C extends Component<T>, E extends JSX.ElementBase>(componentClass: IComponentClass<T, Component<T, E>, E>, attrs: JSX.AttrsValue<T>, children: JSX.NodeCollection[]): JSX.ElementCollection {
+	export function createComponentClassElement<T extends JSX.AttrsType, C extends Component<T>, E extends JSX.ElementBase>(componentClass: IComponentClass<T, E>, attrs: JSX.AttrsValue<T>, children: JSX.NodeCollection[]): JSX.ElementCollection {
 		const c = flatten(children);
 		let instance: Component<T> | unset;
 		if (componentClass.instanceProvider)
@@ -335,7 +335,7 @@ export namespace InterfaceBuilder {
 		if (!instance && componentClass.instance)
 			instance = componentClass.instance;
 		if (!instance) {
-			instance = new (componentClass as IComponentClassDefault<T, C>)(attrs);
+			instance = new (componentClass as IComponentClassDefault<T>)(attrs);
 			if (componentClass.instanceCreated)
 				componentClass.instanceCreated(instance as C);
 		}
@@ -384,7 +384,7 @@ export namespace InterfaceBuilder {
 	 * @param children Children to append.
 	 */
 	export function createElement<T extends JSX.AttrsType, C extends Component<T>>(
-		componentClass: IComponentClass<T, C>,
+		componentClass: IComponentClass<T>,
 		attrs: JSX.AttrsValue<T>,
 		...children: JSX.NodeCollection[]
 	): JSX.ElementCollection;
@@ -457,24 +457,47 @@ export namespace InterfaceBuilder {
 	}
 
 	/**
-	 * Display given content in application's default interface container (the `#app` element).
-	 * @param elementCollection Elements to display.
+	 * Hides an HTML element by setting its display CSS property to "none".
+	 * @param element Element to hide.
 	 */
-	export function dispalyDefault(elementCollection: JSX.ElementCollection) {
-		if (!getApp())
-			throw new DOMContentNotLoaded();
-		else
-			replaceContent(getApp(), elementCollection);
+	export function hideElement(element: HTMLElement) {
+		element.style.display = "none";
 	}
 
 	/**
-	 * Clears applications default interface container (the `#app` element).
+	 * 	Unhides an HTML elemenet by setting its display CSS property to something other than "none".
+	 * @param element Element to unhide.
+	 * @param displayStyle Display CSS property, if other than "block";
+	 */
+	export function showElement(element: HTMLElement, displayStyle: string = "block") {
+		element.style.display = displayStyle;
+	}
+
+	/**
+	 * Display given elements in the default interface container (the `#app` element) and hides the default canvas (the `#canvas` element).
+	 * @param elementCollection Elements to display.
+	 */
+	export function dispalyDefault(elementCollection: JSX.ElementCollection) {
+		const app = getApp();
+		const ch = getCanvasHolder();
+		if (app && ch) {
+			replaceContent(getApp(), elementCollection);
+			hideElement(ch);
+			showElement(app);
+		} else throw new DOMContentNotLoaded(); // throw if not loaded
+	}
+
+	/**
+	 * Clears and hides application's default interface container (the `#app` element) and shows the default canvas (the `#canvas` element).
 	 */
 	export function clearDefault() {
-		if (!getApp())
-			throw new DOMContentNotLoaded(); // throw if not loaded
-		else
-			clearContent(getApp());
+		const app = getApp();
+		const ch = getCanvasHolder();
+		if (app && ch) {
+			clearContent(app);
+			hideElement(app);
+			showElement(ch);
+		} else throw new DOMContentNotLoaded(); // throw if not loaded
 	}
 
 	/**

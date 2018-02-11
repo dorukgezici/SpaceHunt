@@ -1,5 +1,5 @@
 import { Class } from "../../Class";
-import { IGameElement, GameBootstrap, IGameElementEvents, IGameEventValue, GameElementDoneType } from "../../GameBootstrap";
+import { IGameElement, GameBootstrap, GameElementDoneType } from "../../GameBootstrap";
 import { InterfaceBuilder } from "../../InterfaceBuilder";
 require("./style.scss");
 
@@ -44,27 +44,23 @@ export class NameEnquiry extends Class implements IGameElement {
 
 	private render() {
 		return (
-			<div id="pname-enquiry">
-				<div className="bg"></div>
-				<div className="content-holder">
-					<div className="dialog">
-						<div className="label">Enter your name:</div>
-						<div className="form">
-							<input
-								ref={elt => this.inputElement = elt}
-								className="name"
-								type="text"
-								onpointerdown={e => e.target.focus()}
-								value={this.value || this.gameBoostrap.state.name || ""}
-								onkeyup={e => this.onKeyPress(e.keyCode)}
-								autoFocus
-								maxLength={32}
-							/>
-							<button className="submit" onpointerdown={this.onClick.bind(this)}>Let's go!</button>
-						</div>
+			<div id="pname-enquiry" className="content-holder">
+				<div className="dialog">
+					<div className="label">Enter your name:</div>
+					<div className="form">
+						<input
+							ref={elt => this.inputElement = elt}
+							className="name"
+							type="text"
+							value={this.value || this.gameBoostrap.state.name || ""}
+							onkeyup={e => this.onKeyPress(e.keyCode)}
+							autoFocus
+							maxLength={32}
+						/>
+						<button className="submit" onclick={this.onClick.bind(this)}>Let's go!</button>
 					</div>
 				</div>
-			</div >
+			</div>
 		);
 	}
 

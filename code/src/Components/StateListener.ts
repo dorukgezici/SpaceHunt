@@ -1,23 +1,23 @@
 import { GameEvent } from "excalibur";
 import { Class } from "../Class";
 
-interface IStateChangedEvent<T, K extends keyof T = keyof T> extends GameEvent<T> {
+interface IStaticStateChangedEvent<T, K extends keyof T = keyof T> extends GameEvent<T> {
 	key: K;
 	oldValue: T[K];
 	newValue: T[K];
 }
 
+type IStateChangedEvent<T, K extends keyof IStateListenerEvents<T> = keyof IStateListenerEvents<T>> = IStateListenerEvents<T>[K];
+
 type IStateEvents<T> = {
-	[K in keyof T]: IStateChangedEvent<T, K>;
+	[K in keyof T]: IStaticStateChangedEvent<T, K>;
 };
 
 interface IAdditionalHandlers<T> {
-	"$all": T[keyof T];
+	"$all": IStaticStateChangedEvent<T, keyof T>;
 }
 
-type IExtendedType<T> = T & IAdditionalHandlers<T>;
-
-export type IStateListenerEvents<T> = IStateEvents<IExtendedType<T>>;
+export type IStateListenerEvents<T> = IStateEvents<T> & IAdditionalHandlers<T>;
 
 export default class StateListener<T> extends Class<IStateListenerEvents<T>> {
 
@@ -29,7 +29,7 @@ export default class StateListener<T> extends Class<IStateListenerEvents<T>> {
 	}
 
 	private emitEvent(e: IStateChangedEvent<T>) {
-		this.emit(e.key, e as any);
+		this.emit(e.key as any, e as any);
 		this.emit("$all", e as any);
 	}
 
