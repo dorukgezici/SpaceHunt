@@ -6,6 +6,7 @@ export default class Player extends ex.Actor {
 	static readonly speed: number = 8;
 	private minX: number;
 	private maxX: number;
+	private ducked:boolean = false;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.Azure);
@@ -28,6 +29,13 @@ export default class Player extends ex.Actor {
 		if(engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
 			this.goRight();
 		}
+
+		if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
+			if(!this.ducked){this.duck();this.ducked=true;}
+		}
+		if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)){
+			if(this.ducked){this.unDuck();this.ducked=false;}
+		}
 	}
 
 	private jump() {
@@ -47,4 +55,17 @@ export default class Player extends ex.Actor {
 		this.pos.x += Player.speed;
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 	}
+
+	private duck(){
+		this.setHeight(this.getHeight()/2);
+		//this.collisionArea.recalc(); //useless, but something to adjust collision area would be nice
+		this.y = this.y + this.getHeight()/2;
+	}
+
+	private unDuck(){
+		this.y = this.y - (this.getHeight()/2);
+		this.setHeight(this.getHeight()*2);
+		//this.collisionArea.recalc();
+	}
+
 }
