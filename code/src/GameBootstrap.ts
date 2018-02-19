@@ -6,6 +6,7 @@ import Menu from "./Scenes/Menu/Menu";
 import Intro from "./Scenes/Intro/Intro";
 import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
+import Level2 from "./Scenes/Level2/Level2";
 
 /**
  * A game event that contains a related event value.
@@ -98,6 +99,7 @@ export class GameBootstrap {
 	private menu = new Menu();
 	private intro = new Intro();
 	private exampleLevel = new ExampleLevel();
+	private level2 = new Level2();
 	private nameEnquiry = new NameEnquiry();
 	private levels = [{
 		name: "Play a Game!",
@@ -106,8 +108,10 @@ export class GameBootstrap {
 		name: "Change your name!",
 		element: this.nameEnquiry
 	}, {
-		name: "Test player movement",
-		element: new MovementTestLevel()
+		//name: "Test player movement",
+		//element: new MovementTestLevel()
+		name: "Test Level 2",
+		element: new Level2()
 	}, {
 		name: "Intro (Story)",
 		element: this.intro
