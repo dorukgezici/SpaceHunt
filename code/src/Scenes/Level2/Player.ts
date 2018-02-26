@@ -49,10 +49,22 @@ export default class Player extends ex.Actor {
 			}
 
 			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-				this.speedX = Player.speedNormal;
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+					this.speedX = Player.speedAcc;
+				} else {
+					this.speedX = Player.speedNormal;
+				}
 			}
 
 			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+					this.speedX = Player.speedDec;
+				} else {
+					this.speedX = Player.speedNormal;
+				}
+			}
+
+			if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
 				this.speedX = Player.speedNormal;
 			}
 
