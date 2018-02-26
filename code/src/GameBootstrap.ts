@@ -99,6 +99,7 @@ export class GameBootstrap {
 	private menu = new Menu();
 	private intro = new Intro();
 	private exampleLevel = new ExampleLevel();
+	private movementTestLevel = new MovementTestLevel();
 	private level2 = new Level2();
 	private nameEnquiry = new NameEnquiry();
 	private levels = [{
@@ -108,8 +109,10 @@ export class GameBootstrap {
 		name: "Change your name!",
 		element: this.nameEnquiry
 	}, {
-		//name: "Test player movement",
-		//element: new MovementTestLevel()
+		name: "Test player movement",
+		element: new MovementTestLevel()
+	}, {
+
 		name: "Test Level 2",
 		element: new Level2()
 	}, {
