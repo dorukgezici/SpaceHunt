@@ -3,7 +3,7 @@ import * as ex from "excalibur";
 export default class Player extends ex.Actor {
 
 	static readonly size = { w: 100, h: 50 }; //changed for swimming movement
-	
+
 	//static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
 	static readonly speedAcc: number = 200;
@@ -30,7 +30,7 @@ export default class Player extends ex.Actor {
 		//Anchor
 		this.anchor.setTo(1, 0.5); // set anchor to the center of the right edge (?)
 		//this.y += this.getHeight() / 2;
-		
+
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
 	}
@@ -38,34 +38,36 @@ export default class Player extends ex.Actor {
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		//X movement
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
-			this.speedX = Player.speedDec;
+		if (!this.trapped) {
+			//X movement
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
+				this.speedX = Player.speedDec;
+			}
+
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
+				this.speedX = Player.speedAcc;
+			}
+
+			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
+				this.speedX = Player.speedNormal;
+			}
+
+			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+				this.speedX = Player.speedNormal;
+			}
+
+			this.vel.x = this.speedX;
+			//check for Level ending -> better raise event in case of collision with level ending?
+
+			//Y movement
+			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
+				this.moveUp();
+			}
+
+			if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
+				this.moveDown();
+			}
 		}
-
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
-			this.speedX = Player.speedAcc;
-		}
-
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-			this.speedX = Player.speedNormal;
-		}
-
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-			this.speedX = Player.speedNormal;
-		}
-
-		this.vel.x = this.speedX;
-		//check for Level ending -> better raise event in case of collision with level ending?
-
-		//Y movement
-		if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
-			this.moveUp();
-		}
-
-		if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
-			this.moveDown();
-		}		
 
 
 	}
@@ -76,6 +78,6 @@ export default class Player extends ex.Actor {
 	}
 
 	private moveDown() {
-		this.pos.y += Player.speedY;
+		this.pos.y += Player.speedY / 2;
 	}
 }
