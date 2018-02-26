@@ -45,6 +45,7 @@ export default class BubbleCreator {
     createNewBubbleRT(scene: ex.Scene, bounds: ex.BoundingBox, player: Player, bubbles: Bubble[], timer: number[]) {
         console.log("creating new bubble... (Level2 - BubbleCreator - createNewBubbleRT()");
 
+        /*
         //create new bubble in front of the player
         var x = player.x + 300;
         var newBubbleIndex = bubbles.push(new Bubble(x, bounds.bottom)) - 1;
@@ -55,6 +56,7 @@ export default class BubbleCreator {
         timer[0] = setTimeout(function () {
             that.createNewBubbleRT(scene, bounds, player, bubbles, timer);
         }, 1500);
+        */
     }
 
 
