@@ -1,9 +1,9 @@
 export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, E extends JSX.ElementBase = JSX.ElementBase> implements JSX.Component<T> {
 
 	/**
-	 * This value will always be undefiend unless manually set. Use `attrs` property instead.
+	 * This value will always be undefined unless manually set. Use `attrs` property instead.
 	 */
-	_attrs: JSX.Attrs<T, E>;
+	_attrs?: JSX.Attrs<T, E>;
 	/**
 	 * Current attributes of the component, if any.
 	 */
@@ -225,7 +225,7 @@ export namespace InterfaceBuilder {
 		if (!values)
 			return [];
 		else if (Array.isArray(values))
-			return values.filter(isTruthy);
+			return values.filter(isTruthy) as JSX.TruthyNode[];
 		else if (isTruthy(values))
 			return [values];
 		else
@@ -241,7 +241,7 @@ export namespace InterfaceBuilder {
 		for (let value of array) {
 			if (isTruthy(value)) {
 				if (Array.isArray(value))
-					flattened.push(...value.filter(isTruthy));
+					flattened.push(...value.filter(isTruthy) as JSX.TruthyNode[]);
 				else
 					flattened.push(value as JSX.TruthyNode);
 			}
@@ -264,7 +264,7 @@ export namespace InterfaceBuilder {
 		for (let attr in attrs) {
 			if (attr === "ref")
 				continue;
-			const value = attrs[attr] as (typeof attrs) | null | undefined;
+			const value = attrs[attr] as any;
 			if (value === null || value === undefined)
 				continue;
 			if (attr === "style")
@@ -477,7 +477,7 @@ export namespace InterfaceBuilder {
 	 * Display given elements in the default interface container (the `#app` element) and hides the default canvas (the `#canvas` element).
 	 * @param elementCollection Elements to display.
 	 */
-	export function dispalyDefault(elementCollection: JSX.ElementCollection) {
+	export function displayDefault(elementCollection: JSX.ElementCollection) {
 		const app = getApp();
 		const ch = getCanvasHolder();
 		if (app && ch) {

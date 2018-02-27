@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
 
-export default class LockLevelCameraStrategy implements ex.ICameraStrategy<ex.Actor> {
+export default class LockLevelCameraStrategy implements ex.ICameraStrategy<ex.Actor | unset> {
 
-	target: ex.Actor;
+	target: ex.Actor | unset;
 	private minX: number;
 	private maxX: number;
 
@@ -11,7 +11,7 @@ export default class LockLevelCameraStrategy implements ex.ICameraStrategy<ex.Ac
 		this.maxX = levelBounds.right - screenBounds.getWidth() / 2;
 	}
 
-	action(target: ex.Actor, cam: ex.BaseCamera, _eng: ex.Engine, _delta: number): ex.Vector {
+	action(target: ex.Actor | unset, cam: ex.BaseCamera, _eng: ex.Engine, _delta: number): ex.Vector {
 		this.target = target;
 
 		let newPosition = cam.pos;
@@ -19,4 +19,5 @@ export default class LockLevelCameraStrategy implements ex.ICameraStrategy<ex.Ac
 		newPosition.x = newPosition.x > this.maxX ? this.maxX : newPosition.x;
 		return newPosition;
 	}
+	
 }

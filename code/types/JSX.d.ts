@@ -25,7 +25,7 @@ declare namespace JSX {
 		/**
 		 * This value should never be references as it may be unset;
 		 */
-		_attrs: Attrs<T>;
+		_attrs?: Attrs<T>;
 	}
 
 	interface Component<T extends AttrsType = DefaultAttrs, E extends JSX.ElementBase = JSX.ElementBase> extends ElementAttributesProperty<T> {

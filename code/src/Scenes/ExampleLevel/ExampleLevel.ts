@@ -4,14 +4,16 @@ import { Class } from "../../Class";
 
 export default class ExampleLevel extends Class<IGameElementEvents> implements IGameElement {
 
-	items: string[];
+	items: string[] = [];
 	gameBootstrap: GameBootstrap;
 	scene: Scene;
-	ball: Actor;
-	bricks: Actor[];
+	ball?: Actor;
+	bricks: Actor[] = [];
 	readonly sceneKey = "examplelevel";
 
-	init(bootstrap: GameBootstrap): void {
+	constructor(bootstrap: GameBootstrap) {
+		super();
+
 		const { engine } = bootstrap;
 		this.gameBootstrap = bootstrap;
 		const scene = this.scene = new Scene(engine);
@@ -20,12 +22,15 @@ export default class ExampleLevel extends Class<IGameElementEvents> implements I
 		const paddle = new Actor(150, bounds.getHeight() - 40, 200, 20);
 		paddle.color = Color.Chartreuse;
 		paddle.collisionType = CollisionType.Fixed;
-		engine.input.pointers.primary.on("move", function (evt: any) {
-			paddle.pos.x = evt.x;
-		});
-
 		scene.add(paddle);
 		engine.addScene(this.sceneKey, scene);
+		this.gameBootstrap.engine.input.pointers.primary.on("move", function (evt: any) {
+			paddle.pos.x = evt.x;
+		});
+	}
+
+	init(bootstrap: GameBootstrap): void {
+		//
 	}
 
 	start(): void {
@@ -37,7 +42,8 @@ export default class ExampleLevel extends Class<IGameElementEvents> implements I
 		const { engine, rootSceneKey } = this.gameBootstrap;
 		this.bricks.forEach(t => t.kill());
 		this.bricks = [];
-		this.ball.kill();
+		if (this.ball)
+			this.ball.kill();
 		engine.goToScene(rootSceneKey);
 	}
 
