@@ -10,12 +10,12 @@ export default class Bubble extends ex.Actor {
 
 	playerCollision: boolean = false;
 	playerTrapped: boolean = false;
-	collidedPlayer: Player;
+	collidedPlayer: Player | undefined;
 
 	constructor(x: number, y: number, speedX: number, speedY: number) {
 		super(x, y, Bubble.size.w, Bubble.size.h, ex.Color.White);
 
-		//Anchor
+		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
 
 		this.collisionArea.body.useBoxCollision();
@@ -24,29 +24,34 @@ export default class Bubble extends ex.Actor {
 		this.vel = new ex.Vector(speedX, speedY);
 
 		// On collision check if Player and trapp if true
-		this.on('precollision', this.onPrecollision);
+		this.on("precollision", this.onPrecollision);
 	}
 
-	//raised every frame while colliding
+	// raised every frame while colliding
 	onPrecollision(ev: any) {
-		//console.log("precollision event raised");
-		//trap player if collided
-		if (!this.playerCollision && ev.other.constructor.name == "Player" && !ev.other.trapped) {
+		// console.log("precollision event raised");
+		// trap player if collided
+		if (!this.playerCollision && ev.other.constructor.name === "Player" && !ev.other.trapped) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Bubble - onPrecollision())");
 			this.playerCollision = true;
 			this.playerTrapped = true;
 			this.collidedPlayer = ev.other;
-			this.collidedPlayer.trapped = true;
-			this.collidedPlayer.vel = this.vel;
-			//TODO: correct player position & animation
+			if (this.collidedPlayer) {
+				this.collidedPlayer.trapped = true;
+				this.collidedPlayer.vel = this.vel;
+			}
+			// TODO: correct player position & animation
+		} else {
+			// un-trap player if reaching sky
+			if (this.playerTrapped && ev.other.constructor.name === "Sky") {
+				this.playerTrapped = false;
+				if (this.collidedPlayer) {
+					this.collidedPlayer.trapped = false;
+				}
+			}
 		}
-		//un-trap player if reaching sky
-		else if (this.playerTrapped && ev.other.constructor.name == "Sky") {
-			this.playerTrapped = false;
-			this.collidedPlayer.trapped = false;
-		}
-		//kill bubble when reaching sky
-		if (ev.other.constructor.name == "Sky") {
+		// kill bubble when reaching sky
+		if (ev.other.constructor.name === "Sky") {
 			this.kill();
 		}
 	}
