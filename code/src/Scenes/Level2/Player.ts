@@ -28,7 +28,7 @@ export default class Player extends ex.Actor {
 		this.maxY = levelBounds.bottom - Player.size.h / 2;
 
 		//Anchor
-		this.anchor.setTo(1, 0.5); // set anchor to the center of the right edge (?)
+		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
 		//this.y += this.getHeight() / 2;
 
 		this.collisionArea.body.useBoxCollision();

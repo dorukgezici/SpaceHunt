@@ -5,14 +5,14 @@ export default class Bubble extends ex.Actor {
 
 	static readonly size = { w: 50, h: 50 };
 
-	static readonly speedY: number = -30;
-	static readonly speedX: number = 10;
+	static readonly speedY: number = -100;
+	static readonly speedX: number = 50;
 
 	playerCollision: boolean = false;
 	playerTrapped: boolean = false;
 	collidedPlayer: Player;
 
-	constructor(x: number, y: number) {
+	constructor(x: number, y: number, speedX: number, speedY: number) {
 		super(x, y, Bubble.size.w, Bubble.size.h, ex.Color.White);
 
 		//Anchor
@@ -21,7 +21,7 @@ export default class Bubble extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		this.vel = new ex.Vector(Bubble.speedX, Bubble.speedY);
+		this.vel = new ex.Vector(speedX, speedY);
 
 		// On collision check if Player and trapp if true
 		this.on('precollision', this.onPrecollision);
