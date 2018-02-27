@@ -20,6 +20,8 @@ export default class Player extends ex.Actor {
 
 	public trapped: boolean = false; //for disabling controls in case of being trapped by a bubble
 
+	public oxygenLevel: number = 100;
+
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
 		this.minX = levelBounds.left + Player.size.w / 2;
@@ -37,6 +39,11 @@ export default class Player extends ex.Actor {
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
+
+		if (this.oxygenLevel <= 0) {
+			alert("You drowned!");
+		}
+		this.oxygenLevel -= 1;
 
 		if (!this.trapped) {
 			//X movement
