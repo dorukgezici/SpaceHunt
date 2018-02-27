@@ -37,17 +37,17 @@ export default class Crocodile extends ex.Actor {
 
 	//raised every frame while colliding
 	onPrecollision(ev: any) {
-		//console.log("precollision event raised");
-		//trap player if collided
+		// Trap player if collided
 		if (!this.playerCollision && ev.other.constructor.name == "Player" && !ev.other.trapped) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
 			this.playerCollision = true;
-
 		}
-		//un-trap player if reaching sky
+
+		// Un-trap player if reaching sky
 		else if (ev.other.constructor.name == "Sky") {
 		}
-		//kill bubble when reaching sky
+
+		// Kill bubble when reaching sky
 		if (ev.other.constructor.name == "Sky") {
 			this.kill();
 		}
