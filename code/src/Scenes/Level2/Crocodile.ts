@@ -3,7 +3,7 @@ import Player from "./Player";
 
 export default class Crocodile extends ex.Actor {
 
-	readonly crocodileTextureUrl: string = require("./crocodile.gif");
+	static readonly crocodileTextureUrl: string = require("./crocodile.jpg");
 
 	crocodileTexture: ex.Texture;
 	resources: ex.ILoadable[];
@@ -13,14 +13,14 @@ export default class Crocodile extends ex.Actor {
 	static readonly speedX: number = 10;
 
 	playerCollision: boolean = false;
-	collidedPlayer: Player;
+	collidedPlayer: Player | null = null;
 
 	constructor(x: number, y: number) {
 		super(x, y, Crocodile.size.w, Crocodile.size.h, ex.Color.White);
 
 		// Texture
 		this.resources = [];
-		this.crocodileTexture = new ex.Texture(this.crocodileTextureUrl);
+		this.crocodileTexture = new ex.Texture(Crocodile.crocodileTextureUrl);
 		this.resources.push(this.crocodileTexture);
 
 		//Anchor
@@ -42,11 +42,10 @@ export default class Crocodile extends ex.Actor {
 		if (!this.playerCollision && ev.other.constructor.name == "Player" && !ev.other.trapped) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
 			this.playerCollision = true;
-			this.collidedPlayer = ev.other;
+
 		}
 		//un-trap player if reaching sky
 		else if (ev.other.constructor.name == "Sky") {
-			this.collidedPlayer.trapped = false;
 		}
 		//kill bubble when reaching sky
 		if (ev.other.constructor.name == "Sky") {
@@ -59,13 +58,7 @@ export default class Crocodile extends ex.Actor {
 
 		// Drawing asset
 		let sprite = this.crocodileTexture.asSprite();
-		let offset = 0;
-		let rndm = new ex.Random(47);
-
-		while(offset < Crocodile.size.w) {
-			sprite.draw(ctx, this.getLeft() + offset, this.getTop());
-			offset += rndm.integer(43, 250);//70;
-		}
+		sprite.draw(ctx, this.getLeft() + 100, this.getTop());
 	}
 
 	update(engine: ex.Engine, delta: number) {

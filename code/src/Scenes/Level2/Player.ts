@@ -43,7 +43,7 @@ export default class Player extends ex.Actor {
 		if (this.oxygenLevel <= 0) {
 			alert("You drowned!");
 		}
-		this.oxygenLevel -= 1;
+		this.oxygenLevel -= 0.01;
 
 		if (!this.trapped) {
 			//X movement

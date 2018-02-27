@@ -24,7 +24,6 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	ground: Ground;
 	sky: Sky;
 	player: Player;
-	crocodile: Crocodile;
 
 	//bubbles
 	bubbles: Bubble[];
@@ -46,7 +45,6 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds);
 		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 25);
-		this.crocodile = new Crocodile(0, 0);
 		this.bubbles = [];
 		this.crocodiles = [];
 
@@ -84,7 +82,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	private registerResources() {
 		this.loader.addResources(this.ground.resources);
 		this.loader.addResources(this.sky.resources);
-		this.loader.addResources(this.crocodile.resources);
+		this.loader.addResources([new ex.Texture(Crocodile.crocodileTextureUrl)]);
 	}
 
 	private buildScene = () => {

@@ -11,6 +11,7 @@ export default class Sky extends ex.Actor {
 
 	playerCollision: boolean = false;
 	collidedPlayer: Player;
+	playerTrapped: boolean = false;
 
 	constructor(x: number, y: number) {
 		super(x, y, Sky.width, 50, ex.Color.Gray);
