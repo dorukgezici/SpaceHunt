@@ -1,19 +1,27 @@
 import * as ex from "excalibur";
 import Player from "./Player";
 
-export default class Bubble extends ex.Actor {
+export default class Crocodile extends ex.Actor {
 
-	static readonly size = { w: 50, h: 50 };
+	readonly crocodileTextureUrl: string = require("./crocodile.gif");
+
+	crocodileTexture: ex.Texture;
+	resources: ex.ILoadable[];
+	static readonly size = { w: 200, h: 50 };
 
 	static readonly speedY: number = -30;
 	static readonly speedX: number = 10;
 
 	playerCollision: boolean = false;
-	playerTrapped: boolean = false;
 	collidedPlayer: Player;
 
 	constructor(x: number, y: number) {
-		super(x, y, Bubble.size.w, Bubble.size.h, ex.Color.White);
+		super(x, y, Crocodile.size.w, Crocodile.size.h, ex.Color.White);
+
+		// Texture
+		this.resources = [];
+		this.crocodileTexture = new ex.Texture(this.crocodileTextureUrl);
+		this.resources.push(this.crocodileTexture);
 
 		//Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
@@ -21,7 +29,7 @@ export default class Bubble extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		this.vel = new ex.Vector(Bubble.speedX, Bubble.speedY);
+		this.vel = new ex.Vector(Crocodile.speedX, Crocodile.speedY);
 
 		// On collision check if Player and trapp if true
 		this.on('precollision', this.onPrecollision);
@@ -32,17 +40,12 @@ export default class Bubble extends ex.Actor {
 		//console.log("precollision event raised");
 		//trap player if collided
 		if (!this.playerCollision && ev.other.constructor.name == "Player" && !ev.other.trapped) {
-			console.log("1st-time PLAYER precollision event raised (Level2 - Bubble - onPrecollision())");
+			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
 			this.playerCollision = true;
-			this.playerTrapped = true;
 			this.collidedPlayer = ev.other;
-			this.collidedPlayer.trapped = true;
-			this.collidedPlayer.vel = this.vel;
-			//TODO: correct player position & animation
 		}
 		//un-trap player if reaching sky
-		else if (this.playerTrapped && ev.other.constructor.name == "Sky") {
-			this.playerTrapped = false;
+		else if (ev.other.constructor.name == "Sky") {
 			this.collidedPlayer.trapped = false;
 		}
 		//kill bubble when reaching sky
@@ -51,16 +54,18 @@ export default class Bubble extends ex.Actor {
 		}
 	}
 
-	draw(ctx: any, delta: any) {
-		// Optionally call original 'base' method
-		// ex.Actor.prototype.draw.call(this, ctx, delta)
+	draw(ctx: CanvasRenderingContext2D, delta: number) {
+		super.draw(ctx, delta);
 
-		// Custom draw code
-		ctx.fillStyle = this.color.toString();
-		ctx.beginPath();
-		ctx.arc(this.pos.x, this.pos.y, 35, 0, Math.PI * 2);
-		ctx.closePath();
-		ctx.fill();
+		// Drawing asset
+		let sprite = this.crocodileTexture.asSprite();
+		let offset = 0;
+		let rndm = new ex.Random(47);
+
+		while(offset < Crocodile.size.w) {
+			sprite.draw(ctx, this.getLeft() + offset, this.getTop());
+			offset += rndm.integer(43, 250);//70;
+		}
 	}
 
 	update(engine: ex.Engine, delta: number) {

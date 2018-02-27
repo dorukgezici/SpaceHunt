@@ -6,7 +6,9 @@ import Ground from "./Ground";
 import Sky from "./Sky";
 import Player from "./Player";
 import Bubble from "./Bubble";
-import BubbleCreator from "./Bubblecreator";
+import BubbleCreator from "./BubbleCreator";
+import Crocodile from "./Crocodile";
+import CrocodileCreator from "./CrocodileCreator";
 
 export default class Level2 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -22,10 +24,15 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	ground: Ground;
 	sky: Sky;
 	player: Player;
+	crocodile: Crocodile;
+
 	//bubbles
 	bubbles: Bubble[];
-
 	bubbleCreator: BubbleCreator;
+
+	// Crocodiles
+	crocodiles: Crocodile[];
+	crocodileCreator: CrocodileCreator;
 
 	loader: ex.Loader;
 
@@ -39,10 +46,14 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds);
 		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 25);
+		this.crocodile = new Crocodile(0, 0);
 		this.bubbles = [];
+		this.crocodiles = [];
 
 		//BubbleCreator for cyclic generation of new bubbles
 		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
+
+		this.crocodileCreator = new CrocodileCreator(this.engine, this.scene, this.bounds, this.player, this.crocodiles);
 
 		this.registerResources();
 	}
@@ -63,11 +74,17 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.bubbles.forEach(function (b) {
 			if (!b.isKilled) { b.kill(); }
 		});
+
+		this.crocodileCreator.stop();
+		this.crocodiles.forEach(function (b) {
+			if (!b.isKilled) { b.kill(); }
+		});
 	}
 
 	private registerResources() {
 		this.loader.addResources(this.ground.resources);
-		this.loader.addResources(this.sky.resources)
+		this.loader.addResources(this.sky.resources);
+		this.loader.addResources(this.crocodile.resources);
 	}
 
 	private buildScene = () => {
@@ -79,6 +96,8 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		//start bubbleCreator
 		this.bubbleCreator.start();
+
+		this.crocodileCreator.start();
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
