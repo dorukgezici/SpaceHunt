@@ -18,11 +18,11 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
 
-	//actors
+	// actors
 	ground: Ground;
 	sky: Sky;
 	player: Player;
-	//bubbles
+	// bubbles
 	bubbles: Bubble[];
 
 	bubbleCreator: BubbleCreator;
@@ -35,20 +35,20 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
-		//Actor creation
+		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds);
 		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 25);
 		this.bubbles = [];
 
-		//BubbleCreator for cyclic generation of new bubbles
+		// BubbleCreator for cyclic generation of new bubbles
 		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
 
 		this.registerResources();
 	}
 
 	start(): void {
-		this.engine.backgroundColor = this.sceneBackgroundColor; //set background color
+		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 0);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
@@ -67,17 +67,17 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 	private registerResources() {
 		this.loader.addResources(this.ground.resources);
-		this.loader.addResources(this.sky.resources)
+		this.loader.addResources(this.sky.resources);
 	}
 
 	private buildScene = () => {
 
-		//add actors
+		// add actors
 		this.scene.add(this.ground);
-		this.scene.add(this.player);
 		this.scene.add(this.sky);
+		this.scene.add(this.player);
 
-		//start bubbleCreator
+		// start bubbleCreator
 		this.bubbleCreator.start();
 
 		this.engine.addScene(this.sceneKey, this.scene);

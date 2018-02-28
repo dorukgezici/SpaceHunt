@@ -2,9 +2,9 @@ import * as ex from "excalibur";
 
 export default class Player extends ex.Actor {
 
-	static readonly size = { w: 100, h: 50 }; //changed for swimming movement
+	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
-	//static speed: number = 8; //to be changed for normal/slower/faster swimming movement
+	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
 	static readonly speedAcc: number = 200;
 	static readonly speedNormal: number = 100;
@@ -16,9 +16,9 @@ export default class Player extends ex.Actor {
 	private maxY: number;
 
 	private speedX: number = Player.speedNormal;
-	//private ducked: boolean = false;
+	// private ducked: boolean = false;
 
-	public trapped: boolean = false; //for disabling controls in case of being trapped by a bubble
+	public trapped: boolean = false; // for disabling controls in case of being trapped by a bubble
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
@@ -27,9 +27,9 @@ export default class Player extends ex.Actor {
 		this.minY = levelBounds.top + Player.size.h / 2;
 		this.maxY = levelBounds.bottom - Player.size.h / 2;
 
-		//Anchor
+		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
-		//this.y += this.getHeight() / 2;
+		// this.y += this.getHeight() / 2;
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
@@ -39,7 +39,7 @@ export default class Player extends ex.Actor {
 		super.update(engine, delta);
 
 		if (!this.trapped) {
-			//X movement
+			// X movement
 			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
 				this.speedX = Player.speedDec;
 			}
@@ -57,9 +57,9 @@ export default class Player extends ex.Actor {
 			}
 
 			this.vel.x = this.speedX;
-			//check for Level ending -> better raise event in case of collision with level ending?
+			// check for Level ending -> better raise event in case of collision with level ending?
 
-			//Y movement
+			// Y movement
 			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
 				this.moveUp();
 			}

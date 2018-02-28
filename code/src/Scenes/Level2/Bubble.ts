@@ -7,23 +7,25 @@ export default class Bubble extends ex.Actor {
 
 	static readonly speedY: number = -100;
 	static readonly speedX: number = 50;
+	static readonly tImbibe: number = 0.5;
 
 	playerCollision: boolean = false;
 	playerTrapped: boolean = false;
 	collidedPlayer: Player | undefined;
+	timer: number = -1;
 
 	constructor(x: number, y: number, speedX: number, speedY: number) {
 		super(x, y, Bubble.size.w, Bubble.size.h, ex.Color.White);
 
 		// Anchor
-		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
+		this.anchor.setTo(0.5, 0.5); // set anchor to the center
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
 		this.vel = new ex.Vector(speedX, speedY);
 
-		// On collision check if Player and trapp if true
+		// On collision check if Player and trap if true
 		this.on("precollision", this.onPrecollision);
 	}
 
@@ -39,15 +41,21 @@ export default class Bubble extends ex.Actor {
 			if (this.collidedPlayer) {
 				this.collidedPlayer.trapped = true;
 				this.collidedPlayer.vel = this.vel;
-			}
-			// TODO: correct player position & animation
-		} else {
-			// un-trap player if reaching sky
-			if (this.playerTrapped && ev.other.constructor.name === "Sky") {
-				this.playerTrapped = false;
-				if (this.collidedPlayer) {
-					this.collidedPlayer.trapped = false;
-				}
+
+				// player position: to be moved towards the center of the bubble within tImbibe seconds
+				// extra velocity for tImbibe seconds
+				let dX: number = (this.x - this.collidedPlayer.x);
+				let dY: number = (this.y - this.collidedPlayer.y);
+				this.collidedPlayer.vel.x = this.collidedPlayer.vel.x + dX / Bubble.tImbibe;
+				this.collidedPlayer.vel.y = this.collidedPlayer.vel.y + dY / Bubble.tImbibe;
+
+
+				let that: Bubble = this;
+				this.timer = setTimeout(function () {
+					if (that.collidedPlayer /*&& !that.isKilled()*/) {that.collidedPlayer.vel = that.vel;}
+					that.timer = -1;
+				}, Bubble.tImbibe * 1000);
+
 			}
 		}
 		// kill bubble when reaching sky
@@ -70,6 +78,19 @@ export default class Bubble extends ex.Actor {
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
+	}
+
+	kill() {
+		// clear timeout if necessary and free player
+		if (this.timer !== -1) {
+			clearTimeout(this.timer);
+		}
+		this.playerTrapped = false;
+		if (this.collidedPlayer) {
+			this.collidedPlayer.trapped = false;
+			this.collidedPlayer.vel = new ex.Vector(0, 0);
+		}
+		super.kill();
 	}
 
 }
