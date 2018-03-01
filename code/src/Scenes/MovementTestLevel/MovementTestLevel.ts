@@ -17,7 +17,9 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	player: Player;
 	loader: ex.Loader;
 
-	init(bootstrap: GameBootstrap): void {
+	constructor(bootstrap: GameBootstrap) {
+		super();
+		
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
@@ -25,7 +27,9 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds);
+	}
 
+	init(bootstrap: GameBootstrap): void {
 		this.registerResources();
 	}
 

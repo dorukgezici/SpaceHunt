@@ -7,22 +7,29 @@ require("./style.scss");
 export default class Intro extends Class implements IGameElement {
 
 	private gameBoostrap: GameBootstrap;
-	private storyElement: HTMLElement;
-	private story: [IStory];
+	private storyElement?: HTMLElement;
+	private story: IStory[];
 	private storyPage: number; // index of a page of a story
 
-	init(bootstrap: GameBootstrap) {
+	constructor(bootstrap: GameBootstrap) {
+		super();
+
 		this.gameBoostrap = bootstrap;
 		this.story = [intro, level1, level2, level3, level4, end, death];
 		this.storyPage = 0;
 	}
 
+	init(bootstrap: GameBootstrap) {
+		//
+	}
+
 	private renderStoryPage() {
-		InterfaceBuilder.replaceContent(this.storyElement, this.story[this.storyPage]);
+		if (this.storyElement)
+			InterfaceBuilder.replaceContent(this.storyElement, this.story[this.storyPage]);
 	}
 
 	start() {
-		InterfaceBuilder.dispalyDefault(this.render());
+		InterfaceBuilder.displayDefault(this.render());
 		this.renderStoryPage();
 	}
 

@@ -5,8 +5,8 @@ require("./style.scss");
 
 export class NameEnquiry extends Class implements IGameElement {
 
-	private inputElement: HTMLInputElement;
-	private gameBoostrap: GameBootstrap;
+	private inputElement?: HTMLInputElement;
+	private gameBoostrap?: GameBootstrap;
 
 	get value() {
 		return this.inputElement && this.inputElement.value.trim() || null;
@@ -17,8 +17,9 @@ export class NameEnquiry extends Class implements IGameElement {
 	}
 
 	start() {
-		InterfaceBuilder.dispalyDefault(this.render());
-		this.inputElement.select();
+		InterfaceBuilder.displayDefault(this.render());
+		if (this.inputElement)
+			this.inputElement.select();
 	}
 
 	dispose() {
@@ -26,7 +27,8 @@ export class NameEnquiry extends Class implements IGameElement {
 	}
 
 	private done() {
-		this.gameBoostrap.state.name = this.value;
+		if (this.gameBoostrap)
+			this.gameBoostrap.state.name = this.value;
 		this.emit("done", { target: this, type: GameElementDoneType.Finished });
 	}
 
@@ -52,7 +54,7 @@ export class NameEnquiry extends Class implements IGameElement {
 							ref={elt => this.inputElement = elt}
 							className="name"
 							type="text"
-							value={this.value || this.gameBoostrap.state.name || ""}
+							value={this.value || (this.gameBoostrap && this.gameBoostrap.state.name) || ""}
 							onkeyup={e => this.onKeyPress(e.keyCode)}
 							autoFocus
 							maxLength={32}

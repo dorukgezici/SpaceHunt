@@ -52,7 +52,7 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
 	/**
 	 * Called when the component should run initialisation logic.
 	 */
-	init(bootstrap: GameBootstrap): void;
+	init?(bootstrap: GameBootstrap): void;
 	/**
 	 * Called when the component should be run and display its content. Note that this may be called multiple times per component instance.
 	 */
@@ -64,9 +64,9 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
 }
 
 /**
- * Intercace for GameBootstrap state.
+ * Interface for GameBootstrap state.
  */
-export class IGameBootstrapState {
+export interface IGameBootstrapState {
 	name: string | null;
 }
 
@@ -96,29 +96,13 @@ export class GameBootstrap {
 
 	readonly loader: Loader;
 
-	private menu = new Menu();
-	private intro = new Intro();
-	private exampleLevel = new ExampleLevel();
-	private movementTestLevel = new MovementTestLevel();
-	private level2 = new Level2();
-	private nameEnquiry = new NameEnquiry();
-	private levels = [{
-		name: "Play a Game!",
-		element: this.exampleLevel
-	}, {
-		name: "Change your name!",
-		element: this.nameEnquiry
-	}, {
-		name: "Test player movement",
-		element: new MovementTestLevel()
-	}, {
-
-		name: "Test Level 2",
-		element: new Level2()
-	}, {
-		name: "Intro (Story)",
-		element: this.intro
-	}];
+	private menu: Menu;
+	private intro: Intro;
+	private exampleLevel: ExampleLevel;
+	private movementTestLevel: MovementTestLevel;
+	private level2: Level2;
+	private nameEnquiry: NameEnquiry;
+	private levels: { name: string, element: IGameElement }[];
 
 	constructor(
 		public readonly canvasId: string,
@@ -140,6 +124,30 @@ export class GameBootstrap {
 
 		this.loader = new Loader();
 
+		this.intro = new Intro(this);
+		this.menu = new Menu();
+		this.exampleLevel = new ExampleLevel(this);
+		this.movementTestLevel = new MovementTestLevel(this);
+		this.level2 = new Level2(this);
+		this.nameEnquiry = new NameEnquiry();
+
+		this.levels = [{
+			name: "Play a Game!",
+			element: this.exampleLevel
+		}, {
+			name: "Change your name!",
+			element: this.nameEnquiry
+		}, {
+			name: "Test player movement",
+			element: new MovementTestLevel(this)
+		}, {
+			name: "Test Level 2",
+			element: new Level2(this)
+		}, {
+			name: "Intro (Story)",
+			element: this.intro
+		}];
+
 		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
 
 		// custom event listenere logic
@@ -159,7 +167,8 @@ export class GameBootstrap {
 		// init all levels and subscribe event listeners
 		levels.forEach(level => {
 			// init the level
-			level.element.init(this);
+			if (level.element.init)
+				level.element.init(this);
 			// decide what to do when the level is over
 			level.element.on("done", e => {
 				level.element.dispose(); // stop current scene

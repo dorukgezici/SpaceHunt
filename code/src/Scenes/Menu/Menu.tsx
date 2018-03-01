@@ -13,7 +13,7 @@ interface IMenuEvents extends IGameElementEvents {
 
 export default class Menu extends Class<IMenuEvents> implements IGameElement {
 
-	items: string[];
+	items?: string[];
 
 	init(bootstrap: GameBootstrap): void {
 		void (0); // do nothing
@@ -32,11 +32,11 @@ export default class Menu extends Class<IMenuEvents> implements IGameElement {
 	}
 
 	start(): void {
-		InterfaceBuilder.dispalyDefault(
+		InterfaceBuilder.displayDefault(
 			<div id="game-menu">
 				<div className="dialog">
 					<div className="items">
-						{this.items.map((t, i) => (
+						{this.items && this.items.map((t, i) => (
 							<div className="item" onclick={e => this.itemClick(i, t)}>{t}</div>
 						))}
 					</div>
