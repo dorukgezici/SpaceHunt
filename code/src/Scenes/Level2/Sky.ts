@@ -10,7 +10,7 @@ export default class Sky extends ex.Actor {
 
 	constructor(x: number, y: number) {
 		super(x, y, Sky.width, 50, ex.Color.Gray);
-		this.collisionType = ex.CollisionType.Fixed;
+		this.collisionType = ex.CollisionType.Passive;
 		this.color = ex.Color.fromHex("#59C9FF");
 		this.resources = [];
 		this.brickTexture = new ex.Texture(this.brickTextureUrl);
@@ -25,7 +25,7 @@ export default class Sky extends ex.Actor {
 
 		while(offset < Sky.width) {
 			sprite.draw(ctx, this.getLeft() + offset, this.getTop());
-			offset += rndm.integer(43, 250);//70;
+			offset += rndm.integer(43, 250);// 70;
 		}
 	}
 

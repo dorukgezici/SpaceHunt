@@ -93,13 +93,13 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		// add actors
 		this.scene.add(this.ground);
-		this.scene.add(this.player);
 		this.scene.add(this.sky);
+		this.scene.add(this.player);
 
 		// start bubbleCreator
 		this.bubbleCreator.start();
 
-		this.crocodileCreator.start();
+		//this.crocodileCreator.start();
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
