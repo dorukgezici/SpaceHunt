@@ -40,23 +40,40 @@ export default class CrocodileCreator {
         }
     }
 
-
-    //TODO: random position(hitting the player based on it's current speed and y-distance?) & intervals
     createNewCrocodileRT(scene: ex.Scene, bounds: ex.BoundingBox, player: Player, crocodiles: Crocodile[], timer: number[]) {
-        console.log("creating new crocodile... (Level2 - CrocodileCreator - createNewCrocodileRT()");
+        console.log("creating new bubble... (Level2 - CrocodileCreator - createNewCrocodileRT()");
 
+        // determining speed of the next bubble
+        let speedXB: number = this.randomIntFromInterval(-20, -100);
+        let speedYB: number = this.randomIntFromInterval(0, 0);
 
-        //create new bubble in front of the player
-        var x = player.x + 600;
-        var newCrocodileIndex = crocodiles.push(new Crocodile(x, bounds.bottom)) - 1;
+        // time until collision = y distance of bubble starting point (at the bottom) and player / y-speed of the bubble
+        let t = -1 * (bounds.bottom - player.y) / speedYB;
+        // console.log("t =    " + t);
+
+        // x of possible collision point = x position of player in t seconds
+        let xC = player.x + (t * player.vel.x);
+
+        // starting x of the bubble = collision x - x distance travelled by the bubble until collision
+        let xBStart = xC - speedXB * t;
+
+        // create new bubble in front of the player
+        let x = player.x + 1000;
+        // let x = xBStart;
+        let newCrocodileIndex = crocodiles.push(new Crocodile(x, this.randomIntFromInterval(40, bounds.bottom - 60), speedXB, speedYB)) - 1;
         scene.add(crocodiles[newCrocodileIndex]);
 
-        //create new timeout for next bubble
-        var that = this;
+        // create new timeout for next bubble
+        let nextCrocodileInMS = this.randomIntFromInterval(1500, 3000);
+        let that = this;
         timer[0] = setTimeout(function () {
             that.createNewCrocodileRT(scene, bounds, player, crocodiles, timer);
-        }, 1000);
+        }, nextCrocodileInMS);
+    }
 
+    randomIntFromInterval(min: number, max: number): number {
+        let t: number = Math.floor(Math.random() * (max - min + 1) + min);
+        return t;
     }
 
 

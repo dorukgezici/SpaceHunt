@@ -3,20 +3,16 @@ import Player from "./Player";
 
 export default class Crocodile extends ex.Actor {
 
-	static readonly crocodileTextureUrl: string = require("./crocodile.jpg");
-
+	static readonly crocodileTextureUrl: string = require("./cloud.jpg");
 	crocodileTexture: ex.Texture;
 	resources: ex.ILoadable[];
+	
 	static readonly size = { w: 200, h: 50 };
-
 	static readonly speedY: number = -30;
 	static readonly speedX: number = 10;
 
-	playerCollision: boolean = false;
-	collidedPlayer: Player | null = null;
-
-	constructor(x: number, y: number) {
-		super(x, y, Crocodile.size.w, Crocodile.size.h, ex.Color.White);
+	constructor(x: number, y: number, speedX: number, speedY: number) {
+		super(x, y, Crocodile.size.w, Crocodile.size.h, ex.Color.Green);
 
 		// Texture
 		this.resources = [];
@@ -29,7 +25,7 @@ export default class Crocodile extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		this.vel = new ex.Vector(Crocodile.speedX, Crocodile.speedY);
+		this.vel = new ex.Vector(speedX, speedY);
 
 		// On collision check if Player and trapp if true
 		this.on('precollision', this.onPrecollision);
@@ -38,26 +34,18 @@ export default class Crocodile extends ex.Actor {
 	//raised every frame while colliding
 	onPrecollision(ev: any) {
 		// Trap player if collided
-		if (!this.playerCollision && ev.other.constructor.name == "Player" && !ev.other.trapped) {
+		if (ev.other.constructor.name == "Player") {
+			let player: Player = ev.other;
 			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
-			this.playerCollision = true;
-		}
-
-		// Un-trap player if reaching sky
-		else if (ev.other.constructor.name == "Sky") {
-		}
-
-		// Kill bubble when reaching sky
-		if (ev.other.constructor.name == "Sky") {
-			this.kill();
+			player.die("You got eaten by a crocodile!");
 		}
 	}
 
 	draw(ctx: CanvasRenderingContext2D, delta: number) {
-		//super.draw(ctx, delta);
+		super.draw(ctx, delta);
 		// Drawing asset
-		let sprite = this.crocodileTexture.asSprite();
-		sprite.draw(ctx, this.getLeft() + 100, this.getTop());
+		// let sprite = this.crocodileTexture.asSprite();
+		// sprite.draw(ctx, this.getRight(), this.getCenter().y);
 	}
 
 	update(engine: ex.Engine, delta: number) {

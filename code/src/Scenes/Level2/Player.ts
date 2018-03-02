@@ -1,4 +1,6 @@
 import * as ex from "excalibur";
+import Sky from "./Sky";
+import Level2 from "./Level2";
 
 export default class Player extends ex.Actor {
 
@@ -19,15 +21,19 @@ export default class Player extends ex.Actor {
 	// private ducked: boolean = false;
 
 	public trapped: boolean = false; // for disabling controls in case of being trapped by a bubble
+	public dead: boolean = false;
 
+	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.minY = levelBounds.top + Player.size.h / 2;
 		this.maxY = levelBounds.bottom - Player.size.h / 2;
+
+		this.oxygenMeter = oxygenMeter;
 
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
@@ -35,15 +41,25 @@ export default class Player extends ex.Actor {
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
+		this.on("precollision", this.onPrecollision);
+	}
+
+	onPrecollision(ev: any) {
+		// Reset Oxygen Level to 100
+		if (ev.other.constructor.name === "Sky") {
+			this.oxygenLevel = 100;
+		}
 	}
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
+		// Decrease Oxygen Level and drown if no oxygen is left
+		this.oxygenLevel -= 0.13;
+		this.oxygenMeter.text = "Oxygen Level: " + Math.round(this.oxygenLevel) + "/100";
 		if (this.oxygenLevel <= 0) {
-			alert("You drowned!");
+			this.die("You drowned!");
 		}
-		this.oxygenLevel -= 0.01;
 
 		if (!this.trapped) {
 			// X movement
@@ -89,6 +105,14 @@ export default class Player extends ex.Actor {
 		}
 
 
+	}
+
+	public die(info: string) {
+		if (!this.dead) {
+			this.dead = true;
+			this.kill();
+			alert(info);
+		}
 	}
 
 
