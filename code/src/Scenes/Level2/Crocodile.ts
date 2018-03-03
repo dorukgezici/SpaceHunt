@@ -3,7 +3,7 @@ import Player from "./Player";
 
 export default class Crocodile extends ex.Actor {
 
-	static readonly crocodileTextureUrl: string = require("./cloud.jpg");
+	static crocodileTextureUrl: string = require("./cloud.jpg");
 	crocodileTexture: ex.Texture;
 	resources: ex.ILoadable[];
 	

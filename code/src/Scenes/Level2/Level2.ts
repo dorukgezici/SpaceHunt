@@ -24,7 +24,6 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	ground: Ground;
 	sky: Sky;
 	player: Player;
-	ui: ex.UIActor;
 	oxygenMeter: ex.Label;
 
 	// bubbles
@@ -48,10 +47,8 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 25);
-		this.ui = new ex.UIActor(this.bounds.left + 30, this.bounds.top + 50)
-		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100");
+		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
 		this.oxygenMeter.fontSize = 30;
-		this.ui.add(this.oxygenMeter);
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter);
 		this.bubbles = [];
 		this.crocodiles = [];
@@ -94,7 +91,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	private registerResources() {
 		this.loader.addResources(this.ground.resources);
 		this.loader.addResources(this.sky.resources);
-		this.loader.addResources([new ex.Texture(Crocodile.crocodileTextureUrl)]);
+		this.loader.addResource(new ex.Texture(Crocodile.crocodileTextureUrl));
 	}
 
 	private buildScene = () => {
@@ -104,7 +101,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.scene.add(this.sky);
 		this.scene.add(this.player);
 
-		this.scene.add(this.ui);
+		this.scene.addUIActor(this.oxygenMeter);
 
 		// start bubbleCreator and crocodileCreator
 		this.bubbleCreator.start();

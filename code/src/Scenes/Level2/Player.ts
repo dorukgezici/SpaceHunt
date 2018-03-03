@@ -18,7 +18,6 @@ export default class Player extends ex.Actor {
 	private maxY: number;
 
 	private speedX: number = Player.speedNormal;
-	// private ducked: boolean = false;
 
 	public trapped: boolean = false; // for disabling controls in case of being trapped by a bubble
 	public dead: boolean = false;
@@ -112,15 +111,22 @@ export default class Player extends ex.Actor {
 			this.dead = true;
 			this.kill();
 			alert(info);
+			let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
+			restartLabel.fontSize = 30;
+			this.scene.addUIActor(restartLabel);
 		}
 	}
 
 
 	private moveUp() {
-		this.pos.y -= Player.speedY;
+		if (this.pos.y > this.minY) {
+			this.pos.y -= Player.speedY;
+		}
 	}
 
 	private moveDown() {
-		this.pos.y += Player.speedY / 2;
+		if (this.pos.y < this.maxX) {
+			this.pos.y += Player.speedY / 2;
+		}
 	}
 }
