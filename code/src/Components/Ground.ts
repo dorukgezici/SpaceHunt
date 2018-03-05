@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 
 export default class Ground extends ex.Actor {
 
-	static brickTextureUrl: string = require("./brick.jpg");
+	static brickTextureUrl: string = require("../Scenes/MovementTestLevel/brick.jpg");
 	static readonly width: number = 5000;
 	static resources: ex.ILoadable[] = [new ex.Texture(Ground.brickTextureUrl)];
 

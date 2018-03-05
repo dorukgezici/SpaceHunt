@@ -91,7 +91,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	private registerResources() {
 		this.loader.addResources(this.ground.resources);
 		this.loader.addResources(this.sky.resources);
-		this.loader.addResource(new ex.Texture(Crocodile.crocodileTextureUrl));
+		this.loader.addResources([new ex.Texture(Crocodile.crocodileTextureUrl)]);
 	}
 
 	private buildScene = () => {
