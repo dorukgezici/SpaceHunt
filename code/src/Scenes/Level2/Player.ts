@@ -54,7 +54,7 @@ export default class Player extends ex.Actor {
 		super.update(engine, delta);
 
 		// Decrease Oxygen Level and drown if no oxygen is left
-		this.oxygenLevel -= 0.13;
+		this.oxygenLevel -= 0.12;
 		this.oxygenMeter.text = "Oxygen Level: " + Math.round(this.oxygenLevel) + "/100";
 		if (this.oxygenLevel <= 0) {
 			this.die("You drowned!");
