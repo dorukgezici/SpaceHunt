@@ -1,25 +1,21 @@
 import * as ex from "excalibur";
 import Player from "./Player";
+import resources from "../../Resources";
+import { GameBootstrap } from "../../GameBootstrap";
 
 export default class Crocodile extends ex.Actor {
 
-	static crocodileTextureUrl: string = require("./cloud.jpg");
-	crocodileTexture: ex.Texture;
-	resources: ex.ILoadable[];
-	
-	static readonly size = { w: 150, h: 50 };
+	static readonly size = { w: 202, h: 50 };
 	static readonly speedY: number = -30;
 	static readonly speedX: number = 10;
+	private readonly bootstrap: GameBootstrap;
 
-	constructor(x: number, y: number, speedX: number, speedY: number) {
+	constructor(bootstrap: GameBootstrap, x: number, y: number, speedX: number, speedY: number) {
 		super(x, y, Crocodile.size.w, Crocodile.size.h, ex.Color.Green);
 
-		// Texture
-		this.resources = [];
-		this.crocodileTexture = new ex.Texture(Crocodile.crocodileTextureUrl);
-		this.resources.push(this.crocodileTexture);
+		this.bootstrap = bootstrap;
 
-		//Anchor
+		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
 
 		this.collisionArea.body.useBoxCollision();
@@ -28,13 +24,18 @@ export default class Crocodile extends ex.Actor {
 		this.vel = new ex.Vector(speedX, speedY);
 
 		// On collision check if Player and trapp if true
-		this.on('precollision', this.onPrecollision);
+		this.on("precollision", this.onPrecollision);
+
+		// Sprite drawings
+		const spriteSheet = new ex.SpriteSheet(resources.crocodile, 1, 8, Crocodile.size.w, Crocodile.size.h);
+		const animation = spriteSheet.getAnimationForAll(bootstrap.engine, 100);
+		this.addDrawing("idle", animation as any);
 	}
 
-	//raised every frame while colliding
+	// raised every frame while colliding
 	onPrecollision(ev: any) {
 		// Trap player if collided
-		if (ev.other.constructor.name == "Player") {
+		if (ev.other.constructor.name === "Player") {
 			let player: Player = ev.other;
 			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
 			player.die("You got eaten by a crocodile!");

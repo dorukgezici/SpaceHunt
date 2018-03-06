@@ -1,4 +1,4 @@
-import { Engine, GameEvent, Color, Input, Loader } from "excalibur";
+import { Engine, GameEvent, Color, Input, Loader, Texture } from "excalibur";
 import { IEvented, Class } from "./Class";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
 import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
@@ -8,6 +8,7 @@ import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
+import resources from "./Resources";
 
 /**
  * A game event that contains a related event value.
@@ -124,6 +125,7 @@ export class GameBootstrap {
 		});
 
 		this.loader = new Loader();
+		this.loader.addResources(Object.values(resources));
 
 		this.intro = new Intro(this);
 		this.menu = new Menu();
@@ -154,7 +156,7 @@ export class GameBootstrap {
 
 		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
 
-		// custom event listenere logic
+		// custom event listener logic
 		exampleLevel.on("done", e => {
 			if (e.type === GameElementDoneType.Finished)
 				alert("Good job!");
@@ -191,7 +193,7 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-
+		
 		this.engine.start(this.loader).then(() => {
 			this.menu.on("click", e => {
 				const level = this.levels.find(t => t.name === e.name);

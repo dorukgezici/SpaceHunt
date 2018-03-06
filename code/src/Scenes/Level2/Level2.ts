@@ -57,11 +57,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
 
 		// CrocodileCreator for generation of new crocodiles
-		this.crocodileCreator = new CrocodileCreator(this.engine, this.scene, this.bounds, this.player, this.crocodiles);
-	}
-
-	init(bootstrap: GameBootstrap): void {
-		this.registerResources();
+		this.crocodileCreator = new CrocodileCreator(bootstrap, this.scene, this.bounds, this.player, this.crocodiles);
 	}
 
 	start(): void {
@@ -86,12 +82,6 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.crocodiles.forEach(function (b) {
 			if (!b.isKilled) { b.kill(); }
 		});
-	}
-
-	private registerResources() {
-		this.loader.addResources(this.ground.resources);
-		this.loader.addResources(this.sky.resources);
-		this.loader.addResources([new ex.Texture(Crocodile.crocodileTextureUrl)]);
 	}
 
 	private buildScene = () => {
