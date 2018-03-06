@@ -7,7 +7,7 @@ export default class Crocodile extends ex.Actor {
 	crocodileTexture: ex.Texture;
 	resources: ex.ILoadable[];
 	
-	static readonly size = { w: 200, h: 50 };
+	static readonly size = { w: 150, h: 50 };
 	static readonly speedY: number = -30;
 	static readonly speedX: number = 10;
 
@@ -23,7 +23,7 @@ export default class Crocodile extends ex.Actor {
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
 
 		this.collisionArea.body.useBoxCollision();
-		this.collisionType = ex.CollisionType.Passive;
+		this.collisionType = ex.CollisionType.Active;
 
 		this.vel = new ex.Vector(speedX, speedY);
 

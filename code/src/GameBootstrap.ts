@@ -6,6 +6,7 @@ import Menu from "./Scenes/Menu/Menu";
 import Intro from "./Scenes/Intro/Intro";
 import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
+import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
 
 /**
@@ -132,20 +133,23 @@ export class GameBootstrap {
 		this.nameEnquiry = new NameEnquiry();
 
 		this.levels = [{
-			name: "Play a Game!",
-			element: this.exampleLevel
+			name: "Level 1",
+			element: new Level1(this)
+		}, {
+			name: "Level 2",
+			element: new Level2(this)
 		}, {
 			name: "Change your name!",
 			element: this.nameEnquiry
 		}, {
+			name: "Intro (Story)",
+			element: this.intro
+		}, {
 			name: "Test player movement",
 			element: new MovementTestLevel(this)
 		}, {
-			name: "Test Level 2",
-			element: new Level2(this)
-		}, {
-			name: "Intro (Story)",
-			element: this.intro
+			name: "Play a Game!",
+			element: this.exampleLevel
 		}];
 
 		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
