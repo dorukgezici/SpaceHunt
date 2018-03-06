@@ -26,5 +26,10 @@ export default class Vine extends ex.Actor {
 		super.update(engine, delta);
 		this.rotation = Math.sin(this.time * this.speed) * this.maxRotation;
 		this.time += delta / 1000;
+
+		if(this.children.length > 0 && this.children[0].isOffScreen === false) {
+			this.isOffScreen = false;
+		}
 	}
+
 }
