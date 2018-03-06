@@ -46,7 +46,16 @@ export default class Player extends ex.Actor {
 	onPrecollision(ev: any) {
 		// Reset Oxygen Level to 100
 		if (ev.other.constructor.name === "Sky") {
+			
+			// refill oxygen
 			this.oxygenLevel = 100;
+
+			// free if trapped??
+			// if (this.trapped) {
+				// this.trapped = false;
+				// this.vel.x = 0;
+			// }
+
 		}
 	}
 
@@ -119,14 +128,15 @@ export default class Player extends ex.Actor {
 
 
 	private moveUp() {
-		if (this.pos.y > this.minY) {
+		// to not move too far into the sky
+		if (this.pos.y > (this.minY+25)) {
 			this.pos.y -= Player.speedY;
 		}
 	}
 
 	private moveDown() {
 		if (this.pos.y < this.maxX) {
-			this.pos.y += Player.speedY / 2;
+			this.pos.y += Player.speedY;
 		}
 	}
 }

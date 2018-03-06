@@ -3,7 +3,10 @@ import Player from "./Player";
 
 export default class Bubble extends ex.Actor {
 
-	static readonly size = { w: 50, h: 50 };
+	static readonly size = { w: 20, h: 20 };
+
+	// no influence on player if over a certain height -> depending on sky height and own size
+	static readonly MINCOLLISIONY: number = Bubble.size.h / 2 + 50 + 1;
 
 	static readonly speedY: number = -100;
 	static readonly speedX: number = 50;
@@ -33,7 +36,8 @@ export default class Bubble extends ex.Actor {
 	onPrecollision(ev: any) {
 		// console.log("precollision event raised");
 		// trap player if collided
-		if (!this.playerCollision && ev.other.constructor.name === "Player" && !ev.other.trapped) {
+		// only if player not already in the sky
+		if (!this.playerCollision && ev.other.constructor.name === "Player" && !ev.other.trapped && this.y > Bubble.MINCOLLISIONY ) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Bubble - onPrecollision())");
 			this.playerCollision = true;
 			this.playerTrapped = true;
@@ -85,11 +89,13 @@ export default class Bubble extends ex.Actor {
 		if (this.timer !== -1) {
 			clearTimeout(this.timer);
 		}
+		
 		this.playerTrapped = false;
 		if (this.collidedPlayer) {
 			this.collidedPlayer.trapped = false;
 			this.collidedPlayer.vel = new ex.Vector(0, 0);
 		}
+		
 		super.kill();
 	}
 
