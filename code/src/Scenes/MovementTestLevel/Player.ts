@@ -1,21 +1,19 @@
 import * as ex from "excalibur";
+import BasePlayer from "../../Components/BasePlayer";
 
-export default class Player extends ex.Actor {
 
-	static readonly size = { w: 25, h: 100 };
+export default class Player extends BasePlayer {
 	static readonly speed: number = 8;
 	private minX: number;
 	private maxX: number;
 	private ducked: boolean = false;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
-		super(x, y, Player.size.w, Player.size.h, ex.Color.Azure);
+		super(x, y);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
 		this.y += this.getHeight() / 2;
-		this.collisionArea.body.useBoxCollision();
-		this.collisionType = ex.CollisionType.Active;
 	}
 
 	update(engine: ex.Engine, delta: number) {
