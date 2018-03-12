@@ -6,9 +6,11 @@ export default class Level1Player extends BasePlayer {
 
 	inJump: boolean = false;
 	onVine: boolean = false;
+	cameraStrategy: ex.LockCameraToActorAxisStrategy;
 
-	constructor(x: number, y: number, ) {
+	constructor(x: number, y: number) {
 		super(x, y);
+		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
 	}
@@ -16,20 +18,24 @@ export default class Level1Player extends BasePlayer {
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+		if(engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 			this.jump();
 		}
 
-		// console.log(this.getWorldPos(), this.pos);
+		if(this.getWorldPos().x < -10) {
+			this.emit("won");
+		}
 	}
 
 	jump() {
 		if(!this.inJump) {
 			if(this.onVine) {
-				this.pos.setTo(this.parent.pos.x, this.parent.pos.y);
+				let parent = this.parent;
 				this.parent.remove(this);
+				this.scene.add(this);
+				this.pos.setTo(parent.pos.x, parent.pos.y);
 				this.collisionType = ex.CollisionType.Active;
-				this.scene.camera.strategy.lockToActorAxis(this, ex.Axis.X);
+				this.cameraStrategy.target = this;
 			}
 
 			this.vel.setTo(-600, -500);
@@ -53,6 +59,7 @@ export default class Level1Player extends BasePlayer {
 	}
 
 	attachToVine(vine: Vine) {
+		this.scene.remove(this);
 		vine.add(this);
 		let vineRoot = vine.getRoot();
 
@@ -65,6 +72,6 @@ export default class Level1Player extends BasePlayer {
 		this.pos.y = Level1Player.size.h / 2;
 		this.vel.setTo(0, 0);
 		this.rotation = 0;
-		this.scene.camera.strategy.lockToActorAxis(vineRoot, ex.Axis.X);
+		this.cameraStrategy.target = vine;
 	}
 }

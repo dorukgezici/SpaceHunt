@@ -30,7 +30,7 @@ export default class Vine extends ex.Actor {
 		super.update(engine, delta);
 		this.rotation = Math.sin(this.time * this.speed) * this.maxRotation;
 
-		this.isOffScreen = this.prevPart ? this.prevPart.isOffScreen : this.isOffScreen;
+		this.isOffScreen = this.prevPart ? !(!this.prevPart.isOffScreen || !this.isOffScreen) : this.isOffScreen;
 		this.rotation += this.prevPart ? this.prevPart.rotation : 0;
 		this.time += delta / 1000;
 
@@ -40,10 +40,6 @@ export default class Vine extends ex.Actor {
 			this.pos.x = this.prevPart.x + posDiff.x;
 			this.pos.y = this.prevPart.y + posDiff.y - 1;
 		}
-	}
-
-	draw(ctx: CanvasRenderingContext2D, delta: number) {
-		super.draw(ctx, delta);
 	}
 
 	getAllParts(): Vine[] {
