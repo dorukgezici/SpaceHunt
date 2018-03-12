@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
-import {GameBootstrap, IGameElement, IGameElementEvents} from "../../GameBootstrap";
+import { Class } from "../../Class";
+import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Ground from "../../Components/Ground";
 import Player from "../../Components/Player";
@@ -29,15 +29,17 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+		this.ground = null as any;
 		this.vineCreator = new VineCreator(this.levelBounds.right - 400, this.levelBounds.left + 100);
-		this.player = new Player(this.levelBounds.right - 50, this.levelBounds.top + 50, this.levelBounds);
+		this.player = new Player(this.levelBounds.right - 50, this.levelBounds.top + 50, this.levelBounds, bootstrap);
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.right - TreeBranch.branchLength / 2, this.levelBounds.top + 250);
+		this.registerResources();
 	}
 
 	init(bootstrap: GameBootstrap): void {
-		this.registerResources();
+		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+		this.player.initAnimations();
 	}
 
 	start(): void {
@@ -62,7 +64,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 
 		let vines = this.vineCreator.createVines();
 
-		for(let vine of vines) {
+		for (let vine of vines) {
 			this.scene.add(vine);
 		}
 

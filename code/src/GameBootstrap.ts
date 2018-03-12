@@ -8,7 +8,7 @@ import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
-import resources from "./Resources";
+import { getLoadableResources } from "./Resources";
 
 /**
  * A game event that contains a related event value.
@@ -48,7 +48,7 @@ export interface IGameElementEvents {
 }
 
 /**
- * Base game element interface. Include event mapping template paramtere for strongly-typed events.
+ * Base game element interface. Include event mapping template parameters for strongly-typed events.
  */
 export interface IGameElement<T extends IGameElementEvents = IGameElementEvents> extends IEvented<T> {
 	/**
@@ -125,7 +125,8 @@ export class GameBootstrap {
 		});
 
 		this.loader = new Loader();
-		this.loader.addResources(Object.values(resources));
+		const rsc = getLoadableResources();
+		this.loader.addResources(rsc);
 
 		this.intro = new Intro(this);
 		this.menu = new Menu();
@@ -170,11 +171,8 @@ export class GameBootstrap {
 			menu.items = levels.map(t => t.name);
 		});
 
-		// init all levels and subscribe event listeners
+		// subscribe event listeners
 		levels.forEach(level => {
-			// init the level
-			if (level.element.init)
-				level.element.init(this);
 			// decide what to do when the level is over
 			level.element.on("done", e => {
 				level.element.dispose(); // stop current scene
@@ -182,7 +180,7 @@ export class GameBootstrap {
 			});
 		});
 
-		// init menu as any other game elementWW
+		// init menu as any other game element
 		menu.init(this);
 		// assign custom properties
 		menu.items = levels.map(t => t.name);
@@ -193,8 +191,13 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-		
+
 		this.engine.start(this.loader).then(() => {
+			this.levels.forEach(level => {
+				// init the level
+				if (level.element.init)
+					level.element.init(this);
+			});
 			this.menu.on("click", e => {
 				const level = this.levels.find(t => t.name === e.name);
 				this.menu.dispose(); // stop displaying menu
