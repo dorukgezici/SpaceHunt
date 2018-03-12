@@ -3,8 +3,8 @@ import Vine from "./Vine";
 
 
 export default class VineCreator {
-	static readonly distRange = {min: 350, max: 450};
-	static readonly lenRange = {min: 12, max: 17};
+	static readonly distRange = {min: 350, max: 390};
+	static readonly lenRange = {min: 12, max: 16};
 	static readonly speedRange = {min: 0.8, max: 1.6};
 	static readonly rotRange = {min: 0.5, max: 0.9};
 

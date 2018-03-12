@@ -193,7 +193,6 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-		
 		this.engine.start(this.loader).then(() => {
 			this.menu.on("click", e => {
 				const level = this.levels.find(t => t.name === e.name);
