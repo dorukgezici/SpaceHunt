@@ -7,7 +7,7 @@ export type IPlayerAnimations = "idle" | "walk" | "jump" | "duck";
 type IPA = IPlayerAnimations;
 
 const baseArmTransform = {
-	translateY: -60
+	translateY: -33
 };
 
 const rightArmData: ITransformDrawSetProviderData<IPA> = {
@@ -89,7 +89,7 @@ const leftArmData: ITransformDrawSetProviderData<IPA> = {
 };
 
 const baseLegTransform = {
-	translateY: -35
+	translateY: -8
 };
 
 const rightLegData: ITransformDrawSetProviderData<IPA> = {
@@ -171,7 +171,7 @@ const leftLegData: ITransformDrawSetProviderData<IPA> = {
 };
 
 const baseTorsoTransform = {
-	translateY: -50
+	translateY: -23
 };
 
 const torsoData: ITransformDrawSetProviderData<IPA> = {
@@ -214,7 +214,7 @@ const head = new PlainDrawSet<IPA>(function (ctx, delta, position, state) {
 
 	ctx.save();
 
-	ctx.translate(x, y - 70);
+	ctx.translate(x, y - 43);
 
 	ctx.fillStyle = "#efb9a5";
 	ctx.beginPath();
