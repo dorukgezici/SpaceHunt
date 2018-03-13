@@ -71,13 +71,6 @@ export default class Level1Player extends BasePlayer {
 		}
 	}
 
-	getWorldPos() {
-		if (this.onVine) {
-			return this.parent.getWorldPos();
-		} else
-			return super.getWorldPos();
-	}
-
 	attachToVine(vine: Vine) {
 		this.scene.remove(this);
 		vine.add(this);

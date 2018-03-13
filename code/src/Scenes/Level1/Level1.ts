@@ -41,7 +41,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	init(bootstrap: GameBootstrap): void {
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 	}
-	
+
 	start(): void {
 		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
 		this.player.on("fell", this.lose);
@@ -60,7 +60,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	win = (): void => {
-		alert("You won!");
+		// alert("You won!");
 		this.player.off("won");
 		this.emit("done", {
 			target: this,
@@ -69,7 +69,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose = (): void => {
-		alert("You fell down and died");
+		// alert("You fell down and died");
 		this.player.off("fell");
 		this.emit("done", {
 			target: this,
