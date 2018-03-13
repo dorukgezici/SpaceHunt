@@ -1,12 +1,16 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Vine from "./Vine";
+import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
 
 export default class Level1Player extends BasePlayer {
 
 	inJump: boolean = false;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
+	private animation?: DrawAnimation<IPlayerAnimations>;
+	private hasStarted = false;
 
 	constructor(x: number, y: number) {
 		super(x, y);
@@ -15,21 +19,30 @@ export default class Level1Player extends BasePlayer {
 		this.on("postcollision", this.onPostcollision);
 	}
 
+	initAnimations() {
+		if (!this.animation)
+			this.animation = playerAnimationFactory.attachTo(this);
+	}
+
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		if(engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 			this.jump();
+			if (!this.hasStarted && this.animation) {
+				this.hasStarted = true;
+				this.animation.changeState("jump");
+			}
 		}
 
-		if(this.getWorldPos().x < -10) {
+		if (this.getWorldPos().x < -10) {
 			this.emit("won");
 		}
 	}
 
 	jump() {
-		if(!this.inJump) {
-			if(this.onVine) {
+		if (!this.inJump) {
+			if (this.onVine) {
 				let parent = this.parent;
 				this.parent.remove(this);
 				this.scene.add(this);
@@ -46,7 +59,7 @@ export default class Level1Player extends BasePlayer {
 	}
 
 	onPrecollision(e: any | ex.PreCollisionEvent) {
-		if(e.other.constructor.name === "Vine" && !this.onVine) {
+		if (e.other.constructor.name === "Vine" && !this.onVine) {
 			this.inJump = false;
 			this.attachToVine(e.other as Vine);
 		}
@@ -58,12 +71,19 @@ export default class Level1Player extends BasePlayer {
 		}
 	}
 
+	getWorldPos() {
+		if (this.onVine) {
+			return this.parent.getWorldPos();
+		} else
+			return super.getWorldPos();
+	}
+
 	attachToVine(vine: Vine) {
 		this.scene.remove(this);
 		vine.add(this);
 		let vineRoot = vine.getRoot();
 
-		for(let v of vineRoot.getAllParts()) {
+		for (let v of vineRoot.getAllParts()) {
 			v.collisionType = ex.CollisionType.PreventCollision;
 		}
 

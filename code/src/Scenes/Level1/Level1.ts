@@ -40,13 +40,13 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 
 	init(bootstrap: GameBootstrap): void {
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player.initAnimations();
 	}
-
+	
 	start(): void {
 		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
+		this.player.initAnimations();
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
