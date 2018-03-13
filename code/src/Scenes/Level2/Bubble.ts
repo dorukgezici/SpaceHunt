@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import Player from "./Player";
+import resources from "../../Resources";
 
 export default class Bubble extends ex.Actor {
 
@@ -71,13 +72,19 @@ export default class Bubble extends ex.Actor {
 	draw(ctx: any, delta: any) {
 		// Optionally call original 'base' method
 		// ex.Actor.prototype.draw.call(this, ctx, delta)
+		// super.draw(ctx, delta);
 
 		// Custom draw code
+		/*
 		ctx.fillStyle = this.color.toString();
 		ctx.beginPath();
 		ctx.arc(this.pos.x, this.pos.y, 35, 0, Math.PI * 2);
 		ctx.closePath();
 		ctx.fill();
+		*/
+
+		let sprite = resources.bubble.asSprite();
+		sprite.draw(ctx, this.getCenter().x - 32, this.getCenter().y - 35);
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -89,13 +96,13 @@ export default class Bubble extends ex.Actor {
 		if (this.timer !== -1) {
 			clearTimeout(this.timer);
 		}
-		
+
 		this.playerTrapped = false;
 		if (this.collidedPlayer) {
 			this.collidedPlayer.trapped = false;
 			this.collidedPlayer.vel = new ex.Vector(0, 0);
 		}
-		
+
 		super.kill();
 	}
 
