@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
-import {GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents} from "../../GameBootstrap";
+import { Class } from "../../Class";
+import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Arrow from "./Arrow";
 import Ground from "../../Components/Ground";
@@ -35,10 +35,12 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.right - TreeBranch.branchLength / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.left + 200, this.levelBounds.top + 200);
+		this.registerResources();
 	}
 
 	init(bootstrap: GameBootstrap): void {
-		this.registerResources();
+		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+		this.player.initAnimations();
 	}
 
 	start(): void {
@@ -52,7 +54,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	dispose(): void {
-		for(let actor of this.scene.actors) {
+		for (let actor of this.scene.actors) {
 			actor.kill();
 		}
 	}
@@ -83,8 +85,8 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	private buildScene = () => {
 		let vines = this.vineCreator.createVines();
 
-		for(let vine of vines) {
-			for(let vinePart of vine.getAllParts()) {
+		for (let vine of vines) {
+			for (let vinePart of vine.getAllParts()) {
 				this.scene.add(vinePart);
 			}
 		}

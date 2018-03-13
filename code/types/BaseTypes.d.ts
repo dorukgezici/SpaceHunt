@@ -5,3 +5,8 @@ declare interface KeyValueObject<T = any> {
 declare interface EmptyObject { }
 
 declare type unset = null | undefined;
+
+interface ObjectConstructor {
+	keys<T>(obj: T): (keyof T)[];
+	values<T>(obj: T): (T[keyof T])[];
+}

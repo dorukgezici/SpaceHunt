@@ -1,10 +1,12 @@
 import * as ex from "excalibur";
 import Sky from "./Sky";
 import Level2 from "./Level2";
+import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "../../Components/Animations/PlayerSwimAnimation";
+import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 
 export default class Player extends ex.Actor {
 
-	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
+	static readonly size = { w: 100, h: 20 }; // changed for swimming movement
 
 	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
@@ -25,6 +27,8 @@ export default class Player extends ex.Actor {
 	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
+	private animation: DrawAnimation<IPlayerSwimAnimations>;
+
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
 		this.minX = levelBounds.left + Player.size.w / 2;
@@ -41,19 +45,21 @@ export default class Player extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
 		this.on("precollision", this.onPrecollision);
+
+		this.animation = playerSwimAnimationFactory.attachTo(this);
 	}
 
 	onPrecollision(ev: any) {
 		// Reset Oxygen Level to 100
 		if (ev.other.constructor.name === "Sky") {
-			
+
 			// refill oxygen
 			this.oxygenLevel = 100;
 
 			// free if trapped??
 			// if (this.trapped) {
-				// this.trapped = false;
-				// this.vel.x = 0;
+			// this.trapped = false;
+			// this.vel.x = 0;
 			// }
 
 		}
@@ -61,6 +67,8 @@ export default class Player extends ex.Actor {
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
+
+		const oldSpeedX = this.speedX;
 
 		// Decrease Oxygen Level and drown if no oxygen is left
 		this.oxygenLevel -= 0.12;
@@ -112,6 +120,14 @@ export default class Player extends ex.Actor {
 			}
 		}
 
+		if (this.speedX !== oldSpeedX) {
+			if (this.speedX === Player.speedNormal)
+				this.animation.changeState("normal");
+			else if (this.speedX === Player.speedAcc)
+				this.animation.changeState("fast");
+			else if (this.speedX === Player.speedDec)
+				this.animation.changeState("slow");
+		}
 
 	}
 
@@ -129,7 +145,7 @@ export default class Player extends ex.Actor {
 
 	private moveUp() {
 		// to not move too far into the sky
-		if (this.pos.y > (this.minY+25)) {
+		if (this.pos.y > (this.minY + 25)) {
 			this.pos.y -= Player.speedY;
 		}
 	}
