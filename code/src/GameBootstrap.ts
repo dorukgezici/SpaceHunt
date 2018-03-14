@@ -8,6 +8,8 @@ import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
+import Level3 from "./Scenes/Level3/Level3";
+import Level4 from "./Scenes/Level4/Level4";
 import resources from "./Resources";
 
 /**
@@ -140,6 +142,12 @@ export class GameBootstrap {
 		}, {
 			name: "Level 2",
 			element: new Level2(this)
+		}, {
+			name: "Level 3",
+			element: new Level3(this)
+		}, {
+			name: "Level 4",
+			element: new Level4(this)
 		}, {
 			name: "Change your name!",
 			element: this.nameEnquiry
