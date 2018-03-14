@@ -13,7 +13,7 @@ import CrocodileCreator from "./CrocodileCreator";
 export default class Level2 extends Class<IGameElementEvents> implements IGameElement {
 
 	readonly sceneKey: string = "level2";
-	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
+	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	readonly sceneBackgroundColor: ex.Color = ex.Color.Azure;
 
 	engine: ex.Engine;
