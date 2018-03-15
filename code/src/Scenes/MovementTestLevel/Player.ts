@@ -43,7 +43,7 @@ export default class Player extends BasePlayer {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 
 		if (groundLevel - this.getBottom() < 15) {
-			this.vel.y = -1500;
+			this.vel.y = -1000;
 		}
 	}
 

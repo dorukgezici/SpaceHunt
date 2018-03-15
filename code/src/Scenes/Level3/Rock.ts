@@ -4,8 +4,9 @@ import Player from "./Player";
 export default class Rock extends ex.Actor {
 
 	d: number;
+	yVelBounce: number;
 
-	constructor(x: number, y: number, d: number, speedX: number) {
+	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number) {
 		super(x, y, d, d, ex.Color.White);
 
 		this.d = d;
@@ -16,9 +17,11 @@ export default class Rock extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		this.acc.y = 1000;
+		this.acc.y = accY;
 
 		this.vel.x = speedX;
+
+		this.yVelBounce = yVelBounce;
 
 		// On collision check if Player and trap if true
 		this.on("precollision", this.onPrecollision);
@@ -27,8 +30,13 @@ export default class Rock extends ex.Actor {
 	// raised every frame while colliding
 	onPrecollision(ev: any) {
 		// console.log("precollision event raised");
-		if (ev.other.constructor.name === "Ground"){
-			this.vel.y = -200;
+		if (ev.other.constructor.name === "Ground") {
+			this.vel.y = this.yVelBounce;
+		}	else
+		if (ev.other.constructor.name === "Player") {
+			console.log("onPrecollision event of Rock colliding with player");
+			let player: Player = ev.other;
+			player.die("You got hit by a rock!");
 		}
 
 	}

@@ -5,6 +5,7 @@ import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBoots
 import Ground from "./Ground";
 import Player from "./Player";
 import Rock from "./Rock";
+import RockCreator from "./RockCreator";
 
 export default class Level3 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -19,13 +20,10 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	// actors
 	ground: Ground;
 	player: Player;
-	rock: Rock;
 
-	/*
-	// bubbles
-	bubbles: Bubble[];
-    bubbleCreator: BubbleCreator;
-    */
+	// rocks
+	rocks: Rock[];
+	rockCreator: RockCreator;
 
 	loader: ex.Loader;
 
@@ -39,13 +37,11 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(100, 400);
+		this.player = new Player(100, 400, this.levelBounds);
 
-		this.rock = new Rock(600, 400, 20, -100);
-		/*
-		// BubbleCreator for cyclic generation of new bubbles
-		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
-		*/
+		// RockCreator for cyclic generation of new rocks
+		this.rocks = [];
+		this.rockCreator = new RockCreator(this.engine, this.scene, this.bounds, this.player, this.rocks);
 
 	}
 
@@ -59,6 +55,11 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 	dispose(): void {
 		this.ground.kill();
+
+		this.rockCreator.stop();
+		this.rocks.forEach(function (b) {
+			if (!b.isKilled) { b.kill(); }
+		});
 	}
 
 	private buildScene = () => {
@@ -66,7 +67,9 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
-		this.scene.add(this.rock);
+
+		// start rockCreator
+		this.rockCreator.start();
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
