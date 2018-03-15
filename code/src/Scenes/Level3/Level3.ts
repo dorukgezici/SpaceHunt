@@ -48,7 +48,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	start(): void {
 		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 2000);
-		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
+		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
 	}

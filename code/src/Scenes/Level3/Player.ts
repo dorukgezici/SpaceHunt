@@ -27,7 +27,6 @@ export default class Player extends BasePlayer {
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.speed = this.speedNormal;
-		this.vel.x = this.speed;
 	}
 
 
@@ -77,9 +76,9 @@ export default class Player extends BasePlayer {
 		}
 
 		if(!this.ducked) {
-			this.vel.x = this.speed;
+			this.pos.x += this.speed * delta / 1000;
 		} else {
-			this.vel.x = this.speedDucked;
+			this.pos.x += this.speedDucked * delta / 1000;
 		}
 	}
 
@@ -90,7 +89,6 @@ export default class Player extends BasePlayer {
 
 		if (groundLevel - this.getBottom() < 15) {
 			this.vel.y = -1000;
-			console.log("WTF!?");
 		}
 	}
 	// -------------------------------------------------------------------- WTF ---------------------------------------------------------------

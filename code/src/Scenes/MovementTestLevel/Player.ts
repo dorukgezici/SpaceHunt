@@ -12,7 +12,8 @@ export default class Player extends BasePlayer {
 		super(x, y);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
-		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
+		this.anchor.setTo(0.5, 1);
+		this.body.useBoxCollision();
 		this.y += this.getHeight() / 2;
 	}
 
@@ -43,7 +44,8 @@ export default class Player extends BasePlayer {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 
 		if (groundLevel - this.getBottom() < 15) {
-			this.vel.y = -1000;
+			this.vel.setTo(this.vel.x, -1000);
+			console.log(this.vel);
 		}
 	}
 
