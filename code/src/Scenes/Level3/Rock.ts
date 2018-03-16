@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import Player from "./Player";
 import resources from "../../Resources";
 
-export const Rocktypes =  {"small":1, "big":2};
+export const Rocktypes = { "small": 1, "big": 2 };
 
 export default class Rock extends ex.Actor {
 
@@ -10,8 +10,10 @@ export default class Rock extends ex.Actor {
 	yVelBounce: number;
 	typ: number;
 	sprite: ex.Sprite;
+	rotationTime: number = 0;
+	numberOfRotationsPerSecond: number;
 
-	static readonly types: {"small":1, "big":2};
+	static readonly types: { "small": 1, "big": 2 };
 
 	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number, typ: number) {
 		super(x, y, d, d, ex.Color.White);
@@ -28,14 +30,18 @@ export default class Rock extends ex.Actor {
 
 		this.vel.x = speedX;
 
+		this.numberOfRotationsPerSecond = speedX / (2 * Math.PI * d / Math.sqrt(2));
+
+
 		this.yVelBounce = yVelBounce;
 
 		this.typ = typ;
-		if(typ === Rocktypes.small) {
+		if (typ === Rocktypes.small) {
 			this.sprite = resources.smallRock.asSprite();
 		} else {
 			this.sprite = resources.bigRock.asSprite();
 		}
+		this.sprite.anchor.setTo(0.5, 0.5);
 
 		// On collision check if Player and trap if true
 		this.on("precollision", this.onPrecollision);
@@ -46,18 +52,18 @@ export default class Rock extends ex.Actor {
 		// console.log("precollision event raised");
 		if (ev.other.constructor.name === "Ground") {
 			this.vel.y = this.yVelBounce;
-		}	else
-		if (ev.other.constructor.name === "Player") {
-			console.log("onPrecollision event of Rock colliding with player");
-			let player: Player = ev.other;
-			player.die("You got hit by a rock!");
-		}
+		} else
+			if (ev.other.constructor.name === "Player") {
+				console.log("onPrecollision event of Rock colliding with player");
+				let player: Player = ev.other;
+				player.die("You got hit by a rock!");
+			}
 
 	}
 
 	draw(ctx: any, delta: any) {
 		// Optionally call original 'base' method
-		// ex.Actor.prototype.draw.call(this, ctx, delta)
+		ex.Actor.prototype.draw.call(this, ctx, delta)
 
 		// Custom draw code
 		/*
@@ -67,7 +73,14 @@ export default class Rock extends ex.Actor {
 		ctx.closePath();
 		ctx.fill();
 		*/
-		this.sprite.draw(ctx, this.getCenter().x - this.sprite.width / 2, this.getCenter().y - this.sprite.height / 2);
+		// TODO: calculate rotation
+		this.rotationTime += delta / 1000;
+		
+		this.rotation = ((this.rotationTime * this.numberOfRotationsPerSecond) % 1) * 2 * Math.PI;
+
+		this.sprite.rotation = this.rotation;
+
+		this.sprite.draw(ctx, this.getCenter().x, this.getCenter().y);
 
 	}
 
