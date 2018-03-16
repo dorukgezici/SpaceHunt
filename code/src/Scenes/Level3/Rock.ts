@@ -5,8 +5,11 @@ export default class Rock extends ex.Actor {
 
 	d: number;
 	yVelBounce: number;
+	typ: number;
 
-	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number) {
+	static types: {"small":1, "big":2};
+
+	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number, typ: number) {
 		super(x, y, d, d, ex.Color.White);
 
 		this.d = d;
@@ -22,6 +25,8 @@ export default class Rock extends ex.Actor {
 		this.vel.x = speedX;
 
 		this.yVelBounce = yVelBounce;
+
+		this.typ = typ;
 
 		// On collision check if Player and trap if true
 		this.on("precollision", this.onPrecollision);

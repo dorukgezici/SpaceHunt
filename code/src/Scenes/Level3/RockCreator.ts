@@ -41,19 +41,17 @@ export default class RockCreator {
 		}
 	}
 
-	// TODO: random position(hitting the player based on it's current speed and y-distance?) & intervals
 	createNewRockRT(scene: ex.Scene, bounds: ex.BoundingBox, player: Player, rocks: Rock[], timer: number[]) {
 		console.log("creating new rock... (Level2 - RockCreator - createNewRockRT()");
 
 		// determining type of the next rock
 		let rock: Rock;
-		// if(this.randomIntFromInterval(1, 2) > 1) {
-		if(true) {
+		if (this.randomIntFromInterval(1, 2) > 1) {
 			// big rock
-			rock = new Rock (player.x + 800, 500, 50, -200, 1000, -380); // big rock bouncing towards the player		
+			rock = new Rock(player.x + 800, 500, 50, -200, 1000, -400, Rock.types.big); // big rock bouncing towards the player		
 		} else {
 			// small rock
-			// rock = new Rock(player.x + 800, 500, 20, -200, 1000, -150); // small rock "rolling" on the ground
+			rock = new Rock(player.x + 800, 500, 20, -200, 1000, -150, Rock.types.small); // small rock "rolling" on the ground
 		}
 
 		// create new rock

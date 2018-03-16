@@ -83,15 +83,13 @@ export default class Player extends BasePlayer {
 	}
 
 
-	// -------------------------------------------------------------------- WTF ---------------------------------------------------------------
 	private jump() {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 
 		if (groundLevel - this.getBottom() < 15) {
-			this.vel.y = -1000;
+			this.vel.y = -420;
 		}
 	}
-	// -------------------------------------------------------------------- WTF ---------------------------------------------------------------
 
 
 
@@ -101,8 +99,6 @@ export default class Player extends BasePlayer {
 		this.ducked = true;
 		this.setHeight(this.getHeight() / 2);
 		this.collisionArea.body.useBoxCollision();
-
-		// TODO: slow player down?
 	}
 
 	private unDuck() {
@@ -111,8 +107,6 @@ export default class Player extends BasePlayer {
 		this.ducked = false;
 		this.setHeight(this.getHeight() * 2);
 		this.collisionArea.body.useBoxCollision();
-
-		// TODO: reaccelerate?
 	}
 
 	public die(info: string) {
