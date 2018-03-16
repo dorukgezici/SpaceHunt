@@ -4,7 +4,10 @@ const resources = {
 
 	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),
 	seaBed: new Texture(require("./Scenes/Level2/seabed.jpg")),
-	sky: new Texture(require("./Scenes/Level2/cloud.jpg"))
+	sky: new Texture(require("./Scenes/Level2/cloud.jpg")),
+	// bubble: new Texture(require("./Scenes/Level2/bubble.png")),
+	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
+	bigRock: new Texture(require("./Scenes/Level3/bigRock.png"))
 
 };
 

@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Rock from "./Rock";
+import Rock, { Rocktypes } from "./Rock";
 import Player from "./Player";
 
 // class for cyclically creating new rocks and adding them to the scene, in front of the player
@@ -43,15 +43,15 @@ export default class RockCreator {
 
 	createNewRockRT(scene: ex.Scene, bounds: ex.BoundingBox, player: Player, rocks: Rock[], timer: number[]) {
 		console.log("creating new rock... (Level2 - RockCreator - createNewRockRT()");
-
+		
 		// determining type of the next rock
 		let rock: Rock;
 		if (this.randomIntFromInterval(1, 2) > 1) {
 			// big rock
-			rock = new Rock(player.x + 800, 500, 50, -200, 1000, -400, Rock.types.big); // big rock bouncing towards the player		
+			rock = new Rock(player.x + 800, 500, 50, -200, 1000, -400, Rocktypes.big); // big rock bouncing towards the player		
 		} else {
 			// small rock
-			rock = new Rock(player.x + 800, 500, 20, -200, 1000, -150, Rock.types.small); // small rock "rolling" on the ground
+			rock = new Rock(player.x + 800, 500, 20, -200, 1000, -150, Rocktypes.small); // small rock "rolling" on the ground
 		}
 
 		// create new rock
