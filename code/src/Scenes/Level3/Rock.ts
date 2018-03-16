@@ -63,7 +63,7 @@ export default class Rock extends ex.Actor {
 
 	draw(ctx: any, delta: any) {
 		// Optionally call original 'base' method
-		ex.Actor.prototype.draw.call(this, ctx, delta)
+		ex.Actor.prototype.draw.call(this, ctx, delta);
 
 		// Custom draw code
 		/*

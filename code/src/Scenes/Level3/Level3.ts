@@ -51,6 +51,10 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
+
+		// camera rotation ?!
+		this.scene.camera.rotation += 0.47;
+		console.log("cam rot:   " + this.scene.camera.rotation + "   (level3 - start())");
 	}
 
 	dispose(): void {
