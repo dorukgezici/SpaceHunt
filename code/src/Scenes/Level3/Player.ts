@@ -3,7 +3,7 @@ import BasePlayer from "../../Components/BasePlayer";
 
 export default class Player extends BasePlayer {
 
-	cameraStrategy: ex.LockCameraToActorAxisStrategy;
+	cameraStrategy: ex.LockCameraToActorStrategy;
 	dead: boolean = false;
 	ducked: boolean = false;
 
@@ -24,6 +24,7 @@ export default class Player extends BasePlayer {
 		this.collisionArea.body.useBoxCollision();
 		
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
+		// this.cameraStrategy = new ex.LockCameraToActorStrategy(this);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.speed = this.speedNormal;
@@ -87,7 +88,7 @@ export default class Player extends BasePlayer {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 
 		if (groundLevel - this.getBottom() < 15) {
-			this.vel.y = -420;
+			this.vel.y = -450;
 		}
 	}
 

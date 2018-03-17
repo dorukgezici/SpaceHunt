@@ -45,6 +45,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	}
 
 	private registerResources() {
+		//
 	}
 
 	private buildScene = () => {

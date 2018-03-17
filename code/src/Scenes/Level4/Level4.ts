@@ -4,10 +4,11 @@ import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
+import Cannibale from "./Cannibale";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
-	readonly sceneKey: string = "level3";
+	readonly sceneKey: string = "level4";
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	readonly sceneBackgroundColor: ex.Color = ex.Color.Gray;
 
@@ -18,6 +19,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	// actors
 	ground: Ground;
 	player: Player;
+	cannibales: Cannibale[] = [];
 
 	/*
 	// bubbles
@@ -37,12 +39,15 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(100, 400);
+		this.player = new Player(100, 400, this.levelBounds);
 
-		/*
-		// BubbleCreator for cyclic generation of new bubbles
-		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
-		*/
+		let i = 0;
+		let numCannibales = 10;
+		for(i; i < numCannibales; i++) {
+			let xStart = this.randomIntFromInterval(500, 4500);
+			let speedX = this.randomIntFromInterval(100, 200);
+			this.cannibales.push(new Cannibale(xStart, 525, 50, speedX, 400, 4600));
+		}
 
 	}
 
@@ -63,9 +68,18 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
+		let that = this;
+		this.cannibales.forEach(function (b) {
+			that.scene.add(b);
+		});
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
+	}
+
+	randomIntFromInterval(min: number, max: number): number {
+		let t: number = Math.floor(Math.random() * (max - min + 1) + min);
+		return t;
 	}
 
 }

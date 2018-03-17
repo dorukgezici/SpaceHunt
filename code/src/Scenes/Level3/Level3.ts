@@ -37,7 +37,12 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(100, 400, this.levelBounds);
+		// this.ground = new Ground(this.bounds.left, this.bounds.bottom - 25);
+		/* this.ground.anchor.setTo(0, 0.5);
+		this.ground.body.useBoxCollision();
+		this.ground.rotation = -Math.PI / 360 * 5; */
+
+		this.player = new Player(100, 300, this.levelBounds);
 
 		// RockCreator for cyclic generation of new rocks
 		this.rocks = [];
