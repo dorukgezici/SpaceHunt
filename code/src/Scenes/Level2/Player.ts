@@ -47,9 +47,7 @@ export default class Player extends ex.Actor {
 		// Reset Oxygen Level to 100
 		if (ev.other.constructor.name === "Sky") {
 			this.oxygenLevel = 100;
-		}
-		// Bubbles add 20 oxygen points
-		else if (ev.other.constructor.name === "Bubble" && !this.trapped) {
+		} else if (ev.other.constructor.name === "Bubble" && !this.trapped) { // Bubbles add 20 oxygen points
 			this.oxygenLevel = (this.oxygenLevel + 20) < 100 ? this.oxygenLevel + 20 : 100;
 		}
 	}

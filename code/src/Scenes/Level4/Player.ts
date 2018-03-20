@@ -6,7 +6,7 @@ export default class Player extends BasePlayer {
 	static readonly speed: number = 8;
 	private minX: number;
 	private maxX: number;
-	private ducked: boolean = false;
+	dead: boolean = false;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y);
@@ -15,6 +15,7 @@ export default class Player extends BasePlayer {
 		this.anchor.setTo(0.5, 1);
 		this.body.useBoxCollision();
 		this.y += this.getHeight() / 2;
+		this.color = ex.Color.Orange;
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -32,20 +33,14 @@ export default class Player extends BasePlayer {
 			this.goRight();
 		}
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
-			this.duck();
-		}
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)) {
-			this.unDuck();
-		}
 	}
 
 	private jump() {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 
 		if (groundLevel - this.getBottom() < 15) {
-			this.vel.setTo(this.vel.x, -1000);
-			console.log(this.vel);
+			this.vel.setTo(this.vel.x, -700);
+			// console.log(this.vel);
 		}
 	}
 
@@ -59,20 +54,26 @@ export default class Player extends BasePlayer {
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 	}
 
-	private duck() {
-		if (this.ducked)
-			return; // already ducked
-		this.ducked = true;
-		this.setHeight(this.getHeight() / 2);
-		this.collisionArea.body.useBoxCollision();
-	}
+	public die(info: string) {
+		if (!this.dead) {
 
-	private unDuck() {
-		if (!this.ducked)
-			return; // already ducked
-		this.ducked = false;
-		this.setHeight(this.getHeight() * 2);
-		this.collisionArea.body.useBoxCollision();
+			// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
+
+			this.dead = true;
+
+			// this.setHeight(this.getHeight() / 4);
+			this.collisionArea.body.useBoxCollision();
+
+			this.scene.camera.shake(50, 50, 500);			
+
+			let player: Player = this;
+			setTimeout(function() {
+
+				player.kill();
+				alert(info);
+
+			}, 550);
+		}
 	}
 
 }
