@@ -41,6 +41,7 @@
     "test": "npm run lint:prod",
     "start": "npm run webserver",
     "webserver:noopen": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/",
-    "webserver": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open"
+    "webserver": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open",
+    "lan": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open --host 0.0.0.0"
   }
 }
