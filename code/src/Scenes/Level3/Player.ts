@@ -147,6 +147,7 @@ export default class Player extends BasePlayer {
 
 	pointerDown(pe:any) {
 		if(pe.pointerType === ex.Input.PointerType.Touch) {
+			// this alert works, jumping doesn't :'(
 			alert("touch pointer down");
 			this.jump();
 			this.jumpFlag = true;
