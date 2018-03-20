@@ -42,7 +42,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.ground.body.useBoxCollision();
 		this.ground.rotation = -Math.PI / 360 * 5; */
 
-		this.player = new Player(100, 300, this.levelBounds);
+		this.player = new Player(100, 300, this.levelBounds, this.engine);
 
 		// RockCreator for cyclic generation of new rocks
 		this.rocks = [];

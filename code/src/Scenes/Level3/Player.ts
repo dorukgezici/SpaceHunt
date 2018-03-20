@@ -6,6 +6,8 @@ export default class Player extends BasePlayer {
 	cameraStrategy: ex.LockCameraToActorStrategy;
 	dead: boolean = false;
 	ducked: boolean = false;
+	engine: ex.Engine;
+	jumpFlag: boolean = false;
 
 	speed: number;
 	speedAcc: number = 300;
@@ -16,7 +18,7 @@ export default class Player extends BasePlayer {
 	minX: number;
 	maxX: number;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine) {
 		super(x, y);
 		
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
@@ -28,6 +30,10 @@ export default class Player extends BasePlayer {
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.speed = this.speedNormal;
+
+		// touch pointer events
+		this.engine = engine;
+		engine.input.pointers.primary.on("down", this.pointerDown);
 	}
 
 
@@ -37,6 +43,12 @@ export default class Player extends BasePlayer {
 		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 			this.jump();
 		}
+		
+		if (this.jumpFlag) {
+			this.jumpFlag = false;
+			this.jump();
+		}
+		
 
 		// X movement
 		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
@@ -130,6 +142,14 @@ export default class Player extends BasePlayer {
 				alert(info);
 
 			}, 550);
+		}
+	}
+
+	pointerDown(pe:any) {
+		if(pe.pointerType === ex.Input.PointerType.Touch) {
+			alert("touch pointer down");
+			this.jump();
+			this.jumpFlag = true;
 		}
 	}
 }
