@@ -11,6 +11,7 @@ import Level2 from "./Scenes/Level2/Level2";
 import Level3 from "./Scenes/Level3/Level3";
 import Level4 from "./Scenes/Level4/Level4";
 import resources from "./Resources";
+import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 
 /**
  * A game event that contains a related event value.
@@ -160,6 +161,9 @@ export class GameBootstrap {
 		}, {
 			name: "Play a Game!",
 			element: this.exampleLevel
+		}, {
+			name: "StarWars Intro",
+			element: new StarWarsIntro()
 		}];
 
 		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
