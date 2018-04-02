@@ -1,16 +1,10 @@
 #game-menu {
-	height: 100%;
+	overflow-y: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	.dialog {
-		height: 100%;
-		overflow-y: auto;
-		overflow-x: hidden;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-	.items {
-		max-height: unset;
-		padding: 48px;
+    height: 100%;
 	}
 	.item {
 		padding: 48px 64px;
