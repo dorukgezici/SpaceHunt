@@ -8,6 +8,7 @@ export default class Ground extends ex.Actor {
 	constructor(x: number, y: number) {
 		super(x, y, Ground.width, 50, ex.Color.Gray);
 		this.collisionType = ex.CollisionType.Fixed;
+		// this.z = -1;
 	}
 
 	draw(ctx: CanvasRenderingContext2D, delta: number): void {

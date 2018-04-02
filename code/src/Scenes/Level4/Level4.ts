@@ -46,7 +46,9 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		for(i; i < numCannibales; i++) {
 			let xStart = this.randomIntFromInterval(500, 4500);
 			let speedX = this.randomIntFromInterval(100, 200);
-			this.cannibales.push(new Cannibale(xStart, 525, 50, speedX, 400, 4600));
+			let w = this.randomIntFromInterval(20, 30);
+			let h = this.randomIntFromInterval(40, 60);
+			this.cannibales.push(new Cannibale(xStart, 600-50-h/2, w, h, speedX, 400, 4600));
 		}
 
 	}

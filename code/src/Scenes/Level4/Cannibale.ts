@@ -9,8 +9,8 @@ export default class Cannibale extends ex.Actor {
 	maxX: number;
 	speedX: number;
 
-	constructor(x: number, y: number, d: number, speedX: number, minX: number, maxX:number) {
-		super(x, y, d, d, ex.Color.White);
+	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX:number) {
+		super(x, y, w, h, ex.Color.White);
 
 		this.minX = minX;
 		this.maxX = maxX;

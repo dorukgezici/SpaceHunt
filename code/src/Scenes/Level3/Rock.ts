@@ -20,6 +20,8 @@ export default class Rock extends ex.Actor {
 
 		this.d = d;
 
+		// this.z = -1;
+
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center
 
