@@ -54,12 +54,17 @@ export default class Rock extends ex.Actor {
 		// console.log("precollision event raised");
 		if (ev.other.constructor.name === "Ground") {
 			this.vel.y = this.yVelBounce;
-		} else
+			// alternatively more random bouncing for big rocks?
+			if (this.typ === Rocktypes.big) {
+				this.vel.y = this.yVelBounce * (this.randomIntFromInterval(90, 110) / 100);
+			}
+		} else {
 			if (ev.other.constructor.name === "Player") {
 				console.log("onPrecollision event of Rock colliding with player");
 				let player: Player = ev.other;
-				player.die("You got hit by a rock!");
+				player.die("You got hit by the rock!");
 			}
+		}
 
 	}
 
@@ -77,7 +82,7 @@ export default class Rock extends ex.Actor {
 		*/
 		// TODO: calculate rotation
 		this.rotationTime += delta / 1000;
-		
+
 		this.rotation = ((this.rotationTime * this.numberOfRotationsPerSecond) % 1) * 2 * Math.PI;
 
 		this.sprite.rotation = this.rotation;
@@ -95,6 +100,11 @@ export default class Rock extends ex.Actor {
 
 	kill() {
 		super.kill();
+	}
+
+	randomIntFromInterval(min: number, max: number): number {
+		let t: number = Math.floor(Math.random() * (max - min + 1) + min);
+		return t;
 	}
 
 }
