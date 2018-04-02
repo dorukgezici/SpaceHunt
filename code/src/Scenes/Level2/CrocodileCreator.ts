@@ -61,7 +61,7 @@ export default class CrocodileCreator {
 		// create new bubble in front of the player
 		let x = player.x + 1000;
 		// let x = xBStart;
-		let newCrocodileIndex = crocodiles.push(new Crocodile(this.bootstrap, x, this.randomIntFromInterval(40, bounds.bottom - 60), speedXB, speedYB)) - 1;
+		let newCrocodileIndex = crocodiles.push(new Crocodile(this.bootstrap, x, this.randomIntFromInterval(120, bounds.bottom - 60), speedXB, speedYB)) - 1;
 		scene.add(crocodiles[newCrocodileIndex]);
 
 		// create new timeout for next bubble

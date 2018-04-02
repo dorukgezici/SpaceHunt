@@ -37,7 +37,6 @@ export default class Crocodile extends ex.Actor {
 		// Trap player if collided
 		if (ev.other.constructor.name === "Player") {
 			let player: Player = ev.other;
-			console.log("1st-time PLAYER precollision event raised (Level2 - Crocodile - onPrecollision())");
 			player.die("You got eaten by a crocodile!");
 		}
 	}

@@ -1,6 +1,5 @@
 import * as ex from "excalibur";
 import Sky from "./Sky";
-import Level2 from "./Level2";
 
 export default class Player extends ex.Actor {
 
@@ -105,7 +104,6 @@ export default class Player extends ex.Actor {
 			}
 		}
 
-
 	}
 
 	public die(info: string) {
@@ -122,7 +120,7 @@ export default class Player extends ex.Actor {
 
 	private moveUp() {
 		// to not move too far into the sky
-		if (this.pos.y > (this.minY + 25)) {
+		if (this.pos.y > (this.minY + 100)) {
 			this.pos.y -= Player.speedY;
 		}
 	}
