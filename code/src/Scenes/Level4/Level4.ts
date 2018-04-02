@@ -5,6 +5,7 @@ import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBoots
 import Ground from "./Ground";
 import Player from "./Player";
 import Cannibale from "./Cannibale";
+import Background from "../Level4/Background";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -20,6 +21,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	ground: Ground;
 	player: Player;
 	cannibales: Cannibale[] = [];
+	background: Background;
 
 	/*
 	// bubbles
@@ -40,6 +42,8 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(100, 400, this.levelBounds);
+
+		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
 		let i = 0;
 		let numCannibales = 10;
@@ -70,6 +74,9 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
+		this.scene.add(this.background);
+		this.background.z = -1;
+
 		let that = this;
 		this.cannibales.forEach(function (b) {
 			that.scene.add(b);

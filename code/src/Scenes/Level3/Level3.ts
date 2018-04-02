@@ -6,6 +6,7 @@ import Ground from "./Ground";
 import Player from "./Player";
 import Rock from "./Rock";
 import RockCreator from "./RockCreator";
+import Background from "./Background";
 
 export default class Level3 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -20,6 +21,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	// actors
 	ground: Ground;
 	player: Player;
+	background: Background;
 
 	// rocks
 	rocks: Rock[];
@@ -47,6 +49,8 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		// RockCreator for cyclic generation of new rocks
 		this.rocks = [];
 		this.rockCreator = new RockCreator(this.engine, this.scene, this.bounds, this.player, this.rocks);
+
+		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
 	}
 
@@ -76,6 +80,8 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
+		this.scene.add(this.background);
+		this.background.z = -1;
 
 		// start rockCreator
 		this.rockCreator.start();
