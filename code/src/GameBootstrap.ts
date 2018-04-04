@@ -10,6 +10,10 @@ import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
 import { getLoadableResources } from "./Resources";
 import { intro as introStory, level1 as level1Story, level2 as level2Story, death as deathStory, end as endStory } from "./Scenes/Intro/Story";
+import Level3 from "./Scenes/Level3/Level3";
+import Level4 from "./Scenes/Level4/Level4";
+import resources from "./Resources";
+import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 
 /**
  * A game event that contains a related event value.
