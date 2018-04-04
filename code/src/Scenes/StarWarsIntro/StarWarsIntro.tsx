@@ -95,18 +95,20 @@ export default class StarWarsIntro extends Class<IGameElementEvents> implements 
 		const ahs = createHandlers(res.prelude, res.logo, res.crawl);
 		InterfaceBuilder.displayDefault(res.elt);
 		this.handlers = [ahs.preludeAH, ahs.logoAH, ahs.crawlAH];
-		ahs.preludeAH.once("done", () => {
-			this.emit("done", {
-				target: this,
-				type: GameElementDoneType.Finished
-			});
-		});
+		ahs.preludeAH.once("done", this.finish.bind(this));
 		ahs.preludeAH.start();
 	}
 
 	dispose(): void {
 		this.handlers.forEach(t => t.cancel());
 		InterfaceBuilder.clearDefault();
+	}
+
+	private finish() {
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Finished
+		});
 	}
 
 	private fillSvg(elt: HTMLElement) {
@@ -127,7 +129,7 @@ export default class StarWarsIntro extends Class<IGameElementEvents> implements 
 		let crawl: HTMLElement = null as any;
 		let logo: SVGElement = null as any;
 		const elt = (
-			<div id="swintro">
+			<div id="swintro" onclick={this.finish.bind(this)}>
 				<div className="hidden">
 					<span className="o">o</span>
 					<span className="oa">oa</span>
