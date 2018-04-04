@@ -79,23 +79,18 @@ body {
     -webkit-box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.2);
     box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.2); }
 #game-menu {
-  height: 100%; }
+  overflow-y: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center; }
   #game-menu .dialog {
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center; }
-  #game-menu .items {
-    max-height: unset;
-    padding: 48px; }
+    height: 100%; }
   #game-menu .item {
     padding: 48px 64px;
     background: rgba(255, 255, 255, 0.8);
@@ -165,5 +160,99 @@ body {
     #intro button.submit:hover {
       -webkit-box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.2);
       box-shadow: 0 2px 8px 2px rgba(0, 0, 0, 0.2); }
+@font-face {
+  font-family: "SF Distant Galaxy aLTOutline";
+  src: url(assets/f0b6ea67ba06de3f6770e5d93555fef7.ttf); }
+
+@font-face {
+  font-family: "SF Distant Galaxy Outline";
+  src: url(assets/ef8c152a55ec13d9b008b1788938b1c1.ttf); }
+
+#swintro, #swintro .center-wrapper, #swintro .perspective-wrapper {
+  position: absolute;
+  height: 100%;
+  width: 100%; }
+
+#swintro {
+  overflow: hidden;
+  background: black; }
+  #swintro .hidden {
+    position: absolute;
+    visibility: collapse; }
+    #swintro .hidden .o {
+      font-family: "SF Distant Galaxy Outline"; }
+    #swintro .hidden .oa {
+      font-family: "SF Distant Galaxy aLTOutline"; }
+  #swintro .center-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; }
+  #swintro .perspective-wrapper {
+    -webkit-perspective: 500px;
+    perspective: 500px; }
+  #swintro .perspective-holder {
+    height: 100%;
+    display: none;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in; }
+  #swintro .perspective-content {
+    position: absolute;
+    max-width: 350px;
+    line-height: 28px;
+    letter-spacing: 1.5px; }
+    #swintro .perspective-content p {
+      margin: 0;
+      color: #e5b13a;
+      font-size: 20px;
+      text-align: justify;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: subpixel-antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-smoothing: always; }
+      #swintro .perspective-content p + p {
+        margin-top: 20px; }
+      #swintro .perspective-content p.episode, #swintro .perspective-content p.title {
+        text-align: center; }
+      #swintro .perspective-content p.title {
+        text-transform: uppercase;
+        -webkit-transform: scaleY(2);
+        transform: scaleY(2);
+        font-weight: bold; }
+  #swintro .prelude {
+    font-family: "Segoe UI Light", "Segoe UI", Tahoma, Geneva, Verdana, "Franklin Gothic Book", sans-serif;
+    letter-spacing: 1px;
+    font-weight: 300;
+    color: #4bd5ee;
+    font-size: 36px;
+    -webkit-transition: all 1s;
+    transition: all 1s;
+    opacity: 0;
+    -webkit-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+    padding: 0 24px; }
+  #swintro #spacehunt-logo {
+    display: none;
+    -webkit-transition: opacity 1s ease-in;
+    transition: opacity 1s ease-in; }
+    #swintro #spacehunt-logo text {
+      font-family: "SF Distant Galaxy aLTOutline";
+      fill: #e5b13a;
+      font-size: 24px;
+      text-anchor: middle;
+      -webkit-font-smoothing: subpixel-antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-smoothing: always; }
+    #swintro #spacehunt-logo .no-ligature {
+      font-family: "SF Distant Galaxy Outline";
+      font-size: 24px; }
 
 /*# sourceMappingURL=style.css.map*/
