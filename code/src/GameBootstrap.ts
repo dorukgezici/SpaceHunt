@@ -8,11 +8,10 @@ import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
-import { getLoadableResources } from "./Resources";
-import { intro as introStory, level1 as level1Story, level2 as level2Story, death as deathStory, end as endStory } from "./Scenes/Intro/Story";
 import Level3 from "./Scenes/Level3/Level3";
 import Level4 from "./Scenes/Level4/Level4";
-import resources from "./Resources";
+import { getLoadableResources } from "./Resources";
+import { intro as introStory, level1 as level1Story, level2 as level2Story, death as deathStory, end as endStory } from "./Scenes/Intro/Story";
 import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 
 /**
@@ -100,13 +99,8 @@ export class GameBootstrap {
 	 * The key of the root (blank) scene.
 	 */
 	readonly rootSceneKey = "root";
-
 	readonly loader: Loader;
-
-	private level1: Level1;
-	private level2: Level2;
-	private nameEnquiry: NameEnquiry;
-	private intro: Intro;
+	private menu = new Menu();
 
 	constructor(
 		public readonly canvasId: string,
@@ -127,16 +121,47 @@ export class GameBootstrap {
 		});
 
 		this.loader = new Loader();
-		const rsc = getLoadableResources();
-		this.loader.addResources(rsc);
+		this.loader.addResources(getLoadableResources());
 
-		this.level1 = new Level1(this);
-		this.level2 = new Level2(this);
-		this.nameEnquiry = new NameEnquiry();
-		this.intro = new Intro(this);
+		const level1 = new Level1(this);
+		const level2 = new Level2(this);
+		const level3 = new Level3(this);
+		const level4 = new Level4(this);
+		const nameEnquiry = new NameEnquiry();
+		const intro = new Intro(this);
+		const startWarsIntro = new StarWarsIntro();
 
-		const { level1, level2, intro, nameEnquiry } = this;
-		let state = 0;
+		[level1, level2, level3, level4, nameEnquiry, intro, startWarsIntro].forEach((t: IGameElement) => {
+			if (t.init)
+				t.init(this);
+		});
+
+		const menuItems = [{
+			element: level1,
+			name: "Level 1"
+		}, {
+			element: level2,
+			name: "Level 2"
+		}, {
+			element: level3,
+			name: "Level 3"
+		}, {
+			element: level4,
+			name: "Level 4"
+		}, {
+			element: startWarsIntro,
+			name: "StarWars Intro"
+		}, {
+			element: nameEnquiry,
+			name: "Start the Game"
+		}];
+
+		this.menu.items = menuItems.map(t => t.name);
+		this.menu.on("click", ({ id }) => {
+			const elt = menuItems[id].element;
+			this.menu.dispose();
+			elt.start();
+		});
 
 		nameEnquiry.on("done", () => {
 			nameEnquiry.dispose();
@@ -154,6 +179,10 @@ export class GameBootstrap {
 		const showDeathStory = () => {
 			intro.setStory(deathStory);
 			intro.start();
+			intro.once("done", () => {
+				intro.dispose();
+				this.menu.start();
+			})
 		};
 
 		level1.on("done", e => {
@@ -184,7 +213,7 @@ export class GameBootstrap {
 	 * Starts the game.
 	 */
 	start() {
-		this.nameEnquiry.start();
+		this.menu.start();
 		this.engine.start(this.loader);
 	}
 
