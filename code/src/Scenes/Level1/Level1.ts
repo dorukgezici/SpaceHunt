@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
-import {GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents} from "../../GameBootstrap";
+import { Class } from "../../Class";
+import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Arrow from "./Arrow";
 import Ground from "../../Components/Ground";
@@ -35,16 +35,18 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.right - TreeBranch.branchLength / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.left + 200, this.levelBounds.top + 200);
+		this.registerResources();
 	}
 
 	init(bootstrap: GameBootstrap): void {
-		this.registerResources();
+		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 	}
 
 	start(): void {
 		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
+		this.player.initAnimations();
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
@@ -52,13 +54,13 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	dispose(): void {
-		for(let actor of this.scene.actors) {
+		for (let actor of this.scene.actors) {
 			actor.kill();
 		}
 	}
 
 	win = (): void => {
-		alert("You won!");
+		// alert("You won!");
 		this.player.off("won");
 		this.emit("done", {
 			target: this,
@@ -67,7 +69,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose = (): void => {
-		alert("You fell down and died");
+		// alert("You fell down and died");
 		this.player.off("fell");
 		this.emit("done", {
 			target: this,
@@ -83,8 +85,8 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	private buildScene = () => {
 		let vines = this.vineCreator.createVines();
 
-		for(let vine of vines) {
-			for(let vinePart of vine.getAllParts()) {
+		for (let vine of vines) {
+			for (let vinePart of vine.getAllParts()) {
 				this.scene.add(vinePart);
 			}
 		}

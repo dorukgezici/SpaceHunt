@@ -1,0 +1,123 @@
+$sw-gold: #e5b13a;
+$sw-blue: #4bd5ee;
+$sw-font-ao: "SF Distant Galaxy aLTOutline";
+$sw-font-o: "SF Distant Galaxy Outline";
+$sw-perspective: 500px;
+
+@font-face {
+	font-family: $sw-font-ao;
+	src: url("../../Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy AltOutline.ttf")
+}
+
+@font-face {
+	font-family: $sw-font-o;
+	src: url("../../Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy Outline.ttf")
+}
+
+%stretch {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
+#swintro {
+	@extend %stretch;
+	overflow: hidden;
+	background: black;
+
+	.hidden {
+		position: absolute;
+		visibility: collapse;
+		.o {
+			font-family: $sw-font-o;
+		}
+		.oa {
+			font-family: $sw-font-ao;
+		}
+	}
+
+	.center-wrapper {
+		@extend %stretch;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.perspective-wrapper {
+		@extend %stretch;
+		perspective: $sw-perspective;
+	}
+
+	.perspective-holder {
+		height: 100%;
+		display: none;
+		justify-content: center;
+		transition: opacity 1s ease-in;
+	}
+
+	.perspective-content {
+		position: absolute;
+		max-width: 350px;
+    line-height: 28px;
+		letter-spacing: 1.5px;
+
+		p {
+			margin: 0;
+			color: $sw-gold;
+			font-size: 20px;
+			text-align: justify;
+			font-family: Arial, Helvetica, sans-serif;
+			-webkit-font-smoothing: subpixel-antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			font-smoothing: always;
+
+			+p {
+				margin-top: 20px;
+			}
+
+			&.episode, &.title {
+				text-align: center;
+			}
+
+			&.title {
+				text-transform: uppercase;
+				transform: scaleY(2);
+				font-weight: bold;
+			}
+		}
+	}
+
+	.prelude {
+		font-family: "Segoe UI Light", "Segoe UI", Tahoma, Geneva, Verdana, "Franklin Gothic Book", sans-serif;
+		letter-spacing: 1px;
+		font-weight: 300;
+		color: $sw-blue;
+		font-size: 36px;
+		transition: all 1s;
+		opacity: 0;
+		transition: opacity 1s ease-in-out;
+		padding: 0 24px;
+	}
+
+	#spacehunt-logo {
+		display: none;
+		transition: opacity 1s ease-in;
+
+		text {
+			font-family: $sw-font-ao;
+			fill: $sw-gold;
+			font-size: 24px;
+			text-anchor: middle;
+			-webkit-font-smoothing: subpixel-antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			font-smoothing: always;
+		}
+	
+		.no-ligature {
+			font-family: $sw-font-o;
+			font-size: 24px;
+		}
+
+	}
+
+}

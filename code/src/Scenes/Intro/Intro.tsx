@@ -8,24 +8,25 @@ export default class Intro extends Class implements IGameElement {
 
 	private gameBoostrap: GameBootstrap;
 	private storyElement?: HTMLElement;
-	private story: IStory[];
+	private story?: IStory;
 	private storyPage: number; // index of a page of a story
 
 	constructor(bootstrap: GameBootstrap) {
 		super();
 
 		this.gameBoostrap = bootstrap;
-		this.story = [intro, level1, level2, level3, level4, end, death];
 		this.storyPage = 0;
 	}
 
-	init(bootstrap: GameBootstrap) {
-		//
+	private renderStoryPage() {
+		if (this.storyElement && this.story)
+			InterfaceBuilder.replaceContent(this.storyElement, this.story[this.storyPage]);
 	}
 
-	private renderStoryPage() {
-		if (this.storyElement)
-			InterfaceBuilder.replaceContent(this.storyElement, this.story[this.storyPage]);
+	setStory(story?: IStory, storyPage = 0) {
+		this.story = story;
+		this.storyPage = storyPage;
+		this.renderStoryPage();
 	}
 
 	start() {
@@ -35,6 +36,7 @@ export default class Intro extends Class implements IGameElement {
 
 	dispose() {
 		InterfaceBuilder.clearDefault();
+		this.storyElement = undefined;
 	}
 
 	private done() {
@@ -44,7 +46,7 @@ export default class Intro extends Class implements IGameElement {
 
 	private onClick() {
 		this.storyPage++;
-		if (this.storyPage >= this.story.length)
+		if (!this.story || this.storyPage >= this.story.length)
 			this.done();
 		else
 			this.renderStoryPage();
@@ -58,7 +60,7 @@ export default class Intro extends Class implements IGameElement {
 					<div className="dialog">
 						<div className="story">
 							<div ref={elt => this.storyElement = elt}></div>
-							<button className="submit" onclick={this.onClick.bind(this)}>Continue to read the story!</button>
+							<button className="submit" onclick={this.onClick.bind(this)}>Continue!</button>
 						</div>
 					</div>
 				</div>

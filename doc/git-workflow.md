@@ -1,8 +1,7 @@
 # Git workflow
 
-We are using **feature branch workflow** - each user story 
-is implemented in a separate branch and then merged to `master` 
-after review. 
+We are using **feature branch workflow** - each user story or task without story
+is implemented in a separate branch and then merged to `master` after review.
 
 If a branch is ready to be reviewed and potentialy
 merged, the developer of the feature should contact repository

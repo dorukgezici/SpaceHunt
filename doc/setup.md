@@ -51,13 +51,13 @@ You now have all assets required for running the application. Open your project 
 npm start
 ```
 
-to run a develpment server, or
+to run a development server, or
 
 ```bash
 npm run build
 ```
 
-to build the project for production.
+to build the project for production. Please refer to [Build Process and Project Structure](build-process.md) for more information about build system.
 
 ## Development
 
@@ -92,33 +92,10 @@ You may also choose to install `ts-node` (run `npm install -g ts-node`) to be ab
 npm install -g tslint
 ```
 
-Note that both packages are installed locally in the project, thus, you don't *need* to install them globally. This is done to avoid version mismatches for building the project on different environemnts and machines.
+Note that both packages are installed locally in the project, thus, you don't *need* to install them globally. This is done to avoid version mismatches for building the project on different environments and machines.
 
-You may find that some text editors or IDEs have build-in support for TypeScript or TSLint. They may, however, require you to install `typescript` or `tslint` npm packages in order to work. Sometimes these features are aviableble via a plugins.
-
-## CLI
-
-There are certaing CLI commands available for managing the project.
-
-| Command(s) | Description |
-| --- | --- |
-| `npm start`<br>`npm run webserver` | Builds the project, runs a webserver at [localhost:8080](http://localhost:8080) and opens it in a browser. |
-| `npm run webserver:noopen` | Builds the project and runs a webserver at [localhost:8080](http://localhost:8080). |
-| `npm run build`<br>`npm run build:prod` | Builds the project for production. |
-| `npm run build:dev` | Builds the project for development. |
-| `npm run clean` | Cleans the build (deletes the `build` directory). |
-| `npm test`<br>`npm run lint:prod` | Runs associated linter in production mode. |
-| `npm run lint:dev` | Runs associated linter in develpment mode. |
-
-Please note: 
-
-- Building the project deletes previous build (if any) beforehand.
-- Running the webserver builds the project internally, which is not written to the `build` directory (this is known as *transpilation*).
-- Building and bundling is done using [webpack](https://webpack.js.org/).
-- `webpack.config.js` and `tslint.json` are in the root only for developer's convenience. They reference configuration files in the `config` directory.
-- Sourcemaps are always created to link generated bundles with original source files. In browser, you can find source files located under `source://` and then `.`.
-- For your convenience, if `npm start`, the webserver automatically forces the web page to refresh every time source files change.
+You may find that some text editors or IDEs have build-in support for TypeScript or TSLint. They may, however, require you to install `typescript` or `tslint` npm packages in order to work. Sometimes these features are available via a plugins.
 
 ## Dependency Management and Imports
 
-Please read [dependency-management.md](dependency-management.md) file to learn how dependencies are organised and handeled and how developers should include and import their resources.
+Please read [dependency-management.md](dependency-management.md) file to learn how dependencies are organised and handled and how developers should include and import their resources.

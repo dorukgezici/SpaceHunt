@@ -10,7 +10,9 @@ import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
 import Level3 from "./Scenes/Level3/Level3";
 import Level4 from "./Scenes/Level4/Level4";
-import resources from "./Resources";
+import { getLoadableResources } from "./Resources";
+import { intro as introStory, level1 as level1Story, level2 as level2Story, death as deathStory, end as endStory } from "./Scenes/Intro/Story";
+import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 
 /**
  * A game event that contains a related event value.
@@ -50,7 +52,7 @@ export interface IGameElementEvents {
 }
 
 /**
- * Base game element interface. Include event mapping template paramtere for strongly-typed events.
+ * Base game element interface. Include event mapping template parameters for strongly-typed events.
  */
 export interface IGameElement<T extends IGameElementEvents = IGameElementEvents> extends IEvented<T> {
 	/**
@@ -97,16 +99,8 @@ export class GameBootstrap {
 	 * The key of the root (blank) scene.
 	 */
 	readonly rootSceneKey = "root";
-
 	readonly loader: Loader;
-
-	private menu: Menu;
-	private intro: Intro;
-	private exampleLevel: ExampleLevel;
-	private movementTestLevel: MovementTestLevel;
-	private level2: Level2;
-	private nameEnquiry: NameEnquiry;
-	private levels: { name: string, element: IGameElement }[];
+	private menu = new Menu();
 
 	constructor(
 		public readonly canvasId: string,
@@ -127,73 +121,92 @@ export class GameBootstrap {
 		});
 
 		this.loader = new Loader();
-		this.loader.addResources(Object.values(resources));
+		this.loader.addResources(getLoadableResources());
 
-		this.intro = new Intro(this);
-		this.menu = new Menu();
-		this.exampleLevel = new ExampleLevel(this);
-		this.movementTestLevel = new MovementTestLevel(this);
-		this.level2 = new Level2(this);
-		this.nameEnquiry = new NameEnquiry();
+		const level1 = new Level1(this);
+		const level2 = new Level2(this);
+		const level3 = new Level3(this);
+		const level4 = new Level4(this);
+		const nameEnquiry = new NameEnquiry();
+		const intro = new Intro(this);
+		const startWarsIntro = new StarWarsIntro();
 
-		this.levels = [{
-			name: "Level 1",
-			element: new Level1(this)
+		[level1, level2, level3, level4, nameEnquiry, intro, startWarsIntro].forEach((t: IGameElement) => {
+			if (t.init)
+				t.init(this);
+		});
+
+		const menuItems = [{
+			element: level1,
+			name: "Level 1"
 		}, {
-			name: "Level 2",
-			element: new Level2(this)
+			element: level2,
+			name: "Level 2"
 		}, {
-			name: "Level 3",
-			element: new Level3(this)
+			element: level3,
+			name: "Level 3"
 		}, {
-			name: "Level 4",
-			element: new Level4(this)
+			element: level4,
+			name: "Level 4"
 		}, {
-			name: "Change your name!",
-			element: this.nameEnquiry
+			element: startWarsIntro,
+			name: "StarWars Intro"
 		}, {
-			name: "Intro (Story)",
-			element: this.intro
-		}, {
-			name: "Test player movement",
-			element: new MovementTestLevel(this)
-		}, {
-			name: "Play a Game!",
-			element: this.exampleLevel
+			element: nameEnquiry,
+			name: "Start the Game"
 		}];
 
-		const { state, levels, menu, intro, exampleLevel, nameEnquiry, stateListener } = this;
-
-		// custom event listener logic
-		exampleLevel.on("done", e => {
-			if (e.type === GameElementDoneType.Finished)
-				alert("Good job!");
+		this.menu.items = menuItems.map(t => t.name);
+		this.menu.on("click", ({ id }) => {
+			const elt = menuItems[id].element;
+			this.menu.dispose();
+			elt.start();
 		});
 
-		// state change event bindings
-		stateListener.on("name", e => {
-			const level = levels.find(t => t.element === nameEnquiry);
-			if (level)
-				level.name = `Change your name, ${e.newValue}!`;
-			menu.items = levels.map(t => t.name);
-		});
-
-		// init all levels and subscribe event listeners
-		levels.forEach(level => {
-			// init the level
-			if (level.element.init)
-				level.element.init(this);
-			// decide what to do when the level is over
-			level.element.on("done", e => {
-				level.element.dispose(); // stop current scene
-				menu.start(); // show menu
+		nameEnquiry.on("done", () => {
+			nameEnquiry.dispose();
+			intro.setStory(introStory);
+			intro.start();
+			intro.once("done", () => {
+				intro.setStory(level1Story);
+				intro.once("done", () => {
+					intro.dispose();
+					level1.start();
+				});
 			});
 		});
 
-		// init menu as any other game elementWW
-		menu.init(this);
-		// assign custom properties
-		menu.items = levels.map(t => t.name);
+		const showDeathStory = () => {
+			intro.setStory(deathStory);
+			intro.start();
+			intro.once("done", () => {
+				intro.dispose();
+				this.menu.start();
+			})
+		};
+
+		level1.on("done", e => {
+			level1.dispose();
+			if (e.type === GameElementDoneType.Finished) {
+				intro.setStory(level2Story);
+				intro.start();
+				intro.once("done", () => {
+					intro.dispose();
+					level2.start();
+				});
+			} else
+				showDeathStory();
+		});
+
+		level2.on("done", e => {
+			level2.dispose();
+			if (e.type === GameElementDoneType.Finished) {
+				intro.setStory(endStory);
+				intro.start();
+			} else
+				showDeathStory();
+		});
+
 	}
 
 	/**
@@ -201,18 +214,7 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-		this.engine.start(this.loader).then(() => {
-			this.menu.on("click", e => {
-				const level = this.levels.find(t => t.name === e.name);
-				this.menu.dispose(); // stop displaying menu
-
-				if (!level) {
-					throw new Error("level not found");
-				}
-
-				level.element.start(); // start the level
-			});
-		});
+		this.engine.start(this.loader);
 	}
 
 }
