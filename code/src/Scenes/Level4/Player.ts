@@ -1,6 +1,8 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
-
+import Level4 from "./Level4";
+import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
 
 export default class Player extends BasePlayer {
 	static readonly speed: number = 8;
@@ -8,6 +10,9 @@ export default class Player extends BasePlayer {
 	private maxX: number;
 	dead: boolean = false;
 	private moveDir: number = 0;
+	private animation?: DrawAnimation<IPlayerAnimations>;
+	private isJumping = false;
+	private posYpreviously: number;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y);
@@ -17,6 +22,12 @@ export default class Player extends BasePlayer {
 		this.body.useBoxCollision();
 		this.y += this.getHeight() / 2;
 		this.color = ex.Color.Orange;
+		this.posYpreviously = this.pos.y;
+	}
+	
+	initAnimations() {
+		if (!this.animation)
+			this.animation = playerAnimationFactory.attachTo(this);
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -24,6 +35,13 @@ export default class Player extends BasePlayer {
 
 		// change direction of movement if not currently jumping
 		if (this.isGround()) {
+
+			// just landed
+			if(this.isJumping && this.animation && this.pos.y === this.posYpreviously) {
+				this.isJumping = false;
+				this.animation.changeState("walk");
+			}
+			this.posYpreviously = this.pos.y;
 
 			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 				this.jump();
@@ -46,12 +64,20 @@ export default class Player extends BasePlayer {
 		this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 
+		// to be replaced by reaching the wife
+		if (this.getWorldPos().x > 4800) {
+			this.emit("won");
+		}
 	}
 
 	private jump() {
 		if (this.isGround()) {
 			this.vel.setTo(this.vel.x, -700);
 			// console.log(this.vel);
+			if (!this.isJumping && this.animation) {
+				this.isJumping = true;
+				this.animation.changeState("jump");
+			}
 		}
 	}
 
@@ -78,10 +104,10 @@ export default class Player extends BasePlayer {
 			this.scene.camera.shake(50, 50, 500);
 
 			let player: Player = this;
-			setTimeout(function () {
+			setTimeout(() => {
 
 				player.kill();
-				alert(info);
+				this.emit("death");
 
 			}, 550);
 		}

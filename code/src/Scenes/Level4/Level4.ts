@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
 import Cannibale from "./Cannibale";
@@ -42,17 +42,20 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(100, 400, this.levelBounds);
+		this.player.on("death", () => this.lose());
+		this.player.on("won", () => this.win());
+		this.player.initAnimations();
 
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
 		let i = 0;
 		let numCannibales = 10;
-		for(i; i < numCannibales; i++) {
+		for (i; i < numCannibales; i++) {
 			let xStart = this.randomIntFromInterval(500, 4500);
 			let speedX = this.randomIntFromInterval(100, 200);
 			let w = this.randomIntFromInterval(20, 30);
 			let h = this.randomIntFromInterval(40, 60);
-			this.cannibales.push(new Cannibale(xStart, 600-50-h/2, w, h, speedX, 400, 4600));
+			this.cannibales.push(new Cannibale(xStart, 600 - 50 - h / 2, w, h, speedX, 400, 4600));
 		}
 
 	}
@@ -89,6 +92,22 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	randomIntFromInterval(min: number, max: number): number {
 		let t: number = Math.floor(Math.random() * (max - min + 1) + min);
 		return t;
+	}
+
+	win = (): void => {
+		alert("won - Level4-won()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Finished
+		});
+	}
+
+	lose = (): void => {
+		alert("died - Level4-lose()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Aborted
+		});
 	}
 
 }

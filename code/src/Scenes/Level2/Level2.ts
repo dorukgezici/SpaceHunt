@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Sky from "./Sky";
 import Player from "./Player";
@@ -50,6 +50,9 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
 		this.oxygenMeter.fontSize = 30;
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter);
+		this.player.on("death", () => this.lose());
+		this.player.on("won", () => this.win());
+
 		this.bubbles = [];
 		this.crocodiles = [];
 
@@ -99,6 +102,23 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
+	}
+
+	win = (): void => {
+		this.player.kill();
+		alert("won - Level2-won()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Finished
+		});
+	}
+
+	lose = (): void => {
+		alert("died - Level2-lose()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Aborted
+		});
 	}
 
 }

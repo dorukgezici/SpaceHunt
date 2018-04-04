@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents } from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
 import Rock from "./Rock";
@@ -45,6 +45,9 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.ground.rotation = -Math.PI / 360 * 5; */
 
 		this.player = new Player(100, 300, this.levelBounds, this.engine);
+		this.player.on("death", () => this.lose());
+		this.player.on("won", () => this.win());
+		this.player.initAnimations();
 
 		// RockCreator for cyclic generation of new rocks
 		this.rocks = [];
@@ -88,6 +91,23 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
+	}
+
+	win = (): void => {
+		this.player.kill();
+		alert("won - Level3-won()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Finished
+		});
+	}
+
+	lose = (): void => {
+		alert("died - Level3-lose()");
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Aborted
+		});
 	}
 
 }

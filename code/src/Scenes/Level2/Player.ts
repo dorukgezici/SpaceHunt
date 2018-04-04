@@ -129,16 +129,23 @@ export default class Player extends ex.Actor {
 				this.animation.changeState("slow");
 		}
 
+		if (this.getWorldPos().x > 4950) {
+			this.emit("won");
+		}
+
 	}
 
 	public die(info: string) {
 		if (!this.dead) {
 			this.dead = true;
 			this.kill();
+			this.emit("death");
+			/*
 			alert(info);
 			let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
 			restartLabel.fontSize = 30;
 			this.scene.addUIActor(restartLabel);
+			*/
 		}
 	}
 
