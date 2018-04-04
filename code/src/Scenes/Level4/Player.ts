@@ -23,8 +23,9 @@ export default class Player extends BasePlayer {
 		this.y += this.getHeight() / 2;
 		this.color = ex.Color.Orange;
 		this.posYpreviously = this.pos.y;
+		this.on("precollision", this.onPrecollision);
 	}
-	
+
 	initAnimations() {
 		if (!this.animation)
 			this.animation = playerAnimationFactory.attachTo(this);
@@ -37,7 +38,7 @@ export default class Player extends BasePlayer {
 		if (this.isGround()) {
 
 			// just landed
-			if(this.isJumping && this.animation && this.pos.y === this.posYpreviously) {
+			if (this.isJumping && this.animation && this.pos.y === this.posYpreviously) {
 				this.isJumping = false;
 				this.animation.changeState("walk");
 			}
@@ -64,10 +65,6 @@ export default class Player extends BasePlayer {
 		this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 
-		// to be replaced by reaching the wife
-		if (this.getWorldPos().x > 4800) {
-			this.emit("won");
-		}
 	}
 
 	private jump() {
@@ -98,7 +95,6 @@ export default class Player extends BasePlayer {
 
 			this.dead = true;
 
-			// this.setHeight(this.getHeight() / 4);
 			this.collisionArea.body.useBoxCollision();
 
 			this.scene.camera.shake(50, 50, 500);
@@ -121,4 +117,14 @@ export default class Player extends BasePlayer {
 			return false;
 		}
 	}
+
+	onPrecollision(ev: any) {
+		// console.log("precollision event raised");
+		if (ev.other.constructor.name === "Princess") {
+			console.log("onPrecollision event of player colliding with princess");
+			this.emit("won");
+		}
+
+	}
+
 }

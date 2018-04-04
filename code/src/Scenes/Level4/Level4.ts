@@ -5,7 +5,10 @@ import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } 
 import Ground from "./Ground";
 import Player from "./Player";
 import Cannibale from "./Cannibale";
-import Background from "../Level4/Background";
+import Background from "./Background";
+import Vine from "../Level1/Vine";
+import Princess from "./Princess";
+import Pot from "./Pot";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -22,6 +25,9 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	player: Player;
 	cannibales: Cannibale[] = [];
 	background: Background;
+	vine: Vine;
+	princess: Princess;
+	pot: Pot;
 
 	/*
 	// bubbles
@@ -46,10 +52,16 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.player.on("won", () => this.win());
 		this.player.initAnimations();
 
+		// vine + wife + pot
+		this.vine = new Vine (4800, 0, 28, 2, 0.05);
+		this.princess = new Princess(this.vine);
+		this.pot = new Pot(4800, 550, 5, 5);
+
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
+		// cannibales
 		let i = 0;
-		let numCannibales = 10;
+		let numCannibales = 1;
 		for (i; i < numCannibales; i++) {
 			let xStart = this.randomIntFromInterval(500, 4500);
 			let speedX = this.randomIntFromInterval(100, 200);
@@ -79,6 +91,11 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.scene.add(this.player);
 		this.scene.add(this.background);
 		this.background.z = -1;
+		for (let vinePart of this.vine.getAllParts()) {
+			this.scene.add(vinePart);
+		}
+		this.scene.add(this.princess);
+		this.scene.add(this.pot);
 
 		let that = this;
 		this.cannibales.forEach(function (b) {
