@@ -40,7 +40,6 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 
 	init(bootstrap: GameBootstrap): void {
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player.initAnimations();
 	}
 
 	start(): void {
