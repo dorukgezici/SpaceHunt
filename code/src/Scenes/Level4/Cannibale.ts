@@ -4,12 +4,12 @@ import resources from "../../Resources";
 
 export default class Cannibale extends ex.Actor {
 
-	// sprite: ex.Sprite;
+	sprite: ex.Sprite;
 	minX: number;
 	maxX: number;
 	speedX: number;
 
-	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX:number) {
+	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX: number) {
 		super(x, y, w, h, ex.Color.White);
 
 		this.minX = minX;
@@ -22,7 +22,7 @@ export default class Cannibale extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		if(this.randomIntFromInterval(1,2)>1) {
+		if (this.randomIntFromInterval(1, 2) > 1) {
 			this.vel.x = speedX;
 		} else {
 			this.vel.x = -speedX;
@@ -30,6 +30,9 @@ export default class Cannibale extends ex.Actor {
 
 		// On collision check if Player and trap if true
 		this.on("precollision", this.onPrecollision);
+
+		this.sprite = resources.cannibale.asSprite();
+		this.sprite.anchor.setTo(0.5, 0.5);
 	}
 
 	// raised every frame while colliding
@@ -47,19 +50,18 @@ export default class Cannibale extends ex.Actor {
 		// Optionally call original 'base' method
 		ex.Actor.prototype.draw.call(this, ctx, delta);
 
-		// this.sprite.draw(ctx, this.getCenter().x, this.getCenter().y);
-
+		this.sprite.draw(ctx, this.getCenter().x, this.getCenter().y - ((this.sprite.height - this.getHeight()) / 2));
 	}
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
 		// check for minX/maxX
-		if(this.pos.x - this.getWidth() < this.minX) {
+		if (this.pos.x - this.getWidth() < this.minX) {
 			this.vel.x = this.speedX;
 		}
-		if(this.pos.x + this.getWidth() > this.maxX) {
-			this.vel.x =  - this.speedX;
+		if (this.pos.x + this.getWidth() > this.maxX) {
+			this.vel.x = - this.speedX;
 		}
 
 	}

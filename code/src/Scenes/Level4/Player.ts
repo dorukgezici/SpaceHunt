@@ -10,9 +10,13 @@ export default class Player extends BasePlayer {
 	private maxX: number;
 	dead: boolean = false;
 	private moveDir: number = 0;
-	private animation?: DrawAnimation<IPlayerAnimations>;
-	private isJumping = false;
-	private posYpreviously: number;
+	private animation?: DrawAnimation<"idle-right" | "idle-left" | "walk-left" | "walk-right" | "jump-left" | "jump-right" | "duck-left" | "duck-right">;
+
+	private stateY: String;
+	private stateX: String;
+
+	private posYold: number;
+
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
 		super(x, y);
@@ -22,41 +26,76 @@ export default class Player extends BasePlayer {
 		this.body.useBoxCollision();
 		this.y += this.getHeight() / 2;
 		this.color = ex.Color.Orange;
-		this.posYpreviously = this.pos.y;
+		this.posYold = this.pos.y;
 		this.on("precollision", this.onPrecollision);
+		this.stateY = "idle";
+		this.stateX = "right";
 	}
 
 	initAnimations() {
-		if (!this.animation)
-			this.animation = playerAnimationFactory.attachTo(this);
+		// if (!this.animation)
+		// this.animation = playerAnimationFactory.attachTo(this);
 	}
 
+
+	// TODO: change animations only if state just changed
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		// change direction of movement if not currently jumping
+		// change movement if not currently in the air
 		if (this.isGround()) {
 
 			// just landed
-			if (this.isJumping && this.animation && this.pos.y === this.posYpreviously) {
-				this.isJumping = false;
-				this.animation.changeState("walk");
+			if (this.stateY === "jump" && this.posYold < (600 - 65)) { // this.vel.y > -1) {
+				// just landed
+				this.stateY = "not jumping";
+				console.log("just landed");
 			}
-			this.posYpreviously = this.pos.y;
+
 
 			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 				this.jump();
 			}
 
-			this.moveDir = 0;
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
-				// this.goLeft();
-				this.moveDir = 1;
-			}
 
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
-				// this.goRight();
-				this.moveDir = -1;
+
+			if (this.stateY !== "jump") {
+
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+					this.moveDir = 1;
+					if (this.stateX !== "left") {
+						this.stateX = "left";
+						console.log("just turned left");
+					}
+					if (this.stateY !== "walk") {
+						this.stateY = "walk";
+						console.log("just started walking");
+					}
+
+				} else {
+
+					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+						this.moveDir = -1;
+						if (this.stateX !== "right") {
+							this.stateX = "right";
+							console.log("just turned right");
+						}
+						if (this.stateY !== "walk") {
+							this.stateY = "walk";
+							console.log("just started walking");
+						}
+
+					} else {
+
+						this.moveDir = 0;
+						if (this.stateY !== "idle") {
+							this.stateY = "idle";
+							console.log("just entered idle");
+						}
+
+					}
+				}
+
 			}
 		}
 
@@ -65,16 +104,14 @@ export default class Player extends BasePlayer {
 		this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 
+		this.posYold = this.pos.y;
 	}
 
 	private jump() {
 		if (this.isGround()) {
 			this.vel.setTo(this.vel.x, -700);
-			// console.log(this.vel);
-			if (!this.isJumping && this.animation) {
-				this.isJumping = true;
-				this.animation.changeState("jump");
-			}
+			this.stateY = "jump";
+			console.log("just jumped");
 		}
 	}
 
@@ -118,9 +155,11 @@ export default class Player extends BasePlayer {
 		}
 	}
 
+	private won: boolean = false;
 	onPrecollision(ev: any) {
 		// console.log("precollision event raised");
-		if (ev.other.constructor.name === "Princess") {
+		if (ev.other.constructor.name === "Princess" && !this.won) {
+			this.won = true;
 			console.log("onPrecollision event of player colliding with princess");
 			this.emit("won");
 		}
