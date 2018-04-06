@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Level4 from "./Level4";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
+import { playerAnimationFactory, IPlayerAnimations } from "./PlayerAnimations";
 
 export default class Player extends BasePlayer {
 	static readonly speed: number = 8;
@@ -40,7 +40,8 @@ export default class Player extends BasePlayer {
 			// just landed
 			if (this.isJumping && this.animation && this.pos.y === this.posYpreviously) {
 				this.isJumping = false;
-				this.animation.changeState("walk");
+				// TODO: change animations
+				// this.animation.changeState("walk");
 			}
 			this.posYpreviously = this.pos.y;
 
@@ -73,7 +74,7 @@ export default class Player extends BasePlayer {
 			// console.log(this.vel);
 			if (!this.isJumping && this.animation) {
 				this.isJumping = true;
-				this.animation.changeState("jump");
+				this.animation.changeState("jump-right");
 			}
 		}
 	}
