@@ -108,7 +108,9 @@ export default class Player extends ex.Actor {
 			}
 
 			this.vel.x = this.speedX;
-			// check for Level ending -> better raise event in case of collision with level ending?
+
+			if (this.pos.x > this.maxX)
+				this.emit("win");
 
 			// Y movement
 			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
@@ -135,7 +137,7 @@ export default class Player extends ex.Actor {
 		if (!this.dead) {
 			this.dead = true;
 			this.kill();
-			alert(info);
+			this.emit("death");
 			let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
 			restartLabel.fontSize = 30;
 			this.scene.addUIActor(restartLabel);
