@@ -2,14 +2,14 @@ import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Vine from "./Vine";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
+import { attachPlayerAnimations, IPlayerAnimations } from "./PlayerAnimations";
 
 export default class Level1Player extends BasePlayer {
 
 	inJump: boolean = false;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
-	private animation?: DrawAnimation<IPlayerAnimations>;
+	private animation: DrawAnimation<IPlayerAnimations>;
 	private hasStarted = false;
 
 	constructor(x: number, y: number) {
@@ -17,11 +17,7 @@ export default class Level1Player extends BasePlayer {
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
-	}
-
-	initAnimations() {
-		if (!this.animation)
-			this.animation = playerAnimationFactory.attachTo(this);
+		this.animation = attachPlayerAnimations(this);
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -29,7 +25,7 @@ export default class Level1Player extends BasePlayer {
 
 		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 			this.jump();
-			if (!this.hasStarted && this.animation) {
+			if (!this.hasStarted) {
 				this.hasStarted = true;
 				this.animation.changeState("jump");
 			}
@@ -55,6 +51,7 @@ export default class Level1Player extends BasePlayer {
 			this.rotation = - Math.PI / 6;
 			this.inJump = true;
 			this.onVine = false;
+			this.animation.changeState("jump");
 		}
 	}
 
@@ -86,5 +83,6 @@ export default class Level1Player extends BasePlayer {
 		this.vel.setTo(0, 0);
 		this.rotation = 0;
 		this.cameraStrategy.target = vine;
+		this.animation.changeState("grab");
 	}
 }
