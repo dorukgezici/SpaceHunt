@@ -4,7 +4,7 @@ import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
-import Cannibale from "./Cannibale";
+import Cannibal from "./Cannibal";
 import Background from "./Background";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
@@ -23,7 +23,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	// actors
 	ground: Ground;
 	player: Player;
-	cannibales: Cannibale[] = [];
+	cannibals: Cannibal[] = [];
 	background: Background;
 	vine: Vine;
 	princess: Princess;
@@ -61,13 +61,13 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 
 		// cannibales
 		let i = 0;
-		let numCannibales = 1;
-		for (i; i < numCannibales; i++) {
+		let numCannibals = 1;
+		for (i; i < numCannibals; i++) {
 			let xStart = this.randomIntFromInterval(500, 4500);
 			let speedX = this.randomIntFromInterval(100, 200);
 			let w = this.randomIntFromInterval(20, 30);
 			let h = this.randomIntFromInterval(40, 60);
-			this.cannibales.push(new Cannibale(xStart, 600 - 50 - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, 600 - 50 - h / 2, w, h, speedX, 400, 4600));
 		}
 
 	}
@@ -98,7 +98,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.scene.add(this.pot);
 
 		let that = this;
-		this.cannibales.forEach(function (b) {
+		this.cannibals.forEach(function (b) {
 			that.scene.add(b);
 		});
 

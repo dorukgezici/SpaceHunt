@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
+import { playerAnimationFactory, IPlayerAnimations } from "./PlayerAnimations";
 
 export default class Player extends BasePlayer {
 
@@ -62,7 +62,8 @@ export default class Player extends BasePlayer {
 		// just landed?
 		if (this.isJumping && this.animation && this.pos.y === this.posYpreviously && this.isGround()) {
 			this.isJumping = false;
-			this.animation.changeState("walk");
+			// TODO: Change lower line
+			// this.animation.changeState("walk");
 		}
 		this.posYpreviously = this.pos.y;
 
@@ -147,8 +148,8 @@ export default class Player extends BasePlayer {
 		this.ducked = false;
 		this.setHeight(this.getHeight() * 2);
 		this.collisionArea.body.useBoxCollision();
-		// change animation
-		if (this.animation) { this.animation.changeState("walk"); }
+		// TODO: change animation
+		// if (this.animation) { this.animation.changeState("walk"); }
 	}
 
 	public die(info: string) {

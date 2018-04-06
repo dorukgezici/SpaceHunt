@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Level4 from "./Level4";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
+import { playerAnimationFactory, IPlayerAnimations } from "./PlayerAnimations";
 
 export default class Player extends BasePlayer {
 	static readonly speed: number = 8;
@@ -16,6 +16,8 @@ export default class Player extends BasePlayer {
 	private stateX: String;
 
 	private posYold: number;
+
+	private isJumping: boolean = false;
 
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
@@ -110,8 +112,13 @@ export default class Player extends BasePlayer {
 	private jump() {
 		if (this.isGround()) {
 			this.vel.setTo(this.vel.x, -700);
+			// console.log(this.vel);
 			this.stateY = "jump";
 			console.log("just jumped");
+			if (!this.isJumping && this.animation) {
+				this.isJumping = true;
+				this.animation.changeState("jump-right");
+			}
 		}
 	}
 

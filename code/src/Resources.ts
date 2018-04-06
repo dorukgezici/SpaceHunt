@@ -13,11 +13,13 @@ const resources = {
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
 	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
 	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
-	bgPlaceholderTexture: new Texture(require("./Scenes/Level3/bgPlaceholder.jpg")),
 	bgPlaceholderTexture2: new Texture(require("./Scenes/Level4/bgPlaceholder2.jpg")),
 	princess: new Texture(require("./Scenes/Level4/princess.png")),
 	pot: new Texture(require("./Scenes/Level4/pot.png")),
-	cannibale: new Texture(require("./Scenes/Level4/cannibale_placeholder.png"))
+	level3: {
+		bg: new Texture(require("./Resources/Images/level3Texture.png")),
+		ground: new Texture(require("./Resources/Images/ground.png"))
+	}
 
 };
 
