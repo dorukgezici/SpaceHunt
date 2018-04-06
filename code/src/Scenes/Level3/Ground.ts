@@ -13,7 +13,7 @@ export default class Ground extends ex.Actor {
 
 	draw(ctx: CanvasRenderingContext2D, delta: number): void {
 		super.draw(ctx, delta);
-		const sprite = Resources.seaBed.asSprite();
+		const sprite = Resources.level3.ground.asSprite();
 		let offset = 0;
 
 		
