@@ -35,12 +35,12 @@ export default class Player extends BasePlayer {
 	}
 
 	initAnimations() {
-		// if (!this.animation)
-		// this.animation = playerAnimationFactory.attachTo(this);
+		if (!this.animation)
+			this.animation = playerAnimationFactory.attachTo(this);
 	}
 
 
-	// TODO: change animations only if state just changed
+	private stateChanged: boolean = false;
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
@@ -52,10 +52,11 @@ export default class Player extends BasePlayer {
 				// just landed
 				this.stateY = "not jumping";
 				console.log("just landed");
+				this.stateChanged = true;
 			}
 
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.stateY !== "jump") {
 				this.jump();
 			}
 
@@ -68,10 +69,12 @@ export default class Player extends BasePlayer {
 					if (this.stateX !== "left") {
 						this.stateX = "left";
 						console.log("just turned left");
+						this.stateChanged = true;
 					}
 					if (this.stateY !== "walk") {
 						this.stateY = "walk";
 						console.log("just started walking");
+						this.stateChanged = true;
 					}
 
 				} else {
@@ -81,10 +84,12 @@ export default class Player extends BasePlayer {
 						if (this.stateX !== "right") {
 							this.stateX = "right";
 							console.log("just turned right");
+							this.stateChanged = true;
 						}
 						if (this.stateY !== "walk") {
 							this.stateY = "walk";
 							console.log("just started walking");
+							this.stateChanged = true;
 						}
 
 					} else {
@@ -93,12 +98,20 @@ export default class Player extends BasePlayer {
 						if (this.stateY !== "idle") {
 							this.stateY = "idle";
 							console.log("just entered idle");
+							this.stateChanged = true;
 						}
 
 					}
 				}
 
 			}
+
+			// check if state changed and update animation accordingly
+			if (this.stateChanged) {
+				this.changeAnimationState(this.stateX, this.stateY);
+				this.stateChanged = false;
+			}
+
 		}
 
 		// move according to direction of movement
@@ -114,10 +127,11 @@ export default class Player extends BasePlayer {
 			this.vel.setTo(this.vel.x, -700);
 			// console.log(this.vel);
 			this.stateY = "jump";
+			this.stateChanged = true;
 			console.log("just jumped");
 			if (!this.isJumping && this.animation) {
 				this.isJumping = true;
-				this.animation.changeState("jump-right");
+				// this.animation.changeState("jump-right");
 			}
 		}
 	}
@@ -171,6 +185,45 @@ export default class Player extends BasePlayer {
 			this.emit("won");
 		}
 
+	}
+
+
+	// convert seperated states to animation state
+	changeAnimationState(stateX: String, stateY: String) {
+		switch (stateY + "-" + stateX) {
+			case "idle-right":
+				if (this.animation) this.animation.changeState("idle-right");
+				console.log("idle-right");
+				break;
+			case "idle-left":
+				if (this.animation) this.animation.changeState("idle-left");
+				console.log("idle-left");
+				break;
+			case "walk-left":
+				if (this.animation) this.animation.changeState("walk-left");
+				console.log("walk-left");
+				break;
+			case "walk-right":
+				if (this.animation) this.animation.changeState("walk-right");
+				console.log("walk-right");
+				break;
+			case "jump-left":
+				if (this.animation) this.animation.changeState("jump-left");
+				console.log("jump-left");
+				break;
+			case "jump-right":
+				if (this.animation) this.animation.changeState("jump-right");
+				console.log("jump-right");
+				break;
+			case "duck-left":
+				if (this.animation) this.animation.changeState("duck-left");
+				console.log("duck-left");
+				break;
+			case "duck-right":
+				if (this.animation) this.animation.changeState("duck-right");
+				console.log("duck-right");
+				break;
+		}
 	}
 
 }

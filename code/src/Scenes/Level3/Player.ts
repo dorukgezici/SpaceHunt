@@ -11,8 +11,8 @@ export default class Player extends BasePlayer {
 	engine: ex.Engine;
 	jumpFlag: boolean = false;
 	private animation?: DrawAnimation<IPlayerAnimations>;
-	private isJumping = false;
-	private posYpreviously: number;
+
+	private posYold: number;
 
 	speed: number;
 	speedAcc: number = 300;
@@ -27,7 +27,7 @@ export default class Player extends BasePlayer {
 		super(x, y);
 
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
-		this.y += this.getHeight();
+		// this.y += this.getHeight();
 		this.collisionArea.body.useBoxCollision();
 
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
@@ -36,7 +36,7 @@ export default class Player extends BasePlayer {
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.speed = this.speedNormal;
 
-		this.posYpreviously = this.pos.y;
+		this.posYold = this.pos.y;
 
 		// touch pointer events
 		this.engine = engine;
@@ -48,62 +48,111 @@ export default class Player extends BasePlayer {
 			this.animation = playerAnimationFactory.attachTo(this);
 	}
 
+
+
+	private stateChanged: boolean = false;
+	private state: String = "default";
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
-			this.jump();
-		}
+		// change movement if not currently in the air
+		if (this.isGround()) {
 
-		if (this.jumpFlag) {
-			this.jumpFlag = false;
-			this.jump();
-		}
-		// just landed?
-		if (this.isJumping && this.animation && this.pos.y === this.posYpreviously && this.isGround()) {
-			this.isJumping = false;
-			// TODO: Change lower line
-			// this.animation.changeState("walk");
-		}
-		this.posYpreviously = this.pos.y;
-
-
-		// X movement
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
-			this.speed = this.speedDec;
-		}
-
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
-			this.speed = this.speedAcc;
-		}
-
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
-				this.speed = this.speedAcc;
-			} else {
-				this.speed = this.speedNormal;
+			// just landed
+			if (this.state === "jump" && this.posYold < (600 - 65)) {
+				this.state = "default";
+				console.log("just landed");
+				this.stateChanged = true;
 			}
-		}
 
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
-				this.speed = this.speedDec;
-			} else {
-				this.speed = this.speedNormal;
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.state !== "jump") {
+				this.jump();
+				this.ducked = false;
+				this.state = "jump";
+				this.stateChanged = true;
 			}
-		}
 
-		if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
-			this.speed = this.speedNormal;
-		}
+			if (this.state !== "jump") {
 
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.D)) {
+					this.duck();
+					if (this.state !== "duck") {
+						this.state = "duck";
+						this.stateChanged = true;
+					}
+				}
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.D)) {
-			this.duck();
-		}
+				if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)) {
+					this.unDuck();
+					if (this.state !== "default") {
+						this.state = "default";
+						this.stateChanged = true;
+					}
+				}
 
-		if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)) {
-			this.unDuck();
+			}
+
+			if (this.state !== "jump" && this.state !== "duck") {
+
+				// X movement
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
+					this.speed = this.speedDec;
+					if (this.state !== "slow") {
+						this.state = "slow";
+						this.stateChanged = true;
+					}
+				}
+
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
+					this.speed = this.speedAcc;
+					if (this.state !== "fast") {
+						this.state = "fast";
+						this.stateChanged = true;
+					}
+				}
+
+				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
+					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+						this.speed = this.speedAcc;
+						if (this.state !== "fast") {
+							this.state = "fast";
+							this.stateChanged = true;
+						}
+					} else {
+						this.speed = this.speedNormal;
+						if (this.state !== "default") {
+							this.state = "default";
+							this.stateChanged = true;
+						}
+					}
+				}
+
+				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+					if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+						this.speed = this.speedDec;
+						if (this.state !== "slow") {
+							this.state = "slow";
+							this.stateChanged = true;
+						}
+					} else {
+						this.speed = this.speedNormal;
+						if (this.state !== "default") {
+							this.state = "default";
+							this.stateChanged = true;
+						}
+					}
+				}
+
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+					this.speed = this.speedNormal;
+					if (this.state !== "default") {
+						this.state = "default";
+						this.stateChanged = true;
+					}
+				}
+
+			}
+
 		}
 
 		if (!this.ducked) {
@@ -115,17 +164,18 @@ export default class Player extends BasePlayer {
 		if (this.getWorldPos().x > 4950) {
 			this.emit("won");
 		}
+
+		this.posYold = this.pos.y;
+
+		if (this.stateChanged) {
+			this.changeAnimationState();
+		}
+
 	}
 
 
 	private jump() {
-		if (this.isGround()) {
-			this.vel.y = -450;
-			this.isJumping = true;
-
-			// change animation
-			if (this.animation) { this.animation.changeState("jump"); }
-		}
+		this.vel.y = -450;
 	}
 
 
@@ -136,10 +186,6 @@ export default class Player extends BasePlayer {
 		this.ducked = true;
 		this.setHeight(this.getHeight() / 2);
 		this.collisionArea.body.useBoxCollision();
-
-		// change animation
-		if (this.animation) { this.animation.changeState("duck"); }
-
 	}
 
 	private unDuck() {
@@ -148,8 +194,6 @@ export default class Player extends BasePlayer {
 		this.ducked = false;
 		this.setHeight(this.getHeight() * 2);
 		this.collisionArea.body.useBoxCollision();
-		// TODO: change animation
-		// if (this.animation) { this.animation.changeState("walk"); }
 	}
 
 	public die(info: string) {
@@ -190,6 +234,26 @@ export default class Player extends BasePlayer {
 			return true;
 		} else {
 			return false;
+		}
+	}
+
+	changeAnimationState() {
+		switch (this.state) {
+			case "slow":
+				if (this.animation) this.animation.changeState("slow");
+				break;
+			case "default":
+				if (this.animation) this.animation.changeState("default");
+				break;
+			case "fast":
+				if (this.animation) this.animation.changeState("fast");
+				break;
+			case "jump":
+				if (this.animation) this.animation.changeState("jump");
+				break;
+			case "duck":
+				if (this.animation) this.animation.changeState("duck");
+				break;
 		}
 	}
 

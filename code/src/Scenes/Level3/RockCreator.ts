@@ -59,7 +59,7 @@ export default class RockCreator {
 		scene.add(rocks[newRockIndex]);
 
 		// create new timeout for next rock
-		let nextRockInMS = this.randomIntFromInterval(1000, 1500);
+		let nextRockInMS = this.randomIntFromInterval(100000, 200000); // (1000, 1500);
 		let that = this;
 		timer[0] = setTimeout(function () {
 			that.createNewRockRT(scene, bounds, player, rocks, timer);
