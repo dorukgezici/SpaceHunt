@@ -1,4 +1,4 @@
-import { IDrawableBase, IDrawSet } from "./DrawAnimation";
+import { IDrawableSet, IDrawSet } from "./DrawAnimation";
 import { Vector } from "Index";
 
 export type IDrawHandler<T extends string> = (
@@ -9,7 +9,7 @@ export type IDrawHandler<T extends string> = (
 	state: T
 ) => void;
 
-export class PlainDrawSet<T extends string> implements IDrawableBase, IDrawSet<T> {
+export class PlainDrawSet<T extends string> implements IDrawableSet, IDrawSet<T> {
 
 	constructor(
 		public drawHandler: IDrawHandler<T>,

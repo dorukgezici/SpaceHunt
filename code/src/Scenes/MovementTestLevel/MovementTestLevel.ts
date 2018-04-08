@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
+import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import {GameBootstrap, IGameElement, IGameElementEvents} from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "../../Components/Ground";
 import Player from "./Player";
 import { playerAnimationFactory } from "./PlayerAnimations";
@@ -20,7 +20,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 
 	constructor(bootstrap: GameBootstrap) {
 		super();
-		
+
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
@@ -28,10 +28,15 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds, bootstrap);
+
+		document.addEventListener("keydown", e => {
+			if (e.keyCode === 27)
+				this.emit("done", { target: this, type: GameElementDoneType.Finished });
+		});
 	}
 
 	init(bootstrap: GameBootstrap): void {
-		this.player.initAnimations();
+		//
 	}
 
 	start(): void {

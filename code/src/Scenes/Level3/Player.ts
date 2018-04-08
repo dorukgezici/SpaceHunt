@@ -1,7 +1,15 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "./PlayerAnimations";
+import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
+
+const states = {
+	default: maStates.walkRight,
+	slow: maStates.walkSlowRight,
+	fast: maStates.walkFastRight,
+	jump: maStates.jumpRight,
+	duck: maStates.duckRight
+};
 
 export default class Player extends BasePlayer {
 
@@ -14,14 +22,17 @@ export default class Player extends BasePlayer {
 
 	private posYold: number;
 
-	speed: number;
-	speedAcc: number = 300;
-	speedNormal: number = 200;
-	speedDec: number = 100;
-	speedDucked: number = 50;
+	private speed: number;
+	private speedAcc: number = 300;
+	private speedNormal: number = 200;
+	private speedDec: number = 100;
+	private speedDucked: number = 50;
 
-	minX: number;
-	maxX: number;
+	private minX: number;
+	private maxX: number;
+
+
+	private state: IPlayerAnimations = states.default;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine) {
 		super(x, y);
@@ -44,111 +55,86 @@ export default class Player extends BasePlayer {
 	}
 
 	initAnimations() {
-		if (!this.animation)
+		if (!this.animation) {
 			this.animation = playerAnimationFactory.attachTo(this);
+			this.animation.changeState("walk-right");
+		}
 	}
 
-
-
-	private stateChanged: boolean = false;
-	private state: String = "default";
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
+
+		let stateChanged = false;
+		const updateState = (state: IPlayerAnimations) => {
+			stateChanged = true;
+			this.state = state;
+		};
 
 		// change movement if not currently in the air
 		if (this.isGround()) {
 
 			// just landed
-			if (this.state === "jump" && this.posYold < (600 - 65)) {
-				this.state = "default";
+			if (this.state === states.jump && this.posYold < (600 - 65)) {
 				console.log("just landed");
-				this.stateChanged = true;
+				updateState(states.default);
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.state !== "jump") {
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.state !== states.jump) {
 				this.jump();
 				this.ducked = false;
-				this.state = "jump";
-				this.stateChanged = true;
+				updateState(states.jump);
 			}
 
-			if (this.state !== "jump") {
+			if (this.state !== states.jump) {
 
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.D)) {
 					this.duck();
-					if (this.state !== "duck") {
-						this.state = "duck";
-						this.stateChanged = true;
-					}
+					updateState(states.duck);
 				}
 
 				if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)) {
 					this.unDuck();
-					if (this.state !== "default") {
-						this.state = "default";
-						this.stateChanged = true;
-					}
+					updateState(states.default);
 				}
 
 			}
 
-			if (this.state !== "jump" && this.state !== "duck") {
+			if (this.state !== states.jump && this.state !== states.duck) {
 
 				// X movement
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
 					this.speed = this.speedDec;
-					if (this.state !== "slow") {
-						this.state = "slow";
-						this.stateChanged = true;
-					}
+					updateState(states.slow);
 				}
 
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
 					this.speed = this.speedAcc;
-					if (this.state !== "fast") {
-						this.state = "fast";
-						this.stateChanged = true;
-					}
+					updateState(states.fast);
 				}
 
 				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
 					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
 						this.speed = this.speedAcc;
-						if (this.state !== "fast") {
-							this.state = "fast";
-							this.stateChanged = true;
-						}
+						updateState(states.fast);
 					} else {
 						this.speed = this.speedNormal;
-						if (this.state !== "default") {
-							this.state = "default";
-							this.stateChanged = true;
-						}
+						updateState(states.default);
 					}
 				}
 
 				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
 					if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
 						this.speed = this.speedDec;
-						if (this.state !== "slow") {
-							this.state = "slow";
-							this.stateChanged = true;
-						}
+						updateState(states.slow);
 					} else {
 						this.speed = this.speedNormal;
-						if (this.state !== "default") {
-							this.state = "default";
-							this.stateChanged = true;
-						}
+						updateState(states.default);
 					}
 				}
 
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
 					this.speed = this.speedNormal;
-					if (this.state !== "default") {
-						this.state = "default";
-						this.stateChanged = true;
-					}
+					updateState(states.default);
 				}
 
 			}
@@ -167,18 +153,14 @@ export default class Player extends BasePlayer {
 
 		this.posYold = this.pos.y;
 
-		if (this.stateChanged) {
-			this.changeAnimationState();
-		}
+		if (stateChanged && this.animation)
+			this.animation.changeState(this.state);
 
 	}
-
 
 	private jump() {
 		this.vel.y = -450;
 	}
-
-
 
 	private duck() {
 		if (this.ducked)
@@ -234,26 +216,6 @@ export default class Player extends BasePlayer {
 			return true;
 		} else {
 			return false;
-		}
-	}
-
-	changeAnimationState() {
-		switch (this.state) {
-			case "slow":
-				if (this.animation) this.animation.changeState("slow");
-				break;
-			case "default":
-				if (this.animation) this.animation.changeState("default");
-				break;
-			case "fast":
-				if (this.animation) this.animation.changeState("fast");
-				break;
-			case "jump":
-				if (this.animation) this.animation.changeState("jump");
-				break;
-			case "duck":
-				if (this.animation) this.animation.changeState("duck");
-				break;
 		}
 	}
 

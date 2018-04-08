@@ -49,8 +49,8 @@ export class TransformDrawAnimationFactory<T extends string> extends Class<IEven
 export interface ITransformDrawSetProviderData<T extends string> {
 	states: ITransformDrawStateCollection<T>;
 	selectedState: T;
-	drawBase: IDrawBase;
-	beforeDraw?: IBeforeDraw;
+	beforeDraw?: IBeforeDraw<T>;
+	drawBase: IDrawBase<T>;
 }
 
 export function createTransformDrawSetProvider<T extends string>(data: ITransformDrawSetProviderData<T>): IDrawSetProvider<T> {
@@ -61,7 +61,7 @@ export function createTransformDrawSetProvider<T extends string>(data: ITransfor
 		throw new Error("Initial state must have duration property declared.");
 
 	const partProvider = () => {
-		const part = new TransformDrawPart(
+		const part = new TransformDrawPart<T>(
 			state.start,
 			state.end,
 			state.duration || 0,

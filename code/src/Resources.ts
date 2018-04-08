@@ -1,4 +1,5 @@
 import { Texture, ILoadable } from "excalibur";
+import { texture as michealsonTexture } from "./Components/Animations/MichaelsonParts";
 
 export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };
@@ -16,6 +17,7 @@ const resources = {
 	bgPlaceholderTexture2: new Texture(require("./Scenes/Level4/bgPlaceholder2.jpg")),
 	princess: new Texture(require("./Scenes/Level4/princess.png")),
 	pot: new Texture(require("./Scenes/Level4/pot.png")),
+	michealsonTexture,
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),
 		ground: new Texture(require("./Resources/Images/ground.png"))

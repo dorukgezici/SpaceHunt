@@ -1,4 +1,4 @@
-import { IDrawableBase, IDrawSet } from "./DrawAnimation";
+import { IDrawableSet, IDrawSet } from "./DrawAnimation";
 import { ITransformation, IEasing, TransformDrawPart } from "./TransformDrawPart";
 import { Vector } from "Index";
 
@@ -16,11 +16,11 @@ export type ITransformDrawStateCollection<T extends string> = {
 	[K in T]?: ITransformDrawState
 };
 
-export type ITransformDrawPartProvider = () => TransformDrawPart;
+export type ITransformDrawPartProvider<T extends string> = () => TransformDrawPart<T>;
 
-export class TransformDrawSet<T extends string> implements IDrawableBase, IDrawSet<T> {
+export class TransformDrawSet<T extends string> implements IDrawableSet, IDrawSet<T> {
 
-	public readonly transformDrawPart: TransformDrawPart;
+	public readonly transformDrawPart: TransformDrawPart<T>;
 	private _selectedState: T;
 	private _enabled: boolean = false;
 	get selectedState() {
@@ -30,7 +30,7 @@ export class TransformDrawSet<T extends string> implements IDrawableBase, IDrawS
 	constructor(
 		private readonly states: ITransformDrawStateCollection<T>,
 		selectedState: T,
-		transformDrawPartProvider: ITransformDrawPartProvider
+		transformDrawPartProvider: ITransformDrawPartProvider<T>
 	) {
 		this._selectedState = selectedState;
 		const state = states[selectedState];
@@ -38,40 +38,39 @@ export class TransformDrawSet<T extends string> implements IDrawableBase, IDrawS
 		this.transformDrawPart = transformDrawPartProvider();
 	}
 
-	changeState(state: ITransformDrawState, delta: number): void;
-	changeState(state: T, delta: number): void;
-	changeState(state: T | ITransformDrawState | undefined, delta: number): void {
-		if (typeof state === "string")
-			state = this.states[state];
-		state = state as ITransformDrawState;
+	changeState(state: T, delta: number): void {
+		if (state === this._selectedState)
+			return;
+		this._selectedState = state;
+		const st = this.states[state] as ITransformDrawState;
 
 		const wasEnabled = this._enabled;
-		this._enabled = !!(state && state.enabled !== false);
+		this._enabled = !!(st && st.enabled !== false);
 
 		if (this._enabled) {
-			if (state.transitionDuration && wasEnabled) {
+			if (st.transitionDuration && wasEnabled) {
 				this.transformDrawPart.makeTransition(
-					state.start,
-					state.end,
+					st.start,
+					st.end,
 					delta,
-					state.transitionDuration,
-					state.transitionEasing
+					st.transitionDuration,
+					st.transitionEasing
 				);
 			} else {
-				this.transformDrawPart.startTransformation = state.start;
-				this.transformDrawPart.endTransformation = state.end;
+				this.transformDrawPart.startTransformation = st.start;
+				this.transformDrawPart.endTransformation = st.end;
 			}
 
-			if (state.easing)
-				this.transformDrawPart.easing = state.easing;
-			if (state.duration)
-				this.transformDrawPart.duration = state.duration;
+			if (st.easing)
+				this.transformDrawPart.easing = st.easing;
+			if (st.duration)
+				this.transformDrawPart.duration = st.duration;
 		}
 	}
 
 	draw(ctx: CanvasRenderingContext2D, delta: number, position?: Vector) {
 		if (this._enabled)
-			this.transformDrawPart.draw(ctx, delta, position);
+			this.transformDrawPart.draw(ctx, delta, position, this._selectedState);
 	}
 
 }

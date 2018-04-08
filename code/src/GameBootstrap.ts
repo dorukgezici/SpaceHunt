@@ -130,12 +130,13 @@ export class GameBootstrap {
 		const nameEnquiry = new NameEnquiry();
 		const intro = new Intro(this);
 		const startWarsIntro = new StarWarsIntro();
+		const movementTestLevel = new MovementTestLevel(this);
 
-		[level1, level2, level3, level4, nameEnquiry, intro, startWarsIntro].forEach((t: IGameElement) => {
+		[level1, level2, level3, level4, nameEnquiry, intro, startWarsIntro, movementTestLevel].forEach((t: IGameElement) => {
 			if (t.init)
 				t.init(this);
 		});
-
+		
 		const menuItems = [{
 			element: level1,
 			name: "Level 1"
@@ -149,12 +150,20 @@ export class GameBootstrap {
 			element: level4,
 			name: "Level 4"
 		}, {
+			element: movementTestLevel,
+			name: "MovementTestLevel"
+		}, {
 			element: startWarsIntro,
 			name: "StarWars Intro"
 		}, {
 			element: nameEnquiry,
 			name: "Start the Game"
 		}];
+
+		movementTestLevel.on("done", () => {
+			movementTestLevel.dispose();
+			this.menu.start();
+		});
 
 		this.menu.items = menuItems.map(t => t.name);
 		this.menu.on("click", ({ id }) => {

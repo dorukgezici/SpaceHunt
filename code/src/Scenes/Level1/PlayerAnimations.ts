@@ -9,7 +9,7 @@ type IPA = IPlayerAnimations;
 
 export function attachPlayerAnimations(player: Player) {
 
-	const beforeDraw: IBeforeDraw = (ctx, path, position) => {
+	const beforeDraw: IBeforeDraw<IPlayerAnimations> = (ctx, path, position) => {
 		if (position && player.onVine)
 			ctx.translate(-position.x, -position.y);
 	};

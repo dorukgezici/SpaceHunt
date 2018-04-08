@@ -59,7 +59,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
-		// cannibales
+		// cannibals
 		let i = 0;
 		let numCannibals = 1;
 		for (i; i < numCannibals; i++) {

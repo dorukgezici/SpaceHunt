@@ -1,5 +1,4 @@
 import { Vector, IDrawable } from "excalibur";
-import { IDrawableBase } from "./DrawAnimation";
 
 export interface ITransformation {
 	rotate?: number;
@@ -9,8 +8,8 @@ export interface ITransformation {
 	scaleY?: number;
 }
 
-export type IDrawBase = (this: TransformDrawPart, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, delta: number, transformation: ITransformation) => void;
-export type IBeforeDraw = (this: TransformDrawPart, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, delta: number) => void;
+export type IBeforeDraw<T extends string> = (this: TransformDrawPart<T>, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, state: T, delta: number, transformation: ITransformation) => ITransformation | unset | void;
+export type IDrawBase<T extends string> = (this: TransformDrawPart<T>, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, state: T, delta: number, transformation: ITransformation) => void;
 
 /** 
  * Represents animation easing.
@@ -21,7 +20,7 @@ export type IEasing = (delta: number) => number;
 export const linearEasing: IEasing = delta => delta;
 export const cubicEasing: IEasing = delta => delta ** 3;
 
-export class TransformDrawPart implements IDrawableBase {
+export class TransformDrawPart<T extends string> {
 
 	protected tmpDuration = 0;
 	protected tmpEasing: IEasing | null = null;
@@ -36,9 +35,11 @@ export class TransformDrawPart implements IDrawableBase {
 		public anchor?: Vector
 	) { }
 
-	private static getTransformValue(start: number | undefined, end: number | undefined, path: number): number | undefined {
-		if (typeof start !== "number" || typeof end !== "number")
-			return;
+	private static getTransformValue(start: number | undefined, end: number | undefined, path: number, defaultValue: number): number | undefined {
+		// if (typeof start !== "number" || typeof end !== "number") // this results in no transition for unspecified fields
+		// 	return;
+		start = start || defaultValue;
+		end = end || defaultValue;
 		return (end - start) * path + start;
 	}
 
@@ -71,11 +72,11 @@ export class TransformDrawPart implements IDrawableBase {
 	 * @param path Number from interval [0, 1] indicating state of the animation.
 	 */
 	static getTransformation(start: ITransformation, end: ITransformation, path: number): ITransformation {
-		const rotate = TransformDrawPart.getTransformValue(start.rotate, end.rotate, path);
-		const scaleX = TransformDrawPart.getTransformValue(start.scaleX, end.scaleX, path);
-		const scaleY = TransformDrawPart.getTransformValue(start.scaleY, end.scaleY, path);
-		const translateX = TransformDrawPart.getTransformValue(start.translateX, end.translateX, path);
-		const translateY = TransformDrawPart.getTransformValue(start.translateY, end.translateY, path);
+		const rotate = TransformDrawPart.getTransformValue(start.rotate, end.rotate, path, 0);
+		const scaleX = TransformDrawPart.getTransformValue(start.scaleX, end.scaleX, path, 1);
+		const scaleY = TransformDrawPart.getTransformValue(start.scaleY, end.scaleY, path, 1);
+		const translateX = TransformDrawPart.getTransformValue(start.translateX, end.translateX, path, 0);
+		const translateY = TransformDrawPart.getTransformValue(start.translateY, end.translateY, path, 0);
 
 		return {
 			translateX,
@@ -123,16 +124,18 @@ export class TransformDrawPart implements IDrawableBase {
 	 * @param path Number from interval [0, 1] indicating state of the animation.
 	 * @param delta Milliseconds since the animation has started.
 	 */
-	beforeDraw: IBeforeDraw | undefined;
+	beforeDraw: IBeforeDraw<T> | undefined;
 
 	/**
 	 * Should draw the base shape at coordinate system origin (0, 0).
 	 * @param ctx Canvas drawing context.
 	 * @param path Number from interval [0, 1] indicating state of the animation.
+	 * @param position Position at which the drawing will take place.
+	 * @param state State of the animation.
 	 * @param delta Milliseconds since the animation has started.
 	 * @param transformation Transformation already applied.
 	 */
-	drawBase(ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, delta: number, transformation: ITransformation) {
+	drawBase(ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, state: T, delta: number, transformation: ITransformation) {
 		ctx.fillStyle = "red";
 		ctx.fillRect(0, 0, 50, 50);
 	}
@@ -142,18 +145,23 @@ export class TransformDrawPart implements IDrawableBase {
 	 * @param ctx Canvas drawing context.
 	 * @param delta Milliseconds since the animation has started.
 	 */
-	draw(ctx: CanvasRenderingContext2D, delta: number, position?: Vector) {
+	draw(ctx: CanvasRenderingContext2D, delta: number, position: Vector | undefined, state: T) {
 		const path = this.getPath(delta);
 		const t = this.getTransformation(path);
+		let customTransformation: ITransformation | null = null;
 
 		ctx.save();
 
 		if (this.beforeDraw)
-			this.beforeDraw(ctx, path, position, delta);
+			customTransformation = this.beforeDraw(ctx, path, position, state, delta, t) || null;
 
-		if (position || this.anchor || t.translateX || t.translateY) {
+		if (position || this.anchor || t.translateX || t.translateY || (customTransformation && (customTransformation.translateX || customTransformation.translateY))) {
 			let x = t.translateX || 0;
 			let y = t.translateY || 0;
+			if (customTransformation) {
+				x += customTransformation.translateX || 0;
+				y += customTransformation.translateY || 0;
+			}
 			if (this.anchor) {
 				x += this.anchor.x;
 				y += this.anchor.y;
@@ -165,13 +173,13 @@ export class TransformDrawPart implements IDrawableBase {
 			ctx.translate(x, y);
 		}
 
-		if (t.rotate)
-			ctx.rotate(t.rotate);
+		if (t.rotate || (customTransformation && customTransformation.rotate))
+			ctx.rotate((t.rotate || 0) + ((customTransformation && customTransformation.rotate) || 0));
 
-		if (typeof t.scaleX === "number" || typeof t.scaleY === "number")
-			ctx.scale(t.scaleX || 1, t.scaleY || 1);
+		if (typeof t.scaleX === "number" || typeof t.scaleY === "number" || (customTransformation && (typeof customTransformation.scaleX === "number" || typeof customTransformation.scaleY === "number")))
+			ctx.scale((customTransformation && customTransformation.scaleX) || t.scaleX || 1, (customTransformation && customTransformation.scaleY) || t.scaleY || 1);
 
-		this.drawBase(ctx, path, position, delta, t);
+		this.drawBase(ctx, path, position, state, delta, t);
 
 		ctx.restore();
 	}
