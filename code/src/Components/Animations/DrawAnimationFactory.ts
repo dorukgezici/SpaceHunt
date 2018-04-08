@@ -2,7 +2,7 @@ import { ITransformDrawStateCollection, TransformDrawSet, ITransformDrawPartProv
 import { Class } from "../../Class";
 import { DrawAnimation, IDrawSet, IDrawSetProvider } from "./DrawAnimation";
 import { Actor } from "excalibur";
-import { IDrawBase, TransformDrawPart } from "./TransformDrawPart";
+import { IDrawBase, TransformDrawPart, IBeforeDraw } from "./TransformDrawPart";
 
 interface IActorClass<T extends Actor = Actor> {
 	prototype: T;
@@ -50,10 +50,11 @@ export interface ITransformDrawSetProviderData<T extends string> {
 	states: ITransformDrawStateCollection<T>;
 	selectedState: T;
 	drawBase: IDrawBase;
+	beforeDraw?: IBeforeDraw;
 }
 
 export function createTransformDrawSetProvider<T extends string>(data: ITransformDrawSetProviderData<T>): IDrawSetProvider<T> {
-	const { states, selectedState, drawBase } = data;
+	const { states, selectedState, drawBase, beforeDraw } = data;
 
 	const state = states[selectedState];
 	if (!state || !state.duration)
@@ -66,7 +67,9 @@ export function createTransformDrawSetProvider<T extends string>(data: ITransfor
 			state.duration || 0,
 			state.easing
 		);
-		part.drawBase = data.drawBase;
+		part.drawBase = drawBase;
+		if (beforeDraw)
+			part.beforeDraw = beforeDraw;
 		return part;
 	};
 

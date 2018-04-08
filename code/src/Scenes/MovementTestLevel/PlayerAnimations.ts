@@ -1,7 +1,7 @@
-import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "./DrawAnimationFactory";
-import { cubicEasing } from "./TransformDrawPart";
-import { IDrawSetProvider } from "./DrawAnimation";
-import { PlainDrawSet } from "./PlainDrawSet";
+import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "../../Components/Animations/DrawAnimationFactory";
+import { cubicEasing } from "../../Components/Animations/TransformDrawPart";
+import { IDrawSetProvider } from "../../Components/Animations/DrawAnimation";
+import { PlainDrawSet } from "../../Components/Animations/PlainDrawSet";
 
 export type IPlayerAnimations = "idle" | "walk" | "jump" | "duck";
 type IPA = IPlayerAnimations;

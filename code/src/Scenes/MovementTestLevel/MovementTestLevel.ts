@@ -4,7 +4,7 @@ import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import {GameBootstrap, IGameElement, IGameElementEvents} from "../../GameBootstrap";
 import Ground from "../../Components/Ground";
 import Player from "./Player";
-import { playerAnimationFactory } from "../../Components/Animations/PlayerAnimations";
+import { playerAnimationFactory } from "./PlayerAnimations";
 
 export default class MovementTestLevel extends Class<IGameElementEvents> implements IGameElement {
 
