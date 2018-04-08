@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import { GameBootstrap } from "../../GameBootstrap";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/PlayerAnimations";
+import { playerAnimationFactory, IPlayerAnimations } from "./PlayerAnimations";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 
 

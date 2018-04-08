@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import Sky from "./Sky";
 import Level2 from "./Level2";
-import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "../../Components/Animations/PlayerSwimAnimation";
+import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 
 export default class Player extends ex.Actor {

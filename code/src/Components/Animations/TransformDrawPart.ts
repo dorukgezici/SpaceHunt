@@ -10,6 +10,7 @@ export interface ITransformation {
 }
 
 export type IDrawBase = (this: TransformDrawPart, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, delta: number, transformation: ITransformation) => void;
+export type IBeforeDraw = (this: TransformDrawPart, ctx: CanvasRenderingContext2D, path: number, position: Vector | undefined, delta: number) => void;
 
 /** 
  * Represents animation easing.
@@ -117,6 +118,14 @@ export class TransformDrawPart implements IDrawableBase {
 	}
 
 	/**
+	 * Called before any transformations are applied.
+	 * @param ctx Canvas drawing context.
+	 * @param path Number from interval [0, 1] indicating state of the animation.
+	 * @param delta Milliseconds since the animation has started.
+	 */
+	beforeDraw: IBeforeDraw | undefined;
+
+	/**
 	 * Should draw the base shape at coordinate system origin (0, 0).
 	 * @param ctx Canvas drawing context.
 	 * @param path Number from interval [0, 1] indicating state of the animation.
@@ -138,6 +147,9 @@ export class TransformDrawPart implements IDrawableBase {
 		const t = this.getTransformation(path);
 
 		ctx.save();
+
+		if (this.beforeDraw)
+			this.beforeDraw(ctx, path, position, delta);
 
 		if (position || this.anchor || t.translateX || t.translateY) {
 			let x = t.translateX || 0;
