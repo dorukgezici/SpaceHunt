@@ -273,8 +273,8 @@ const legBack: IRLData = {
 	baseStates: {
 		idle: {
 			duration: 1000,
-			start: { rotate: 0 },
-			end: { rotate: 0 },
+			start: {},
+			end: {},
 			transitionDuration: 200
 		},
 		walk: {
@@ -345,6 +345,7 @@ const torso: IRLData = {
 			transitionDuration: 200
 		},
 		"jump-left": {
+			duration: 1000,
 			start: { rotate: -0.2 },
 			end: { rotate: -0.2 },
 			transitionDuration: 200
@@ -353,8 +354,8 @@ const torso: IRLData = {
 	baseStates: {
 		idle: {
 			duration: 1000,
-			start: { rotate: 0 },
-			end: { rotate: 0 },
+			start: {},
+			end: {},
 			transitionDuration: 200
 		},
 		walk: {
@@ -405,22 +406,22 @@ const head: IRLData = {
 	states: {
 		"jump-right": {
 			duration: 500,
-			start: { rotate: -0.1, translateX: 5 },
+			start: { rotate: 0.1, translateX: 5 },
 			end: { rotate: -0.1, translateX: 5 },
 			transitionDuration: 200
 		},
 		"jump-left": {
 			duration: 500,
-			start: { rotate: 0.1, translateX: -5 },
+			start: { rotate: -0.1, translateX: -5 },
 			end: { rotate: 0.1, translateX: -5 },
 			transitionDuration: 200
 		}
 	},
 	baseStates: {
 		idle: {
-			duration: 1000,
-			start: { rotate: 0.1 },
-			end: { rotate: -0.1 },
+			duration: 1500,
+			start: { rotate: 0.05 },
+			end: { rotate: -0.05 },
 			transitionDuration: 200
 		},
 		walk: {

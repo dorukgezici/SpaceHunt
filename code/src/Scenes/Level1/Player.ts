@@ -2,14 +2,14 @@ import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Vine from "./Vine";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { attachPlayerAnimations, IPlayerAnimations } from "./PlayerAnimations";
+import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
 
 export default class Level1Player extends BasePlayer {
 
 	inJump: boolean = false;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
-	private animation: DrawAnimation<IPlayerAnimations>;
+	private animation: DrawAnimation<ITarzanAnimations>;
 	private hasStarted = false;
 
 	constructor(x: number, y: number) {
