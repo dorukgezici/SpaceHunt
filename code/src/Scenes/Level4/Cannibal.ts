@@ -2,7 +2,7 @@ import * as ex from "excalibur";
 import Player from "./Player";
 import resources from "../../Resources";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { ICannibalAnimations, cannibalAnimationFactory } from "./CannibalAnimations";
+import { IEslanAnimations, eslanAnimationFactory } from "../../Components/Animations/EslanAnimation";
 
 export default class Cannibal extends ex.Actor {
 
@@ -10,7 +10,7 @@ export default class Cannibal extends ex.Actor {
 	minX: number;
 	maxX: number;
 	speedX: number;
-	private animation: DrawAnimation<ICannibalAnimations>;
+	private animation: DrawAnimation<IEslanAnimations>;
 
 	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX: number) {
 		super(x, y, w, h, ex.Color.White);
@@ -25,7 +25,7 @@ export default class Cannibal extends ex.Actor {
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
-		this.animation = cannibalAnimationFactory.attachTo(this);
+		this.animation = eslanAnimationFactory.attachTo(this);
 
 		if (this.randomIntFromInterval(1, 2) > 1) {
 			this.vel.x = speedX;

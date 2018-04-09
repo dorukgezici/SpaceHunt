@@ -9,6 +9,7 @@ import Background from "./Background";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";
+import { modelSize } from "../../Components/Animations/EslanParts";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -53,20 +54,20 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.player.initAnimations();
 
 		// vine + wife + pot
-		this.vine = new Vine (4800, 0, 28, 2, 0.05);
+		this.vine = new Vine(4800, 0, 28, 2, 0.05);
 		this.princess = new Princess(this.vine);
 		this.pot = new Pot(4800, 550, 5, 5);
 
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
 		// cannibals
-		let i = 0;
-		let numCannibals = 1;
-		for (i; i < numCannibals; i++) {
-			let xStart = this.randomIntFromInterval(500, 4500);
-			let speedX = this.randomIntFromInterval(100, 200);
-			let w = this.randomIntFromInterval(20, 30);
-			let h = this.randomIntFromInterval(40, 60);
+		const numCannibals = 1;
+		for (let i = 0; i < numCannibals; i++) {
+			const xStart = this.randomIntFromInterval(500, 4500);
+			const speedX = this.randomIntFromInterval(100, 200);
+			// let w = this.randomIntFromInterval(20, 30);
+			// let h = this.randomIntFromInterval(40, 60);
+			const { w, h } = modelSize;
 			this.cannibals.push(new Cannibal(xStart, 600 - 50 - h / 2, w, h, speedX, 400, 4600));
 		}
 

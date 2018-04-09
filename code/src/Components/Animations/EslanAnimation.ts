@@ -3,10 +3,11 @@ import { cubicEasing, IDrawBase, IBeforeDraw } from "./TransformDrawPart";
 import { IDrawSetProvider } from "./DrawAnimation";
 import { PlainDrawSet } from "./PlainDrawSet";
 import { Sprite } from "excalibur";
-import { bodyParts, IBodyPart, sprites, IBodyParts } from "./MichaelsonParts";
+import { bodyParts, sprites } from "./EslanParts";
 import { ITransformDrawStateCollection } from "./TransformDrawSet";
+import { IBodyParts } from "./MichaelsonParts";
 
-export const playerAnimationTypes = [
+export const eslanAnimationTypes = [
 	"idle-right",
 	"idle-left",
 	"walk-right",
@@ -21,7 +22,7 @@ export const playerAnimationTypes = [
 	"walk-slow-left"
 ];
 
-export type IPlayerAnimations =
+export type IEslanAnimations =
 	| "idle-right"
 	| "idle-left"
 	| "walk-right"
@@ -35,7 +36,7 @@ export type IPlayerAnimations =
 	| "walk-slow-right"
 	| "walk-slow-left";
 
-type IPABase =
+type IEABase =
 	| "idle"
 	| "walk"
 	| "jump"
@@ -57,15 +58,15 @@ const _states = {
 	walkSlowLeft: "walk-slow-left",
 };
 
-export const states = _states as ObjectValueMap<typeof _states, IPlayerAnimations>;
+export const states = _states as ObjectValueMap<typeof _states, IEslanAnimations>;
 
-type IPA = IPlayerAnimations;
-type ITData = ITransformDrawSetProviderData<IPA>;
+type IEA = IEslanAnimations;
+type ITData = ITransformDrawSetProviderData<IEA>;
 interface IRLData extends ITData {
-	baseStates?: ITransformDrawStateCollection<IPABase>;
+	baseStates?: ITransformDrawStateCollection<IEABase>;
 }
 
-const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IBeforeDraw<IPlayerAnimations> => {
+const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IBeforeDraw<IEslanAnimations> => {
 	const bpr = bodyParts[bodyPartRight];
 	const bpl = bodyParts[bodyPartLeft];
 
@@ -77,7 +78,7 @@ const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts):
 	};
 };
 
-const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IDrawBase<IPlayerAnimations> => {
+const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IDrawBase<IEslanAnimations> => {
 	const spr = sprites[bodyPartRight];
 	const spl = sprites[bodyPartLeft];
 	const bpr = bodyParts[bodyPartRight].anchor;
@@ -94,32 +95,19 @@ const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): I
 const baseDataExtender = (irlData: IRLData) => {
 	if (irlData.baseStates)
 		Object.entries(irlData.baseStates).forEach(([key, state]) => {
-			irlData.states[key + "-right" as IPA] = state;
-			irlData.states[key + "-left" as IPA] = state;
+			irlData.states[key + "-right" as IEA] = state;
+			irlData.states[key + "-left" as IEA] = state;
 		});
 	return irlData as ITData;
 };
 
-const selectedState = "idle-right";
+const selectedState = "walk-right";
 
 const armFront: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("armRight", "armLeft"),
 	beforeDraw: beforeDrawFactory("armRight", "armLeft"),
-	states: {
-		"jump-right": {
-			duration: 800,
-			start: { rotate: -2.2, translateX: 5 },
-			end: { rotate: -2.5, translateX: 5 },
-			transitionDuration: 100
-		},
-		"jump-left": {
-			duration: 800,
-			start: { rotate: 2.2, translateX: -5 },
-			end: { rotate: 2.5, translateX: -5 },
-			transitionDuration: 100
-		},
-	},
+	states: {},
 	baseStates: {
 		idle: {
 			duration: 1000,
@@ -445,4 +433,4 @@ const animationProviders = allData
 	.map(baseDataExtender)
 	.map(createTransformDrawSetProvider);
 
-export const playerAnimationFactory = new TransformDrawAnimationFactory(animationProviders);
+export const eslanAnimationFactory = new TransformDrawAnimationFactory(animationProviders);

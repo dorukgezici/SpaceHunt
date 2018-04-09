@@ -8,7 +8,7 @@ import resources from "../../Resources";
  */
 export default class Background extends ex.Actor {
 
-	static readonly image: ex.Sprite = resources.level4bg.asSprite();
+	static readonly image: ex.Sprite = resources.level4.bg.asSprite();
 	static readonly bgWidth: number = 1190;
 	static readonly bgHeight: number = 604;
 	static readonly maxYMovement = 10;
