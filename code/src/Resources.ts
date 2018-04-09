@@ -14,13 +14,17 @@ const resources = {
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
 	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
 	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
-	level4bg: new Texture(require("./Resources/Images/level4Texture.png")),
-	princess: new Texture(require("./Scenes/Level4/princess.png")),
-	pot: new Texture(require("./Scenes/Level4/pot.png")),
-	michealsonTexture,
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),
 		ground: new Texture(require("./Resources/Images/ground.png"))
+	},
+	level4: {
+		bg: new Texture(require("./Resources/Images/level4Texture.png")),
+		// bg: new Texture(require("./Resources/Images/lvl4background2.png")),
+		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
+		princess: new Texture(require("./Scenes/Level4/princess.png")),
+		pot: new Texture(require("./Scenes/Level4/pot.png")),
+		michealsonTexture,
 	}
 
 };

@@ -14,7 +14,7 @@ export default class Princess extends ex.Actor {
 		this.vine = vine;
 		this.vLast = this.vine.getAllParts()[this.vine.getAllParts().length - 1];
 		this.collisionType = ex.CollisionType.Passive;
-		this.sprite = resources.princess.asSprite();
+		this.sprite = resources.level4.princess.asSprite();
 		this.sprite.anchor.setTo(0.5, 0.5);
 	}
 
