@@ -1,8 +1,9 @@
 import { Texture, Sprite } from "excalibur";
 import { CustomSprite } from "./AnimationHelpers";
-import { IBodyPart, IBodyParts } from "./MichaelsonParts";
+import { IBodyPart } from "./MichaelsonParts";
 
 export const image = require<string>("../../Resources/Images/eslan.png");
+export const texture = new Texture(image);
 
 export const modelSize = {
 	w: 38,
@@ -50,7 +51,7 @@ const torsoAnchor = {
 };
 
 const armRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 128,
 		y: 86,
@@ -65,7 +66,7 @@ const armRight: IBodyPart = {
 };
 
 const armLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 103,
 		y: 85,
@@ -80,7 +81,7 @@ const armLeft: IBodyPart = {
 };
 
 const legRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 177,
 		y: 19,
@@ -95,7 +96,7 @@ const legRight: IBodyPart = {
 };
 
 const legLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 139,
 		y: 19,
@@ -110,7 +111,7 @@ const legLeft: IBodyPart = {
 };
 
 const headRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 76,
 		y: 14,
@@ -125,10 +126,10 @@ const headRight: IBodyPart = {
 };
 
 const headLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 24,
-		y: 15	,
+		y: 15,
 		...headSize
 	},
 	modelLocation: {
@@ -140,7 +141,7 @@ const headLeft: IBodyPart = {
 };
 
 const torso: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 27,
 		y: 84,
@@ -154,7 +155,7 @@ const torso: IBodyPart = {
 	anchor: { ...torsoAnchor }
 };
 
-export const texture = new Texture(image);
+export type IBodyParts = keyof typeof bodyParts;
 const _sprites: ObjectValueMap<typeof bodyParts, CustomSprite> = {} as any;
 const _bodyParts = {
 	armRight,
@@ -198,7 +199,7 @@ const shiftRight = (part: IBodyPart) => {
 
 allParts.forEach(centerPart);
 rightParts.forEach(shiftRight);
-Object.entries(_bodyParts).forEach(([key, { sourceLocation: loc }]) =>
+Object.entries(_bodyParts).forEach(([key, { texture, sourceLocation: loc }]) =>
 	_sprites[key as IBodyParts] = new CustomSprite(texture, loc.x, loc.y, loc.w, loc.h)
 );
 

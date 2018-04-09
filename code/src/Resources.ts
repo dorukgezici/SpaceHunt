@@ -1,5 +1,5 @@
 import { Texture, ILoadable } from "excalibur";
-import { texture as michealsonTexture } from "./Components/Animations/MichaelsonParts";
+import { texture as michealsonTexture, textureDuck } from "./Components/Animations/MichaelsonParts";
 import { texture as eslanTexture } from "./Components/Animations/EslanParts";
 
 export interface IResources {
@@ -27,7 +27,8 @@ const resources = {
 		pot: new Texture(require("./Scenes/Level4/pot.png")),
 	},
 	michealsonTexture,
-	eslanTexture
+	eslanTexture,
+	textureDuck
 };
 
 export default resources as IResources as typeof resources;

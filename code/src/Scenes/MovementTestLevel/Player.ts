@@ -3,10 +3,11 @@ import BasePlayer from "../../Components/BasePlayer";
 import { GameBootstrap } from "../../GameBootstrap";
 import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { modelSize } from "../../Components/Animations/MichaelsonParts";
+import { modelSize, modelDuckSize } from "../../Components/Animations/MichaelsonParts";
 
 export default class Player extends BasePlayer {
 	static readonly size = modelSize;
+	static readonly duckSize = modelDuckSize;
 	static readonly speed: number = 8;
 	private minX: number;
 	private maxX: number;
@@ -102,7 +103,7 @@ export default class Player extends BasePlayer {
 		if (this.ducked)
 		return; // already ducked
 		this.ducked = true;
-		this.setHeight(this.getHeight() / 2);
+		this.setHeight(Player.duckSize.h);
 		this.collisionArea.body.useBoxCollision();
 	}
 	
@@ -110,7 +111,7 @@ export default class Player extends BasePlayer {
 		if (!this.ducked)
 			return; // already ducked
 		this.ducked = false;
-		this.setHeight(this.getHeight() * 2);
+		this.setHeight(Player.size.h);
 		this.collisionArea.body.useBoxCollision();
 	}
 

@@ -149,7 +149,7 @@ const armFront: IRLData = {
 			duration: 1000,
 			start: { rotate: -0.1, translateY: 20 },
 			end: { rotate: 0.1, translateY: 20 },
-			transitionDuration: 200
+			transitionDuration: 100
 		}
 	}
 };
@@ -201,7 +201,7 @@ const armBack: IRLData = {
 			duration: 1000,
 			start: { rotate: 0.1, translateY: 20 },
 			end: { rotate: -0.1, translateY: 20 },
-			transitionDuration: 200
+			transitionDuration: 100
 		}
 	}
 };
@@ -247,12 +247,6 @@ const legFront: IRLData = {
 			duration: 600,
 			start: { rotate: 0.3 },
 			end: { rotate: -0.3 },
-			transitionDuration: 200
-		},
-		duck: {
-			duration: 1000,
-			start: { rotate: 0 },
-			end: { rotate: 0 },
 			transitionDuration: 200
 		}
 	}
@@ -300,12 +294,36 @@ const legBack: IRLData = {
 			start: { rotate: -0.3 },
 			end: { rotate: 0.3 },
 			transitionDuration: 200
-		},
+		}
+	}
+};
+
+const legDuckFront: IRLData = {
+	selectedState,
+	drawBase: drawBaseFactory("legDuckRight", "legDuckLeft"),
+	beforeDraw: beforeDrawFactory("legDuckRight", "legDuckLeft"),
+	states: {},
+	baseStates: {
 		duck: {
-			duration: 1000,
-			start: { rotate: 0 },
-			end: { rotate: 0 },
-			transitionDuration: 200
+			duration: 600,
+			start: { rotate: 0.1 },
+			end: { rotate: -0.1 },
+			transitionDuration: 100
+		}
+	}
+};
+
+const legDuckBack: IRLData = {
+	selectedState,
+	drawBase: drawBaseFactory("legDuckRight", "legDuckLeft"),
+	beforeDraw: beforeDrawFactory("legDuckRight", "legDuckLeft"),
+	states: {},
+	baseStates: {
+		duck: {
+			duration: 600,
+			start: { rotate: -0.1 },
+			end: { rotate: 0.1 },
+			transitionDuration: 100
 		}
 	}
 };
@@ -361,7 +379,7 @@ const torso: IRLData = {
 			duration: 1000,
 			start: { rotate: 0, translateY: 18 },
 			end: { rotate: 0, translateY: 18 },
-			transitionDuration: 200
+			transitionDuration: 100
 		}
 	}
 };
@@ -427,17 +445,19 @@ const head: IRLData = {
 			duration: 900,
 			start: { rotate: -0.1, translateY: 25 },
 			end: { rotate: 0.1, translateY: 25 },
-			transitionDuration: 200
+			transitionDuration: 100
 		}
 	}
 };
 
 const allData = [
 	legBack,
+	legDuckBack,
 	armBack,
 	torso,
 	head,
 	legFront,
+	legDuckFront,
 	armFront,
 ];
 

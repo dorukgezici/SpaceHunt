@@ -57,16 +57,15 @@ export function createTransformDrawSetProvider<T extends string>(data: ITransfor
 	const { states, selectedState, drawBase, beforeDraw } = data;
 
 	const state = states[selectedState];
-	if (!state || !state.duration)
-		throw new Error("Initial state must have duration property declared.");
 
 	const partProvider = () => {
-		const part = new TransformDrawPart<T>(
-			state.start,
-			state.end,
-			state.duration || 0,
-			state.easing
-		);
+		const part = state
+			? new TransformDrawPart<T>(
+				state.start,
+				state.end,
+				state.duration || 0,
+				state.easing
+			) : new TransformDrawPart<T>({}, {}, 0);
 		part.drawBase = drawBase;
 		if (beforeDraw)
 			part.beforeDraw = beforeDraw;

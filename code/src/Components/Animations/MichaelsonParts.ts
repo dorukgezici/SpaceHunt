@@ -9,7 +9,7 @@ export interface IBounds {
 }
 
 export interface IBodyPart {
-	image: string;
+	texture: Texture;
 	// Part of the source image that represents the body part
 	sourceLocation: IBounds;
 	// Position of the body part in player model
@@ -21,6 +21,9 @@ export interface IBodyPart {
 }
 
 export const image = require<string>("../../Resources/Images/Michaelsons1.png");
+export const imageDuck = require<string>("../../Resources/Images/duckLegs.png");
+export const texture = new Texture(image);
+export const textureDuck = new Texture(imageDuck);
 
 export const modelSize = {
 	w: 45,
@@ -28,9 +31,11 @@ export const modelSize = {
 };
 
 export const modelDuckSize = {
-	w: 45,
+	w: 58,
 	h: 90
 };
+
+const dh = modelSize.h - modelDuckSize.h;
 
 const armSize = {
 	w: 16,
@@ -72,8 +77,18 @@ const torsoAnchor = {
 	y: 59 / 2
 };
 
+const legDuckSize = {
+	w: 47,
+	h: 45
+};
+
+const legDuckAnchor = {
+	x: 40,
+	y: 21
+};
+
 const armRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 172,
 		y: 29,
@@ -88,7 +103,7 @@ const armRight: IBodyPart = {
 };
 
 const armLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 147,
 		y: 29,
@@ -103,7 +118,7 @@ const armLeft: IBodyPart = {
 };
 
 const legRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 211,
 		y: 28,
@@ -118,7 +133,7 @@ const legRight: IBodyPart = {
 };
 
 const legLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 252,
 		y: 29,
@@ -133,7 +148,7 @@ const legLeft: IBodyPart = {
 };
 
 const headRight: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 19,
 		y: 65,
@@ -148,7 +163,7 @@ const headRight: IBodyPart = {
 };
 
 const headLeft: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 17,
 		y: 10,
@@ -163,7 +178,7 @@ const headLeft: IBodyPart = {
 };
 
 const torso: IBodyPart = {
-	image,
+	texture,
 	sourceLocation: {
 		x: 86,
 		y: 29,
@@ -177,7 +192,36 @@ const torso: IBodyPart = {
 	anchor: { ...torsoAnchor }
 };
 
-export const texture = new Texture(image);
+const legDuckRight: IBodyPart = {
+	texture: textureDuck,
+	sourceLocation: {
+		x: 65,
+		y: 16,
+		...legDuckSize
+	},
+	modelLocation: {
+		x: -11, // 9
+		y: 66 + (dh / 2),
+		...legDuckSize
+	},
+	anchor: { ...legDuckAnchor }
+};
+
+const legDuckLeft: IBodyPart = {
+	texture: textureDuck,
+	sourceLocation: {
+		x: 9,
+		y: 18,
+		...legDuckSize
+	},
+	modelLocation: {
+		x: -11, // 9
+		y: 66 + (dh / 2),
+		...legDuckSize
+	},
+	anchor: { ...legDuckAnchor }
+};
+
 export type IBodyParts = keyof typeof bodyParts;
 const _sprites: ObjectValueMap<typeof bodyParts, CustomSprite> = {} as any;
 const _bodyParts = {
@@ -185,6 +229,8 @@ const _bodyParts = {
 	armLeft,
 	legRight,
 	legLeft,
+	legDuckRight,
+	legDuckLeft,
 	headRight,
 	headLeft,
 	torso
@@ -195,6 +241,8 @@ const allParts = [
 	armLeft,
 	legRight,
 	legLeft,
+	legDuckRight,
+	legDuckLeft,
 	headRight,
 	headLeft,
 	torso
@@ -203,6 +251,7 @@ const allParts = [
 const rightParts = [
 	armRight,
 	legRight,
+	legDuckRight,
 	headRight
 ];
 
@@ -222,7 +271,7 @@ const shiftRight = (part: IBodyPart) => {
 
 allParts.forEach(centerPart);
 rightParts.forEach(shiftRight);
-Object.entries(_bodyParts).forEach(([key, { sourceLocation: loc }]) =>
+Object.entries(_bodyParts).forEach(([key, { texture, sourceLocation: loc }]) =>
 	_sprites[key as IBodyParts] = new CustomSprite(texture, loc.x, loc.y, loc.w, loc.h)
 );
 

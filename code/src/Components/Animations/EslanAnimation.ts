@@ -3,9 +3,8 @@ import { cubicEasing, IDrawBase, IBeforeDraw } from "./TransformDrawPart";
 import { IDrawSetProvider } from "./DrawAnimation";
 import { PlainDrawSet } from "./PlainDrawSet";
 import { Sprite } from "excalibur";
-import { bodyParts, sprites } from "./EslanParts";
+import { bodyParts, sprites, IBodyParts } from "./EslanParts";
 import { ITransformDrawStateCollection } from "./TransformDrawSet";
-import { IBodyParts } from "./MichaelsonParts";
 
 export const eslanAnimationTypes = [
 	"idle-right",
