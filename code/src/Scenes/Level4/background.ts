@@ -3,14 +3,14 @@ import Player from "./Player";
 import resources from "../../Resources";
 
 /**
- * Water and sky backround moves is not so long to fill the whole level.
+ * Water and sky background moves is not so long to fill the whole level.
  * So it moves relatively to the player and simulates the feeling of perspective.
  */
 export default class Background extends ex.Actor {
 
-	static readonly image: ex.Sprite = resources.bgPlaceholderTexture2.asSprite();
-	static readonly bgWidth: number = 1600;
-	static readonly bgHeight: number = 600;
+	static readonly image: ex.Sprite = resources.level4bg.asSprite();
+	static readonly bgWidth: number = 1190;
+	static readonly bgHeight: number = 604;
 	static readonly maxYMovement = 10;
 	static readonly ySpeed: number = 0.001;
 

@@ -14,7 +14,7 @@ const resources = {
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
 	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
 	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
-	bgPlaceholderTexture2: new Texture(require("./Scenes/Level4/bgPlaceholder2.jpg")),
+	level4bg: new Texture(require("./Resources/Images/level4Texture.png")),
 	princess: new Texture(require("./Scenes/Level4/princess.png")),
 	pot: new Texture(require("./Scenes/Level4/pot.png")),
 	michealsonTexture,
