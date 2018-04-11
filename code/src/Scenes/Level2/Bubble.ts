@@ -7,7 +7,7 @@ export default class Bubble extends ex.Actor {
 	static readonly size = { w: 20, h: 20 };
 
 	// no influence on player if over a certain height -> depending on sky height and own size
-	static readonly MINCOLLISIONY: number = Bubble.size.h / 2 + 50 + 1;
+	static readonly MINCOLLISIONY: number = Bubble.size.h / 2 + 125 + 1;
 
 	static readonly speedY: number = -100;
 	static readonly speedX: number = 50;

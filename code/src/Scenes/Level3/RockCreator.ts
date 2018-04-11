@@ -48,10 +48,10 @@ export default class RockCreator {
 		let rock: Rock;
 		if (this.randomIntFromInterval(1, 2) > 1) {
 			// big rock
-			rock = new Rock(player.x + 800, 500, 50, -200, 1000, -550, Rocktypes.big); // big rock bouncing towards the player		
+			rock = new Rock(player.x + 800, 500, 50, -250, 1000, -550, Rocktypes.big); // big rock bouncing towards the player		
 		} else {
 			// small rock
-			rock = new Rock(player.x + 800, 500, 20, -200, 1000, -250, Rocktypes.small); // small rock "rolling" on the ground
+			rock = new Rock(player.x + 800, 500, 20, -250, 1000, -250, Rocktypes.small); // small rock "rolling" on the ground
 		}
 
 		// create new rock
@@ -59,7 +59,7 @@ export default class RockCreator {
 		scene.add(rocks[newRockIndex]);
 
 		// create new timeout for next rock
-		let nextRockInMS = this.randomIntFromInterval(100000, 200000); // (1000, 1500);
+		let nextRockInMS = this.randomIntFromInterval(1500, 2000); // (100000, 200000); // (1000, 1500);
 		let that = this;
 		timer[0] = setTimeout(function () {
 			that.createNewRockRT(scene, bounds, player, rocks, timer);

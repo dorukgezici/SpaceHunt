@@ -14,7 +14,7 @@ import { modelSize } from "../../Components/Animations/EslanParts";
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
 
-	readonly numCannibals: number = 5;
+	readonly numCannibals: number = 3;
 	readonly sceneKey: string = "level4";
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	readonly sceneBackgroundColor: ex.Color = ex.Color.Gray;
