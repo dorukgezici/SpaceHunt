@@ -24,7 +24,6 @@ const resources = {
 		bg: new Texture(require("./Resources/Images/level4Texture.png")),
 		// bg: new Texture(require("./Resources/Images/lvl4background2.png")),
 		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
-		princess: new Texture(require("./Scenes/Level4/princess.png")),
 		pot: new Texture(require("./Scenes/Level4/pot.png")),
 	},
 	michealsonTexture,
