@@ -89,7 +89,7 @@ export default class Player extends BasePlayer {
 					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
 						this.moveDir = -1;
 						if (this.stateX !== "right") {
-							updateStateX("left");
+							updateStateX("right");
 							console.log("just turned right");
 						}
 						if (this.stateY !== "walk") {
