@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { Class } from "../../Class";
+import {Class} from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
@@ -9,6 +9,7 @@ import Bubble from "./Bubble";
 import BubbleCreator from "./BubbleCreator";
 import Crocodile from "./Crocodile";
 import CrocodileCreator from "./CrocodileCreator";
+import Background from "./Background";
 
 export default class Level2 extends Class<IGameElementEvents> implements IGameElement {
 
@@ -25,6 +26,7 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	sky: Sky;
 	player: Player;
 	oxygenMeter: ex.Label;
+	background: Background;
 
 	// bubbles
 	bubbles: Bubble[];
@@ -46,13 +48,14 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 25);
+		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 62);
 		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
 		this.oxygenMeter.fontSize = 30;
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter);
 		this.player.on("death", () => this.lose());
 		this.player.on("won", () => this.win());
 
+		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 		this.bubbles = [];
 		this.crocodiles = [];
 
@@ -88,12 +91,13 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	private buildScene = () => {
-
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.sky);
 		this.scene.add(this.player);
+		this.scene.add(this.background);
 
+		this.background.z = -1;
 		this.scene.addUIActor(this.oxygenMeter);
 
 		// start bubbleCreator and crocodileCreator

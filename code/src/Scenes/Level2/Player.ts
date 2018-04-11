@@ -6,7 +6,7 @@ import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 
 export default class Player extends ex.Actor {
 
-	static readonly size = { w: 100, h: 20 }; // changed for swimming movement
+	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
 	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
@@ -62,6 +62,8 @@ export default class Player extends ex.Actor {
 			// this.vel.x = 0;
 			// }
 
+		} else if (ev.other.constructor.name === "Bubble" && !this.trapped) { // Bubbles add 20 oxygen points
+			this.oxygenLevel = (this.oxygenLevel + 20) < 100 ? this.oxygenLevel + 20 : 100;
 		}
 	}
 
@@ -152,13 +154,13 @@ export default class Player extends ex.Actor {
 
 	private moveUp() {
 		// to not move too far into the sky
-		if (this.pos.y > (this.minY + 25)) {
+		if (this.pos.y > (this.minY + 100)) {
 			this.pos.y -= Player.speedY;
 		}
 	}
 
 	private moveDown() {
-		if (this.pos.y < this.maxX) {
+		if (this.pos.y < this.maxY) { // maxX?
 			this.pos.y += Player.speedY;
 		}
 	}

@@ -22,6 +22,8 @@ export default class Player extends BasePlayer {
 
 	private posYold: number;
 
+	private jumpingVelocity: number = -600;
+
 	private speed: number;
 	private speedAcc: number = 300;
 	private speedNormal: number = 200;
@@ -159,7 +161,7 @@ export default class Player extends BasePlayer {
 	}
 
 	private jump() {
-		this.vel.y = -450;
+		this.vel.y = this.jumpingVelocity;
 	}
 
 	private duck() {

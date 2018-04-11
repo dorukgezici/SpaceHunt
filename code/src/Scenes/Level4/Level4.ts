@@ -13,6 +13,8 @@ import { modelSize } from "../../Components/Animations/EslanParts";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
+
+	readonly numCannibals: number = 5;
 	readonly sceneKey: string = "level4";
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	readonly sceneBackgroundColor: ex.Color = ex.Color.Gray;
@@ -61,14 +63,14 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 
 		// cannibals
-		const numCannibals = 1;
-		for (let i = 0; i < numCannibals; i++) {
+
+		for (let i = 0; i < this.numCannibals; i++) {
 			const xStart = this.randomIntFromInterval(500, 4500);
 			const speedX = this.randomIntFromInterval(100, 200);
 			// let w = this.randomIntFromInterval(20, 30);
 			// let h = this.randomIntFromInterval(40, 60);
 			const { w, h } = modelSize;
-			this.cannibals.push(new Cannibal(xStart, 600 - 50 - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, 600 - 40 - h / 2, w, h, speedX, 400, 4600));
 		}
 
 	}

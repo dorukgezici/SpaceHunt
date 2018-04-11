@@ -8,6 +8,8 @@ type IStateX = "right" | "left";
 type IStateY = "idle" | "walk" | "jump" | "duck";
 
 export default class Player extends BasePlayer {
+
+	private readonly jumpingVelocity: number = -900;
 	static readonly speed: number = 8;
 	private minX: number;
 	private maxX: number;
@@ -126,7 +128,7 @@ export default class Player extends BasePlayer {
 
 	private jump() {
 		if (this.isGround()) {
-			this.vel.setTo(this.vel.x, -700);
+			this.vel.setTo(this.vel.x, this.jumpingVelocity);
 			// console.log(this.vel);
 			if (!this.isJumping && this.animation) {
 				this.isJumping = true;
