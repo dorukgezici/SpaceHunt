@@ -89,12 +89,12 @@ export default class Player extends BasePlayer {
 
 			if (this.state !== states.jump) {
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.D)) {
+				if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
 					this.duck();
 					updateState(states.duck);
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.D)) {
+				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Down)) {
 					this.unDuck();
 					updateState(states.default);
 				}

@@ -37,8 +37,8 @@ export default class Player extends BasePlayer {
 		const jumpPressed = keyboard.wasPressed(Keys.Space);
 		const leftHeld = keyboard.isHeld(Keys.Left);
 		const rightHeld = keyboard.isHeld(Keys.Right);
-		const duckPressed = keyboard.wasPressed(Keys.D);
-		const duckReleased = keyboard.wasReleased(Keys.D);
+		const duckPressed = keyboard.wasPressed(Keys.Down);
+		const duckReleased = keyboard.wasReleased(Keys.Down);
 		const ducked = this.ducked;
 
 		if (jumpPressed)
