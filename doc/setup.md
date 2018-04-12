@@ -61,7 +61,7 @@ to build the project for production. Please refer to [Build Process and Project 
 
 ## Deployment
 
-You can find the deployment process and script in the document [Deployment Script and Process](deploy-process.md).
+You can find the deployment process and script in the document [Deployment Script and Process](deployment-process.md).
 
 ## Development
 

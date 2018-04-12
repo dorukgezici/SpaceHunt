@@ -15,7 +15,7 @@ Please see [setup.md](doc/setup.md).
 
 ## Definition of Done
 
-**Done** task have to meet the points in the doc [definition-of-done.md](doc/defiinition-of-done.md).
+**Done** task have to meet the points in the doc [definition-of-done.md](doc/definition-of-done.md).
 
 ## Useful Information
 
