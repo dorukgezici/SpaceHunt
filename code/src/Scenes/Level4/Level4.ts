@@ -115,7 +115,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	win = (): void => {
-		alert("won - Level4-won()");
+		// alert("won - Level4-won()");
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished
@@ -123,7 +123,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose = (): void => {
-		alert("died - Level4-lose()");
+		// alert("died - Level4-lose()");
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Aborted

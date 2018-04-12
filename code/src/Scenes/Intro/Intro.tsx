@@ -1,13 +1,14 @@
 import { Class } from "../../Class";
 import { IGameElement, GameBootstrap, IGameElementEvents, IGameEventValue, GameElementDoneType } from "../../GameBootstrap";
 import { InterfaceBuilder } from "../../InterfaceBuilder";
-import { IStory, intro, level1, level2, level3, level4, end, death } from "./Story";
+import { IStory } from "./Story";
 require("./style.scss");
 
 export default class Intro extends Class implements IGameElement {
 
 	private gameBoostrap: GameBootstrap;
 	private storyElement?: HTMLElement;
+	private button?: HTMLButtonElement;
 	private story?: IStory;
 	private storyPage: number; // index of a page of a story
 
@@ -32,6 +33,8 @@ export default class Intro extends Class implements IGameElement {
 	start() {
 		InterfaceBuilder.displayDefault(this.render());
 		this.renderStoryPage();
+		if (this.button)
+			this.button.focus();
 	}
 
 	dispose() {
@@ -60,7 +63,7 @@ export default class Intro extends Class implements IGameElement {
 					<div className="dialog">
 						<div className="story">
 							<div ref={elt => this.storyElement = elt}></div>
-							<button className="submit" onclick={this.onClick.bind(this)}>Continue!</button>
+							<button ref={elt => this.button = elt} autoFocus className="submit" onclick={this.onClick.bind(this)}>Continue!</button>
 						</div>
 					</div>
 				</div>

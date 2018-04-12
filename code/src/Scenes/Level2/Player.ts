@@ -110,7 +110,9 @@ export default class Player extends ex.Actor {
 			}
 
 			this.vel.x = this.speedX;
-			// check for Level ending -> better raise event in case of collision with level ending?
+
+			if (this.pos.x > this.maxX)
+				this.emit("win");
 
 			// Y movement
 			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {

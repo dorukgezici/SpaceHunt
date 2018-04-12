@@ -52,9 +52,8 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
 		this.oxygenMeter.fontSize = 30;
 		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter);
-		this.player.on("death", () => this.lose());
-		this.player.on("won", () => this.win());
-
+		this.player.on("win", this.win.bind(this));
+		this.player.on("death", this.lose.bind(this));
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
 		this.bubbles = [];
 		this.crocodiles = [];
@@ -108,17 +107,14 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.engine.goToScene(this.sceneKey);
 	}
 
-	win = (): void => {
-		this.player.kill();
-		alert("won - Level2-won()");
+	win() {
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished
 		});
 	}
 
-	lose = (): void => {
-		alert("died - Level2-lose()");
+	lose() {
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Aborted

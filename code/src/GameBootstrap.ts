@@ -11,7 +11,7 @@ import Level2 from "./Scenes/Level2/Level2";
 import Level3 from "./Scenes/Level3/Level3";
 import Level4 from "./Scenes/Level4/Level4";
 import { getLoadableResources } from "./Resources";
-import { intro as introStory, level1 as level1Story, level2 as level2Story, death as deathStory, end as endStory } from "./Scenes/Intro/Story";
+import * as Stories from "./Scenes/Intro/Story";
 import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 
 /**
@@ -100,7 +100,7 @@ export class GameBootstrap {
 	 */
 	readonly rootSceneKey = "root";
 	readonly loader: Loader;
-	private menu = new Menu();
+	private menu: Menu;
 
 	constructor(
 		public readonly canvasId: string,
@@ -129,14 +129,60 @@ export class GameBootstrap {
 		const level4 = new Level4(this);
 		const nameEnquiry = new NameEnquiry();
 		const intro = new Intro(this);
-		const startWarsIntro = new StarWarsIntro();
+		const starWarsIntro = new StarWarsIntro();
+		const menu = this.menu = new Menu();
 		const movementTestLevel = new MovementTestLevel(this);
 
-		[level1, level2, level3, level4, nameEnquiry, intro, startWarsIntro, movementTestLevel].forEach((t: IGameElement) => {
-			if (t.init)
-				t.init(this);
-		});
-		
+		const gameElements = [level1, level2, level3, level4, nameEnquiry, intro, starWarsIntro, menu];
+		const gameStory = [nameEnquiry, starWarsIntro, Stories.level1, level1, Stories.level2, level2, Stories.level3, level3, Stories.level4, level4, Stories.end];
+
+		let sceneIndex = 0;
+		let currentGameElement: IGameElement = menu;
+
+		const resetGame = () => {
+			currentGameElement.dispose();
+			menu.start();
+			sceneIndex = 0;
+		};
+
+		const showDeathStory = () => {
+			sceneIndex = 0;
+			currentGameElement.dispose();
+			currentGameElement = intro;
+			intro.setStory(Stories.death);
+			intro.start();
+			intro.once("done", () => {
+				resetGame();
+			});
+		};
+
+		const resetScene = () => sceneIndex = 0;
+		const showScene = () => {
+			if (sceneIndex >= gameStory.length || sceneIndex < 0) {
+				resetGame();
+				return;
+			}
+
+			currentGameElement.dispose();
+			const next = gameStory[sceneIndex];
+
+			if (Array.isArray(next)) {
+				currentGameElement = intro;
+				intro.setStory(next);
+			} else
+				currentGameElement = next;
+
+			currentGameElement.start();
+			currentGameElement.once("done", ({ type }) => {
+				if (type === GameElementDoneType.Finished) {
+					sceneIndex++;
+					showScene();
+				} else
+					showDeathStory();
+			});
+
+		};
+
 		const menuItems = [{
 			element: level1,
 			name: "Level 1"
@@ -150,72 +196,24 @@ export class GameBootstrap {
 			element: level4,
 			name: "Level 4"
 		}, {
-			element: movementTestLevel,
-			name: "MovementTestLevel"
-		}, {
-			element: startWarsIntro,
+			element: starWarsIntro,
 			name: "StarWars Intro"
 		}, {
 			element: nameEnquiry,
 			name: "Start the Game"
 		}];
 
-		movementTestLevel.on("done", () => {
-			movementTestLevel.dispose();
-			this.menu.start();
-		});
+		gameElements.forEach((t: IGameElement) => t.init && t.init(this));
 
 		this.menu.items = menuItems.map(t => t.name);
-		this.menu.on("click", ({ id }) => {
+		this.menu.on("click", ({ id, name }) => {
 			const elt = menuItems[id].element;
-			this.menu.dispose();
-			elt.start();
+			if (!elt)
+				resetScene();
+			else
+				sceneIndex = gameStory.indexOf(elt);
+			showScene();
 		});
-
-		nameEnquiry.on("done", () => {
-			nameEnquiry.dispose();
-			intro.setStory(introStory);
-			intro.start();
-			intro.once("done", () => {
-				intro.setStory(level1Story);
-				intro.once("done", () => {
-					intro.dispose();
-					level1.start();
-				});
-			});
-		});
-
-		const showDeathStory = () => {
-			intro.setStory(deathStory);
-			intro.start();
-			intro.once("done", () => {
-				intro.dispose();
-				this.menu.start();
-			})
-		};
-
-		level1.on("done", e => {
-			level1.dispose();
-			if (e.type === GameElementDoneType.Finished) {
-				intro.setStory(level2Story);
-				intro.start();
-				intro.once("done", () => {
-					intro.dispose();
-					level2.start();
-				});
-			} else
-				showDeathStory();
-		});
-
-		level2.on("done", e => {
-			level2.dispose();
-			if (e.type === GameElementDoneType.Finished) {
-				intro.setStory(endStory);
-				intro.start();
-			} else
-				showDeathStory();
-		});
-
 	}
 
 	/**
