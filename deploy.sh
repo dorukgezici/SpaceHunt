@@ -1,4 +1,5 @@
 git checkout master
+git push -f github master:master # force push origin's master to github
 FILE="build/CNAME"
 [[ -f $FILE ]] || echo "spacehunt.tk" >> $FILE && git add $FILE && git commit -m "Added CNAME file." && echo "Added CNAME file"
 git subtree split --prefix build -b gh-pages # create a local gh-pages branch containing the splitted build folder

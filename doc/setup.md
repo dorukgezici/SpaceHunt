@@ -59,6 +59,10 @@ npm run build
 
 to build the project for production. Please refer to [Build Process and Project Structure](build-process.md) for more information about build system.
 
+## Deployment
+
+You can find the deployment process and script in the document [Deployment Script and Process](deploy-process.md).
+
 ## Development
 
 This section covers general development principles and advice.

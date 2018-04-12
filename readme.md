@@ -13,6 +13,10 @@ Authors of the project are team members of Group 10 called _TheGroup_:
 
 Please see [setup.md](doc/setup.md).
 
+## Definition of Done
+
+**Done** task have to meet the points in the doc [doc/defiinition-of-done.md].
+
 ## Useful Information
 
 See [doc](doc/) directory for further details about the project.
