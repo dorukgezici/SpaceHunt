@@ -32,8 +32,8 @@ export function attachPlayerAnimations(player: Player) {
 
 	const armBack: ITransformDrawSetProviderData<ITA> = {
 		selectedState,
-		drawBase: drawBaseFactory("armLeft"),
-		beforeDraw: beforeDrawFactory("armLeft"),
+		drawBase: drawBaseFactory("armRight"),
+		beforeDraw: beforeDrawFactory("armRight"),
 		states: {
 			idle: {
 				duration: 1000,
@@ -43,8 +43,8 @@ export function attachPlayerAnimations(player: Player) {
 			},
 			jump: {
 				duration: 800,
-				start: { rotate: 1.9, translateX: -5 },
-				end: { rotate: 2.2, translateX: -5 },
+				start: { rotate: -1.9, translateX: -5 },
+				end: { rotate: -2.2, translateX: -5 },
 				transitionDuration: 100
 			},
 			grab: {
@@ -58,8 +58,8 @@ export function attachPlayerAnimations(player: Player) {
 
 	const armFront: ITransformDrawSetProviderData<ITA> = {
 		selectedState,
-		drawBase: drawBaseFactory("armLeft"),
-		beforeDraw: beforeDrawFactory("armLeft"),
+		drawBase: drawBaseFactory("armRight"),
+		beforeDraw: beforeDrawFactory("armRight"),
 		states: {
 			idle: {
 				duration: 1000,
@@ -69,8 +69,8 @@ export function attachPlayerAnimations(player: Player) {
 			},
 			jump: {
 				duration: 800,
-				start: { rotate: 2.2, translateX: -5 },
-				end: { rotate: 2.5, translateX: -5 },
+				start: { rotate: -2.2, translateX: -5 },
+				end: { rotate: -2.5, translateX: -5 },
 				transitionDuration: 100
 			},
 			grab: {
@@ -84,8 +84,8 @@ export function attachPlayerAnimations(player: Player) {
 
 	const legBack: ITransformDrawSetProviderData<ITA> = {
 		selectedState,
-		drawBase: drawBaseFactory("legLeft"),
-		beforeDraw: beforeDrawFactory("legLeft"),
+		drawBase: drawBaseFactory("legRight"),
+		beforeDraw: beforeDrawFactory("legRight"),
 		states: {
 			idle: {
 				duration: 1000,
@@ -110,8 +110,8 @@ export function attachPlayerAnimations(player: Player) {
 
 	const legFront: ITransformDrawSetProviderData<ITA> = {
 		selectedState,
-		drawBase: drawBaseFactory("legLeft"),
-		beforeDraw: beforeDrawFactory("legLeft"),
+		drawBase: drawBaseFactory("legRight"),
+		beforeDraw: beforeDrawFactory("legRight"),
 		states: {
 			idle: {
 				transitionDuration: 200,
@@ -162,8 +162,8 @@ export function attachPlayerAnimations(player: Player) {
 
 	const head: ITransformDrawSetProviderData<ITA> = {
 		selectedState,
-		drawBase: drawBaseFactory("headLeft"),
-		beforeDraw: beforeDrawFactory("headLeft"),
+		drawBase: drawBaseFactory("headRight"),
+		beforeDraw: beforeDrawFactory("headRight"),
 		states: {
 			idle: {
 				duration: 1500,
