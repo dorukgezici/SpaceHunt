@@ -7,17 +7,19 @@ import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
 export default class Level1Player extends BasePlayer {
 
 	inJump: boolean = false;
+	levelLength: number;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
 	private animation: DrawAnimation<ITarzanAnimations>;
 	private hasStarted = false;
 
-	constructor(x: number, y: number) {
+	constructor(x: number, y: number, levelLength: number) {
 		super(x, y);
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
 		this.animation = attachPlayerAnimations(this);
+		this.levelLength = levelLength;
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -31,7 +33,7 @@ export default class Level1Player extends BasePlayer {
 			}
 		}
 
-		if (this.getWorldPos().x < -10) {
+		if (this.getWorldPos().x > this.levelLength + 10) {
 			this.emit("won");
 		}
 	}
@@ -47,7 +49,7 @@ export default class Level1Player extends BasePlayer {
 				this.cameraStrategy.target = this;
 			}
 
-			this.vel.setTo(-600, -500);
+			this.vel.setTo(600, -500);
 			this.rotation = - Math.PI / 6;
 			this.inJump = true;
 			this.onVine = false;
