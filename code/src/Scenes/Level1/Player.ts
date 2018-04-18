@@ -44,6 +44,11 @@ export default class Level1Player extends BasePlayer {
 			this.moveRight();
 		}
 
+		if(engine.input.keyboard.wasReleased(ex.Input.Keys.Left) ||
+			engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+			this.animation.changeState("idle");
+		}
+
 		if (this.getWorldPos().x > this.levelLength + 10) {
 			this.emit("won");
 		}
