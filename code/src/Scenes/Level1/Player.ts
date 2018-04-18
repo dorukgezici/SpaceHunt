@@ -5,8 +5,11 @@ import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
 
 export default class Level1Player extends BasePlayer {
+	static readonly MOVEMENT_SPEED = 8;
+	static readonly SCREEN_END_X = 5;
 
 	inJump: boolean = false;
+	onBranch: boolean = true;
 	levelLength: number;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
@@ -33,12 +36,22 @@ export default class Level1Player extends BasePlayer {
 			}
 		}
 
+		if(engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+			this.moveLeft();
+		}
+
+		if(engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+			this.moveRight();
+		}
+
 		if (this.getWorldPos().x > this.levelLength + 10) {
 			this.emit("won");
 		}
 	}
 
 	jump() {
+		this.onBranch = false;
+
 		if (!this.inJump) {
 			if (this.onVine) {
 				let parent = this.parent;
@@ -86,5 +99,19 @@ export default class Level1Player extends BasePlayer {
 		this.rotation = 0;
 		this.cameraStrategy.target = vine;
 		this.animation.changeState("grab");
+	}
+
+	private moveLeft() {
+		if(this.onBranch) {
+			let newPos = this.pos.x - Level1Player.MOVEMENT_SPEED;
+			newPos = newPos < Level1Player.SCREEN_END_X ? Level1Player.SCREEN_END_X : newPos;
+			this.pos.x = newPos;
+		}
+	}
+
+	private moveRight() {
+		if(this.onBranch) {
+			this.pos.x += Level1Player.MOVEMENT_SPEED;
+		}
 	}
 }
