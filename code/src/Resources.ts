@@ -18,7 +18,8 @@ const resources = {
 	riverTexture: new Texture(require("./Resources/Images/RiverTexture.png")),
 	level1: {
 		bg: new Texture(require("./Resources/Images/JungleBackground.png")),
-		ground: new Texture(require("./Resources/Images/Grass.png"))
+		ground: new Texture(require("./Resources/Images/Grass.png")),
+		tree: new Texture(require("./Resources/Images/Tree.png"))
 	},
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),

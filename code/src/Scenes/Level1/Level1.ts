@@ -36,7 +36,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 35);
 		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
 		this.treeBranch = new TreeBranch(
-			this.levelBounds.left + TreeBranch.branchLength / 2, this.levelBounds.top + 250);
+			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
 		this.registerResources();
 	}
@@ -94,6 +94,8 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		}
 
 		this.scene.add(this.ground);
+		this.ground.z = 2;
+		
 		this.scene.add(this.treeBranch);
 		this.scene.add(this.player);
 
