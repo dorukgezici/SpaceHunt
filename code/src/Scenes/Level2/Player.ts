@@ -3,8 +3,9 @@ import Sky from "./Sky";
 import Level2 from "./Level2";
 import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import BasePlayer, { controlSets } from "../../Components/BasePlayer";
 
-export default class Player extends ex.Actor {
+export default class Player extends BasePlayer {
 
 	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
@@ -30,7 +31,8 @@ export default class Player extends ex.Actor {
 	private animation: DrawAnimation<IPlayerSwimAnimations>;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label) {
-		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
+		// super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
+		super(x, y, controlSets.controls2);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.minY = levelBounds.top + Player.size.h / 2;
@@ -81,31 +83,31 @@ export default class Player extends ex.Actor {
 
 		if (!this.trapped) {
 			// X movement
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
+			if (engine.input.keyboard.wasPressed(this.controls.left)) {
 				this.speedX = Player.speedDec;
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
+			if (engine.input.keyboard.wasPressed(this.controls.right)) {
 				this.speedX = Player.speedAcc;
 			}
 
-			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+			if (engine.input.keyboard.wasReleased(this.controls.left)) {
+				if (engine.input.keyboard.isHeld(this.controls.right)) {
 					this.speedX = Player.speedAcc;
 				} else {
 					this.speedX = Player.speedNormal;
 				}
 			}
 
-			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+			if (engine.input.keyboard.wasReleased(this.controls.right)) {
+				if (engine.input.keyboard.isHeld(this.controls.left)) {
 					this.speedX = Player.speedDec;
 				} else {
 					this.speedX = Player.speedNormal;
 				}
 			}
 
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+			if (engine.input.keyboard.isHeld(this.controls.left) && engine.input.keyboard.isHeld(this.controls.right)) {
 				this.speedX = Player.speedNormal;
 			}
 
@@ -115,11 +117,11 @@ export default class Player extends ex.Actor {
 				this.emit("win");
 
 			// Y movement
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
+			if (engine.input.keyboard.isHeld(this.controls.up)) {
 				this.moveUp();
 			}
 
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
+			if (engine.input.keyboard.isHeld(this.controls.down)) {
 				this.moveDown();
 			}
 		}

@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import Level4 from "./Level4";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states } from "../../Components/Animations/MichelsonAnimation";
@@ -25,8 +25,8 @@ export default class Player extends BasePlayer {
 
 	private won: boolean = false;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
-		super(x, y);
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, controlSet: IControlSet) {
+		super(x, y, controlSet);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.anchor.setTo(0.5, 1);
@@ -67,7 +67,7 @@ export default class Player extends BasePlayer {
 				updateStateY("walk");
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.stateY !== "jump") {
+			if (engine.input.keyboard.wasPressed(this.controls.up) && this.stateY !== "jump") {
 				if (this.jump()) {
 					updateStateY("jump");
 				}
@@ -75,7 +75,7 @@ export default class Player extends BasePlayer {
 
 			if (this.stateY !== "jump") {
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+				if (engine.input.keyboard.isHeld(this.controls.left)) {
 					this.moveDir = 1;
 					if (this.stateX !== "left") {
 						updateStateX("left");
@@ -88,7 +88,7 @@ export default class Player extends BasePlayer {
 
 				} else {
 
-					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+					if (engine.input.keyboard.isHeld(this.controls.right)) {
 						this.moveDir = -1;
 						if (this.stateX !== "right") {
 							updateStateX("right");

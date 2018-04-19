@@ -5,6 +5,7 @@ import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } 
 import Ground from "../../Components/Ground";
 import Player from "./Player";
 import { playerAnimationFactory } from "./PlayerAnimations";
+import { controlSets } from "../../Components/BasePlayer";
 
 export default class MovementTestLevel extends Class<IGameElementEvents> implements IGameElement {
 
@@ -16,6 +17,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	bounds: ex.BoundingBox;
 	ground: Ground;
 	player: Player;
+	// player2: Player;
 	loader: ex.Loader;
 
 	constructor(bootstrap: GameBootstrap) {
@@ -27,7 +29,8 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 		this.loader = bootstrap.loader;
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds, bootstrap);
+		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds, bootstrap, controlSets.controls1);
+		// this.player2 = new Player(this.bounds.right / 2 + 100, this.bounds.bottom - 100, this.levelBounds, bootstrap, controlSets.controls2);
 
 		document.addEventListener("keydown", e => {
 			if (e.keyCode === 27)

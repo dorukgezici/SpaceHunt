@@ -16,6 +16,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 	engine: ex.Engine;
 	scene: ex.Scene;
+	// extendedScene: ExtendedScene;
 	bounds: ex.BoundingBox;
 
 	// actors
@@ -34,6 +35,15 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
+
+		const baseUpdateMethod = this.scene.update;
+		const scene = this.scene;
+		this.scene.update = function() {
+			// console.log("custom update logic");
+			baseUpdateMethod.apply(scene, arguments);
+			// console.log("custom update logic2");			
+		};
+
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
@@ -110,4 +120,11 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		});
 	}
 
+}
+
+class ExtendedScene extends ex.Scene {
+	update(engine: ex.Engine, delta: number) {
+		super.update(engine, delta);
+		console.log("extendScene update");
+	}
 }

@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets } from "../../Components/BasePlayer";
 import Vine from "./Vine";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
@@ -13,7 +13,7 @@ export default class Level1Player extends BasePlayer {
 	private hasStarted = false;
 
 	constructor(x: number, y: number) {
-		super(x, y);
+		super(x, y, controlSets.controls2);
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
@@ -23,7 +23,7 @@ export default class Level1Player extends BasePlayer {
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+		if (engine.input.keyboard.wasPressed(this.controls.up)) {
 			this.jump();
 			if (!this.hasStarted) {
 				this.hasStarted = true;

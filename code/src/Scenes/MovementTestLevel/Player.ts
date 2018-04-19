@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import { GameBootstrap } from "../../GameBootstrap";
 import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
@@ -18,8 +18,8 @@ export default class Player extends BasePlayer {
 	private left = false;
 	private change = false;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, private readonly bootstrap: GameBootstrap) {
-		super(x, y);
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, private readonly bootstrap: GameBootstrap, controlSet: IControlSet) {
+		super(x, y, controlSet);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge

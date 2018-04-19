@@ -1,7 +1,8 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets } from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
+
 
 const states = {
 	default: maStates.walkRight,
@@ -34,10 +35,13 @@ export default class Player extends BasePlayer {
 	private maxX: number;
 
 
+
 	private state: IPlayerAnimations = states.default;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine) {
-		super(x, y);
+		super(x, y, controlSets.controls2);
+
+		// this.controls = controls1;
 
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
 		// this.y += this.getHeight();
@@ -53,7 +57,6 @@ export default class Player extends BasePlayer {
 
 		// touch pointer events
 		this.engine = engine;
-		engine.input.pointers.primary.on("down", this.pointerDown);
 	}
 
 	initAnimations() {
@@ -81,7 +84,7 @@ export default class Player extends BasePlayer {
 				updateState(states.default);
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.state !== states.jump) {
+			if (engine.input.keyboard.wasPressed(this.controls.up) && this.state !== states.jump) {
 				this.jump();
 				this.ducked = false;
 				updateState(states.jump);
@@ -89,12 +92,12 @@ export default class Player extends BasePlayer {
 
 			if (this.state !== states.jump) {
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
+				if (engine.input.keyboard.isHeld(this.controls.down)) {
 					this.duck();
 					updateState(states.duck);
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Down)) {
+				if (engine.input.keyboard.wasReleased(this.controls.down)) {
 					this.unDuck();
 					updateState(states.default);
 				}
@@ -104,18 +107,18 @@ export default class Player extends BasePlayer {
 			if (this.state !== states.jump && this.state !== states.duck) {
 
 				// X movement
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
+				if (engine.input.keyboard.isHeld(this.controls.left)) {
 					this.speed = this.speedDec;
 					updateState(states.slow);
 				}
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.isHeld(this.controls.right)) {
 					this.speed = this.speedAcc;
 					updateState(states.fast);
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.wasReleased(this.controls.left)) {
+					if (engine.input.keyboard.isHeld(this.controls.right)) {
 						this.speed = this.speedAcc;
 						updateState(states.fast);
 					} else {
@@ -124,8 +127,8 @@ export default class Player extends BasePlayer {
 					}
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-					if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+				if (engine.input.keyboard.wasReleased(this.controls.right)) {
+					if (engine.input.keyboard.isHeld(this.controls.left)) {
 						this.speed = this.speedDec;
 						updateState(states.slow);
 					} else {
@@ -134,7 +137,7 @@ export default class Player extends BasePlayer {
 					}
 				}
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.isHeld(this.controls.left) && engine.input.keyboard.isHeld(this.controls.right)) {
 					this.speed = this.speedNormal;
 					updateState(states.default);
 				}
@@ -200,15 +203,6 @@ export default class Player extends BasePlayer {
 				this.emit("death");
 
 			}, 550);
-		}
-	}
-
-	pointerDown(pe: any) {
-		if (pe.pointerType === ex.Input.PointerType.Touch) {
-			// this alert works, jumping doesn't :'(
-			alert("touch pointer down");
-			this.jump();
-			this.jumpFlag = true;
 		}
 	}
 
