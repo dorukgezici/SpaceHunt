@@ -28,7 +28,7 @@ export class NameEnquiry extends Class implements IGameElement {
 
 	private done() {
 		if (this.gameBoostrap)
-			this.gameBoostrap.state.name = this.value;
+			this.gameBoostrap.state.title = this.value;
 		this.emit("done", { target: this, type: GameElementDoneType.Finished });
 	}
 
@@ -54,7 +54,7 @@ export class NameEnquiry extends Class implements IGameElement {
 							ref={elt => this.inputElement = elt}
 							className="name"
 							type="text"
-							value={this.value || (this.gameBoostrap && this.gameBoostrap.state.name) || ""}
+							value={this.value || (this.gameBoostrap && this.gameBoostrap.state.title) || ""}
 							onkeyup={e => this.onKeyPress(e.keyCode)}
 							autoFocus
 							maxLength={32}

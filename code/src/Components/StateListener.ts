@@ -47,7 +47,7 @@ export default class StateListener<T> extends Class<IStateListenerEvents<T>> {
 						oldValue,
 						newValue,
 						key
-					});
+					} as any);
 				},
 				enumerable: true,
 				configurable: false,

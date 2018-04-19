@@ -264,7 +264,7 @@ export namespace InterfaceBuilder {
 		for (let attr in attrs) {
 			if (attr === "ref")
 				continue;
-			const value = attrs[attr] as any;
+			const value = attrs[attr as keyof typeof attrs] as any;
 			if (value === null || value === undefined)
 				continue;
 			if (attr === "style")
@@ -456,20 +456,28 @@ export namespace InterfaceBuilder {
 		element.remove();
 	}
 
+	function internalHideElement(element: HTMLElement) {
+		element.classList.add("hide");
+	}
+
+	function internalShowElement(element: HTMLElement) {
+		element.classList.remove("hide");
+	}
+
 	/**
 	 * Hides an HTML element by setting its display CSS property to "none".
 	 * @param element Element to hide.
 	 */
-	export function hideElement(element: HTMLElement) {
+	function _hideElement(element: HTMLElement) {
 		element.style.display = "none";
 	}
 
 	/**
-	 * 	Unhides an HTML elemenet by setting its display CSS property to something other than "none".
+	 * 	Unhides an HTML element by setting its display CSS property to something other than "none".
 	 * @param element Element to unhide.
 	 * @param displayStyle Display CSS property, if other than "block";
 	 */
-	export function showElement(element: HTMLElement, displayStyle: string = "block") {
+	function _showElement(element: HTMLElement, displayStyle: string = "block") {
 		element.style.display = displayStyle;
 	}
 
@@ -482,8 +490,8 @@ export namespace InterfaceBuilder {
 		const ch = getCanvasHolder();
 		if (app && ch) {
 			replaceContent(getApp(), elementCollection);
-			hideElement(ch);
-			showElement(app);
+			internalHideElement(ch);
+			internalShowElement(app);
 		} else throw new DOMContentNotLoaded(); // throw if not loaded
 	}
 
@@ -495,8 +503,8 @@ export namespace InterfaceBuilder {
 		const ch = getCanvasHolder();
 		if (app && ch) {
 			clearContent(app);
-			hideElement(app);
-			showElement(ch);
+			internalHideElement(app);
+			internalShowElement(ch);
 		} else throw new DOMContentNotLoaded(); // throw if not loaded
 	}
 

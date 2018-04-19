@@ -13,6 +13,7 @@ import Level4 from "./Scenes/Level4/Level4";
 import { getLoadableResources } from "./Resources";
 import * as Stories from "./Scenes/Intro/Story";
 import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
+import GameBar from "./Scenes/GameBar/GameBar";
 
 /**
  * A game event that contains a related event value.
@@ -73,7 +74,10 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
  * Interface for GameBootstrap state.
  */
 export interface IGameBootstrapState {
-	name: string | null;
+	title: string | null;
+	lives: number; // [1, 2, 3, ...]
+	oxygen: number; // [0, 1]
+	showOxygen: boolean;
 }
 
 /**
@@ -99,6 +103,7 @@ export class GameBootstrap {
 	 * The key of the root (blank) scene.
 	 */
 	readonly rootSceneKey = "root";
+	readonly gameBar: GameBar;
 	readonly loader: Loader;
 	private menu: Menu;
 
@@ -107,7 +112,10 @@ export class GameBootstrap {
 		public readonly overlay: HTMLElement
 	) {
 		this.stateListener = new StateListener<IGameBootstrapState>({
-			name: null
+			title: null,
+			lives: 3,
+			oxygen: 1,
+			showOxygen: false,
 		});
 		this.state = this.stateListener.createListenableObject();
 
@@ -122,6 +130,8 @@ export class GameBootstrap {
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());
+
+		this.gameBar = new GameBar(this);
 
 		const level1 = new Level1(this);
 		const level2 = new Level2(this);
@@ -220,6 +230,7 @@ export class GameBootstrap {
 	 * Starts the game.
 	 */
 	start() {
+		this.gameBar.toggle(true);
 		this.menu.start();
 		this.engine.start(this.loader);
 	}

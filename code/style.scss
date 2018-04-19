@@ -7,19 +7,29 @@ body {
 	background-position: center;
 }
 
-#app,
-#canvas-holder {
+#app {
 	height: 100%;
 	width: 100%;
 	position: absolute;
 	display: block;
+
+	&.hide {
+		display: none;
+	}
 }
 
-#canvas-wrapper {
-	display: flex;
+#canvas-holder {
 	height: 100%;
+	width: 100%;
+	display: flex;
 	align-items: center;
 	justify-content: center;
+	position: absolute;
+	flex-direction: column;
+
+	&.hide {
+		display: none;
+	}
 }
 
 #canvas {
