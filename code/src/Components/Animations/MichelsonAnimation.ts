@@ -239,8 +239,8 @@ export const legFront: IRLData = {
 		},
 		"grab-right": {
 			duration: 500,
-			start: { rotate: -0.4, translateX: 5 },
-			end: { rotate: -0.55, translateX: 5 },
+			start: { rotate: 0.15 },
+			end: { rotate: -0.15 },
 			transitionDuration: 200
 		},
 	},
@@ -291,8 +291,8 @@ export const legBack: IRLData = {
 		},
 		"grab-right": {
 			duration: 500,
-			start: { rotate: 0.15, translateX: 5 },
-			end: { rotate: 0.3, translateX: 5 },
+			start: { rotate: -0.15 },
+			end: { rotate: 0.15 },
 			transitionDuration: 200
 		}
 	},
