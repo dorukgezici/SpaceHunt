@@ -99,6 +99,7 @@ export default class Level1Player extends BasePlayer {
 
 		this.onVine = true;
 		this.pos.y = 20 + Level1Player.size.h / 2;
+		this.pos.x = 0;
 		this.vel.setTo(0, 0);
 		this.rotation = 0;
 		this.cameraStrategy.target = vine;
