@@ -1,9 +1,9 @@
 import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "./DrawAnimationFactory";
-import { cubicEasing, IDrawBase, IBeforeDraw } from "./TransformDrawPart";
+import { cubicEasing, IDrawBase, IBeforeDraw, ITransformation } from "./TransformDrawPart";
 import { IDrawSetProvider } from "./DrawAnimation";
 import { PlainDrawSet } from "./PlainDrawSet";
-import { Sprite } from "excalibur";
-import { bodyParts, IBodyPart, sprites, IBodyParts } from "./MichaelsonParts";
+import { Sprite, Vector } from "excalibur";
+import { bodyParts, IBodyPart, sprites, IBodyParts, IBounds } from "./MichaelsonParts";
 import { ITransformDrawStateCollection } from "./TransformDrawSet";
 
 export const playerAnimationTypes = [
@@ -18,7 +18,8 @@ export const playerAnimationTypes = [
 	"walk-fast-right",
 	"walk-fast-left",
 	"walk-slow-right",
-	"walk-slow-left"
+	"walk-slow-left",
+	"grab-right"
 ];
 
 export type IPlayerAnimations =
@@ -33,7 +34,8 @@ export type IPlayerAnimations =
 	| "walk-fast-right"
 	| "walk-fast-left"
 	| "walk-slow-right"
-	| "walk-slow-left";
+	| "walk-slow-left"
+	| "grab-right";
 
 type IPABase =
 	| "idle"
@@ -91,7 +93,7 @@ const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): I
 	};
 };
 
-const baseDataExtender = (irlData: IRLData) => {
+export const baseDataExtender = (irlData: IRLData) => {
 	if (irlData.baseStates)
 		Object.entries(irlData.baseStates).forEach(([key, state]) => {
 			irlData.states[key + "-right" as IPA] = state;
@@ -100,9 +102,9 @@ const baseDataExtender = (irlData: IRLData) => {
 	return irlData as ITData;
 };
 
-const selectedState = "idle-right";
+export const selectedState = "idle-right";
 
-const armFront: IRLData = {
+export const armFront: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("armRight", "armLeft"),
 	beforeDraw: beforeDrawFactory("armRight", "armLeft"),
@@ -119,6 +121,12 @@ const armFront: IRLData = {
 			end: { rotate: 2.5, translateX: -5 },
 			transitionDuration: 100
 		},
+		"grab-right": {
+			duration: 800,
+			start: { rotate: -3 - .03, translateX: -5 },
+			end: { rotate: -3 + .03, translateX: -5 },
+			transitionDuration: 100
+		}
 	},
 	baseStates: {
 		idle: {
@@ -154,7 +162,7 @@ const armFront: IRLData = {
 	}
 };
 
-const armBack: IRLData = {
+export const armBack: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("armRight", "armLeft"),
 	beforeDraw: beforeDrawFactory("armRight", "armLeft"),
@@ -171,6 +179,12 @@ const armBack: IRLData = {
 			end: { rotate: 2.2, translateX: -5 },
 			transitionDuration: 100
 		},
+		"grab-right": {
+			duration: 800,
+			start: { rotate: -3 + .03, translateX: -5 },
+			end: { rotate: -3 - .03, translateX: -5 },
+			transitionDuration: 100
+		}
 	},
 	baseStates: {
 		idle: {
@@ -206,7 +220,7 @@ const armBack: IRLData = {
 	}
 };
 
-const legFront: IRLData = {
+export const legFront: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("legRight", "legLeft"),
 	beforeDraw: beforeDrawFactory("legRight", "legLeft"),
@@ -222,7 +236,13 @@ const legFront: IRLData = {
 			start: { rotate: -0.4, translateX: 5 },
 			end: { rotate: -0.55, translateX: 5 },
 			transitionDuration: 200
-		}
+		},
+		"grab-right": {
+			duration: 500,
+			start: { rotate: -0.4, translateX: 5 },
+			end: { rotate: -0.55, translateX: 5 },
+			transitionDuration: 200
+		},
 	},
 	baseStates: {
 		idle: {
@@ -252,7 +272,7 @@ const legFront: IRLData = {
 	}
 };
 
-const legBack: IRLData = {
+export const legBack: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("legRight", "legLeft"),
 	beforeDraw: beforeDrawFactory("legRight", "legLeft"),
@@ -264,6 +284,12 @@ const legBack: IRLData = {
 			transitionDuration: 200
 		},
 		"jump-left": {
+			duration: 500,
+			start: { rotate: 0.15, translateX: 5 },
+			end: { rotate: 0.3, translateX: 5 },
+			transitionDuration: 200
+		},
+		"grab-right": {
 			duration: 500,
 			start: { rotate: 0.15, translateX: 5 },
 			end: { rotate: 0.3, translateX: 5 },
@@ -298,7 +324,7 @@ const legBack: IRLData = {
 	}
 };
 
-const legDuckFront: IRLData = {
+export const legDuckFront: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("legDuckRight", "legDuckLeft"),
 	beforeDraw: beforeDrawFactory("legDuckRight", "legDuckLeft"),
@@ -313,7 +339,7 @@ const legDuckFront: IRLData = {
 	}
 };
 
-const legDuckBack: IRLData = {
+export const legDuckBack: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("legDuckRight", "legDuckLeft"),
 	beforeDraw: beforeDrawFactory("legDuckRight", "legDuckLeft"),
@@ -328,7 +354,7 @@ const legDuckBack: IRLData = {
 	}
 };
 
-const torso: IRLData = {
+export const torso: IRLData = {
 	selectedState,
 	beforeDraw: () => {
 		return { translateX: bodyParts.torso.modelLocation.x, translateY: bodyParts.torso.modelLocation.y };
@@ -348,6 +374,12 @@ const torso: IRLData = {
 			duration: 1000,
 			start: { rotate: -0.2 },
 			end: { rotate: -0.2 },
+			transitionDuration: 200
+		},
+		"grab-right": {
+			duration: 1000,
+			start: {},
+			end: {},
 			transitionDuration: 200
 		}
 	},
@@ -385,7 +417,7 @@ const torso: IRLData = {
 	}
 };
 
-const head: IRLData = {
+export const head: IRLData = {
 	selectedState,
 	beforeDraw: (_, __, ___, state) => {
 		const { x: xr, y: yr } = bodyParts.headRight.modelLocation;
@@ -414,6 +446,12 @@ const head: IRLData = {
 			duration: 500,
 			start: { rotate: -0.1, translateX: -5 },
 			end: { rotate: 0.1, translateX: -5 },
+			transitionDuration: 200
+		},
+		"grab-right": {
+			duration: 500,
+			start: { rotate: -0.1 },
+			end: { rotate: 0.1 },
 			transitionDuration: 200
 		}
 	},
@@ -451,7 +489,7 @@ const head: IRLData = {
 	}
 };
 
-const allData = [
+export const allData = [
 	legBack,
 	legDuckBack,
 	armBack,
