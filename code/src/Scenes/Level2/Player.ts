@@ -3,7 +3,7 @@ import Sky from "./Sky";
 import Level2 from "./Level2";
 import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import BasePlayer, { controlSets } from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 
 export default class Player extends BasePlayer {
 
@@ -30,9 +30,9 @@ export default class Player extends BasePlayer {
 
 	private animation: DrawAnimation<IPlayerSwimAnimations>;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label) {
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, controlSet: IControlSet) {
 		// super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
-		super(x, y, controlSets.controls2);
+		super(x, y, controlSet);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.minY = levelBounds.top + Player.size.h / 2;

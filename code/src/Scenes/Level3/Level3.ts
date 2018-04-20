@@ -7,8 +7,11 @@ import Player from "./Player";
 import Rock from "./Rock";
 import RockCreator from "./RockCreator";
 import Background from "./Background";
+import { controlSets } from "../../Components/BasePlayer";
 
 export default class Level3 extends Class<IGameElementEvents> implements IGameElement {
+
+	readonly secondPlayer: boolean = false;
 
 	readonly sceneKey: string = "level3";
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
@@ -22,6 +25,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	// actors
 	ground: Ground;
 	player: Player;
+	player2: Player | undefined;
 	background: Background;
 
 	// rocks
@@ -38,7 +42,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		const baseUpdateMethod = this.scene.update;
 		const scene = this.scene;
-		this.scene.update = function() {
+		this.scene.update = function () {
 			// console.log("custom update logic");
 			baseUpdateMethod.apply(scene, arguments);
 			// console.log("custom update logic2");			
@@ -54,10 +58,17 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.ground.body.useBoxCollision();
 		this.ground.rotation = -Math.PI / 360 * 5; */
 
-		this.player = new Player(100, 300, this.levelBounds, this.engine);
+		this.player = new Player(100, 300, this.levelBounds, this.engine, controlSets.controls1);
 		this.player.on("death", () => this.lose());
 		this.player.on("won", () => this.win());
 		this.player.initAnimations();
+
+		if (this.secondPlayer) {
+			this.player2 = new Player(50, 350, this.levelBounds, this.engine, controlSets.controls2);
+			this.player2.on("death", () => this.lose());
+			this.player2.on("won", () => this.win());
+			this.player2.initAnimations();
+		}
 
 		// RockCreator for cyclic generation of new rocks
 		this.rocks = [];
@@ -91,6 +102,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	private buildScene = () => {
 
 		// add actors
+		if (this.player2) this.scene.add(this.player2);
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
 		this.scene.add(this.background);
@@ -120,11 +132,4 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		});
 	}
 
-}
-
-class ExtendedScene extends ex.Scene {
-	update(engine: ex.Engine, delta: number) {
-		super.update(engine, delta);
-		console.log("extendScene update");
-	}
 }

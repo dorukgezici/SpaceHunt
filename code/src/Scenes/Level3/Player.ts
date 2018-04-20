@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer, { controlSets } from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
 
@@ -38,8 +38,8 @@ export default class Player extends BasePlayer {
 
 	private state: IPlayerAnimations = states.default;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine) {
-		super(x, y, controlSets.controls2);
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine, controlSet: IControlSet) {
+		super(x, y, controlSet);
 
 		// this.controls = controls1;
 

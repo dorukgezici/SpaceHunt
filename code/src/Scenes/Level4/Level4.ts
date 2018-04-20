@@ -14,6 +14,9 @@ import { controlSets } from "../../Components/BasePlayer";
 
 export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
 
+	// create second player?
+	readonly secondPlayer: boolean = false;
+	player2: Player | undefined;
 
 	readonly numCannibals: number = 3;
 	readonly sceneKey: string = "level4";
@@ -33,8 +36,6 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	princess: Princess;
 	pot: Pot;
 
-	player2: Player;
-
 	/*
 	// bubbles
 	bubbles: Bubble[];
@@ -53,15 +54,18 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+
 		this.player = new Player(100, 400, this.levelBounds, controlSets.controls1);
 		this.player.on("death", () => this.lose());
 		this.player.on("won", () => this.win());
 		this.player.initAnimations();
 
-		this.player2 = new Player(50, 400, this.levelBounds, controlSets.controls2);
-		this.player2.on("death", () => this.lose());
-		this.player2.on("won", () => this.win());
-		this.player2.initAnimations();
+		if (this.secondPlayer) {
+			this.player2 = new Player(50, 350, this.levelBounds, controlSets.controls2);
+			this.player2.on("death", () => this.lose());
+			this.player2.on("won", () => this.win());
+			this.player2.initAnimations();
+		}
 
 		// vine + wife + pot
 		this.vine = new Vine(4800, 0, 28, 2, 0.05);
@@ -100,7 +104,7 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		// add actors
 		this.scene.add(this.ground);
 		this.scene.add(this.player);
-		this.scene.add(this.player2);
+		if (this.player2) this.scene.add(this.player2);
 		this.scene.add(this.background);
 		this.background.z = -1;
 		for (let vinePart of this.vine.getAllParts()) {
