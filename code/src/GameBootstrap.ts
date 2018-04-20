@@ -117,7 +117,7 @@ export class GameBootstrap {
 			height: 600,
 			canvasElementId: canvasId,
 			backgroundColor: Color.Black,
-			pointerScope: Input.PointerScope.Canvas
+			pointerScope: Input.PointerScope.Canvas,
 		});
 
 		this.loader = new Loader();

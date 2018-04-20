@@ -16,6 +16,11 @@ const resources = {
 	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
 	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
 	riverTexture: new Texture(require("./Resources/Images/RiverTexture.png")),
+	level1: {
+		bg: new Texture(require("./Resources/Images/JungleBackground.png")),
+		ground: new Texture(require("./Resources/Images/Grass.png")),
+		tree: new Texture(require("./Resources/Images/Tree.png"))
+	},
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),
 		ground: new Texture(require("./Resources/Images/ground.png"))

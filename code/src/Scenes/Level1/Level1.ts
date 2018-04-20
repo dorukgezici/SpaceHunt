@@ -1,12 +1,14 @@
 import * as ex from "excalibur";
-import { Class } from "../../Class";
-import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
+import {Class} from "../../Class";
+import {GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents} from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Arrow from "./Arrow";
+import Background from "../../Components/Background";
 import Ground from "../../Components/Ground";
 import Level1Player from "./Player";
 import TreeBranch from "./TreeBranch";
 import VineCreator from "./VineCreator";
+import resources from "../../Resources";
 
 
 export default class Level1 extends Class<IGameElementEvents> implements IGameElement {
@@ -15,6 +17,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
 
 	arrow: Arrow;
+	background: Background | any = null;
 	bounds: ex.BoundingBox;
 	engine: ex.Engine;
 	ground: Ground;
@@ -30,20 +33,21 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.vineCreator = new VineCreator(this.levelBounds.right - 400, this.levelBounds.left + 50);
+		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 35);
+		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
 		this.treeBranch = new TreeBranch(
-			this.levelBounds.right - TreeBranch.branchLength / 2, this.levelBounds.top + 250);
-		this.arrow = new Arrow(this.levelBounds.left + 200, this.levelBounds.top + 200);
+			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
+		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
 		this.registerResources();
 	}
 
 	init(bootstrap: GameBootstrap): void {
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 35);
 	}
 
 	start(): void {
-		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
+		this.player = new Level1Player(this.levelBounds.left + 100, this.levelBounds.top + 199, this.levelBounds.right);
+		this.background = new Background(resources.level1.bg.asSprite(), this.player, 0, 0, 400, 400, 5000);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
 		ex.Physics.acc.setTo(0, 2000);
@@ -77,7 +81,6 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	private registerResources() {
-		this.loader.addResources(Ground.resources);
 		this.loader.addResources(Arrow.resources);
 	}
 
@@ -91,10 +94,16 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		}
 
 		this.scene.add(this.ground);
+		this.ground.z = 2;
+		
 		this.scene.add(this.treeBranch);
 		this.scene.add(this.player);
+
 		this.scene.add(this.arrow);
 		this.arrow.z = -1;
+
+		this.scene.add(this.background);
+		this.background.z = -2;
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
