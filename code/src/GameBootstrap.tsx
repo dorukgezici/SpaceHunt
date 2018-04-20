@@ -57,19 +57,11 @@ export interface IGameElementEvents {
 /**
  * Base game element interface. Include event mapping template parameters for strongly-typed events.
  */
-export interface IGameElement<T extends IGameElementEvents = IGameElementEvents> extends IEvented<T> {
-	/**
-	 * Called when the component should run initialisation logic.
-	 */
-	init?(bootstrap: GameBootstrap): void;
-	/**
-	 * Called when the component should be run and display its content. Note that this may be called multiple times per component instance.
-	 */
-	start(): void;
+export interface IGameElement<T = {}> extends IEvented<T & IGameElementEvents> {
 	/**
 	 * Called when the component should hide its content and stop its execution. Note that this may be called multiple times per component instance.
 	 */
-	dispose(): void;
+	dispose?(): void;
 }
 
 /**
@@ -81,6 +73,13 @@ export interface IGameBootstrapState {
 	oxygen: number; // [0, 1]
 	showOxygen: boolean;
 }
+
+const defaultGameBootstrapState: IGameBootstrapState = {
+	title: null,
+	lives: 3,
+	oxygen: 1,
+	showOxygen: false,
+};
 
 /**
  * Game bootstrap object.
@@ -108,15 +107,45 @@ export class GameBootstrap {
 	// @ts-ignore
 	readonly interface: GameInterface;
 	readonly loader: Loader;
-	private menu: Menu;
+
+	private sceneIndex = 0;
+	private currentGameElement: IGameElement | null = null;
+	private menuItems = [{
+		index: 3,
+		name: "Level 1"
+	}, {
+		index: 5,
+		name: "Level 2"
+	}, {
+		index: 7,
+		name: "Level 3"
+	}, {
+		index: 9,
+		name: "Level 4"
+	}, {
+		index: 1,
+		name: "StarWars Intro"
+	}, {
+		index: 0,
+		name: "Start the Game"
+	}];
+
+	private levels: (() => IGameElement)[] = [
+		() => new NameEnquiry(this),
+		() => new StarWarsIntro(),
+		() => new Intro(this, Stories.level1),
+		() => new Level1(this),
+		() => new Intro(this, Stories.level2),
+		() => new Level2(this),
+		() => new Intro(this, Stories.level3),
+		() => new Level3(this),
+		() => new Intro(this, Stories.level4),
+		() => new Level4(this),
+		() => new Intro(this, Stories.end)
+	];
 
 	constructor() {
-		this.stateListener = new StateListener<IGameBootstrapState>({
-			title: null,
-			lives: 3,
-			oxygen: 1,
-			showOxygen: false,
-		});
+		this.stateListener = new StateListener<IGameBootstrapState>(defaultGameBootstrapState);
 		this.state = this.stateListener.createListenableObject();
 
 		// @ts-ignore
@@ -142,97 +171,48 @@ export class GameBootstrap {
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());
+	}
 
-		const level1 = new Level1(this);
-		const level2 = new Level2(this);
-		const level3 = new Level3(this);
-		const level4 = new Level4(this);
-		const nameEnquiry = new NameEnquiry();
-		const intro = new Intro(this);
-		const starWarsIntro = new StarWarsIntro();
-		const menu = this.menu = new Menu();
-		const movementTestLevel = new MovementTestLevel(this);
+	private showMenu() {
+		const menu = new Menu(this.menuItems.map(t => t.name));
+		this.currentGameElement = menu;
+		menu.once("click", ({ id }) => {
+			this.sceneIndex = this.menuItems[id].index;
+			this.showScene();
+		});
+	}
 
-		const gameElements = [level1, level2, level3, level4, nameEnquiry, intro, starWarsIntro, menu];
-		const gameStory = [nameEnquiry, starWarsIntro, Stories.level1, level1, Stories.level2, level2, Stories.level3, level3, Stories.level4, level4, Stories.end];
+	private resetGame() {
+		if (this.currentGameElement && this.currentGameElement.dispose)
+			this.currentGameElement.dispose();
+		this.sceneIndex = 0;
+		this.showMenu();
+	}
 
-		let sceneIndex = 0;
-		let currentGameElement: IGameElement = menu;
+	private showDeathStory() {
+		this.sceneIndex = 0;
+		if (this.currentGameElement && this.currentGameElement.dispose)
+			this.currentGameElement.dispose();
+		this.currentGameElement = new Intro(this, Stories.death);
+		this.currentGameElement.once("done", () => this.resetGame());
+	}
 
-		const resetGame = () => {
-			currentGameElement.dispose();
-			menu.start();
-			sceneIndex = 0;
-		};
+	private showScene() {
+		if (this.sceneIndex >= this.levels.length || this.sceneIndex < 0) {
+			this.resetGame();
+			return;
+		}
 
-		const showDeathStory = () => {
-			sceneIndex = 0;
-			currentGameElement.dispose();
-			currentGameElement = intro;
-			intro.setStory(Stories.death);
-			intro.start();
-			intro.once("done", () => {
-				resetGame();
-			});
-		};
+		if (this.currentGameElement && this.currentGameElement.dispose)
+			this.currentGameElement.dispose();
+		this.currentGameElement = this.levels[this.sceneIndex]();
 
-		const resetScene = () => sceneIndex = 0;
-		const showScene = () => {
-			if (sceneIndex >= gameStory.length || sceneIndex < 0) {
-				resetGame();
-				return;
-			}
-
-			currentGameElement.dispose();
-			const next = gameStory[sceneIndex];
-
-			if (Array.isArray(next)) {
-				currentGameElement = intro;
-				intro.setStory(next);
+		this.currentGameElement.once("done", ({ type }) => {
+			if (type === GameElementDoneType.Finished) {
+				this.sceneIndex++;
+				this.showScene();
 			} else
-				currentGameElement = next;
-
-			currentGameElement.start();
-			currentGameElement.once("done", ({ type }) => {
-				if (type === GameElementDoneType.Finished) {
-					sceneIndex++;
-					showScene();
-				} else
-					showDeathStory();
-			});
-
-		};
-
-		const menuItems = [{
-			element: level1,
-			name: "Level 1"
-		}, {
-			element: level2,
-			name: "Level 2"
-		}, {
-			element: level3,
-			name: "Level 3"
-		}, {
-			element: level4,
-			name: "Level 4"
-		}, {
-			element: starWarsIntro,
-			name: "StarWars Intro"
-		}, {
-			element: nameEnquiry,
-			name: "Start the Game"
-		}];
-
-		gameElements.forEach((t: IGameElement) => t.init && t.init(this));
-
-		this.menu.items = menuItems.map(t => t.name);
-		this.menu.on("click", ({ id, name }) => {
-			const elt = menuItems[id].element;
-			if (!elt)
-				resetScene();
-			else
-				sceneIndex = gameStory.indexOf(elt);
-			showScene();
+				this.showDeathStory();
 		});
 
 	}
@@ -241,7 +221,7 @@ export class GameBootstrap {
 	 * Starts the game.
 	 */
 	start() {
-		this.menu.start();
+		this.showMenu();
 		this.engine.start(this.loader);
 	}
 

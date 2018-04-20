@@ -35,27 +35,39 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.right - TreeBranch.branchLength / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.left + 200, this.levelBounds.top + 200);
-		this.registerResources();
-	}
 
-	init(bootstrap: GameBootstrap): void {
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-	}
-
-	start(): void {
 		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+		
 		this.buildScene();
 	}
 
-	dispose(): void {
-		for (let actor of this.scene.actors) {
-			actor.kill();
+	buildScene() {
+		let vines = this.vineCreator.createVines();
+		
+		for (let vine of vines) {
+			for (let vinePart of vine.getAllParts()) {
+				this.scene.add(vinePart);
+			}
 		}
+
+		this.scene.add(this.ground);
+		this.scene.add(this.treeBranch);
+		this.scene.add(this.player);
+		this.scene.add(this.arrow);
+		this.arrow.z = -1;
+
+		this.engine.addScene(this.sceneKey, this.scene);
+		this.engine.goToScene(this.sceneKey);
+	}
+
+	dispose(): void {
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	win = (): void => {
@@ -76,27 +88,4 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		});
 	}
 
-	private registerResources() {
-		this.loader.addResources(Ground.resources);
-		this.loader.addResources(Arrow.resources);
-	}
-
-	private buildScene = () => {
-		let vines = this.vineCreator.createVines();
-
-		for (let vine of vines) {
-			for (let vinePart of vine.getAllParts()) {
-				this.scene.add(vinePart);
-			}
-		}
-
-		this.scene.add(this.ground);
-		this.scene.add(this.treeBranch);
-		this.scene.add(this.player);
-		this.scene.add(this.arrow);
-		this.arrow.z = -1;
-
-		this.engine.addScene(this.sceneKey, this.scene);
-		this.engine.goToScene(this.sceneKey);
-	}
 }

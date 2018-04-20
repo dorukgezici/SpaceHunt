@@ -73,18 +73,11 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 			this.cannibals.push(new Cannibal(xStart, 600 - 40 - h / 2, w, h, speedX, 400, 4600));
 		}
 
-	}
-
-	start(): void {
 		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
-	}
-
-	dispose(): void {
-		this.ground.kill();
 	}
 
 	private buildScene = () => {
@@ -107,6 +100,10 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
+	}
+
+	dispose(): void {
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	randomIntFromInterval(min: number, max: number): number {

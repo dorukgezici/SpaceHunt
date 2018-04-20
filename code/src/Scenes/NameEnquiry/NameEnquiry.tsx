@@ -12,11 +12,10 @@ export class NameEnquiry extends Class implements IGameElement {
 		return this.inputElement && this.inputElement.value.trim() || null;
 	}
 
-	init(bootstrap: GameBootstrap) {
-		this.gameBoostrap = bootstrap;
-	}
-
-	start() {
+	constructor(
+		private readonly bootstrap: GameBootstrap
+	) {
+		super();
 		InterfaceBuilder.displayDefault(this.render());
 		if (this.inputElement)
 			this.inputElement.select();
