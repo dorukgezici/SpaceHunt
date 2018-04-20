@@ -15,7 +15,7 @@ export default class Background extends ex.Actor {
 	static readonly ySpeed: number = 0.001;
 
 	bgToLvlRatio: number;
-	player: Player;
+	public player: Player;
 	minLeft: number;
 	lvlLength: number;
 	time: number = 0;

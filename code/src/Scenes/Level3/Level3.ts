@@ -19,7 +19,6 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 	engine: ex.Engine;
 	scene: ex.Scene;
-	// extendedScene: ExtendedScene;
 	bounds: ex.BoundingBox;
 
 	// actors
@@ -40,23 +39,11 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 
-		const baseUpdateMethod = this.scene.update;
-		const scene = this.scene;
-		this.scene.update = function () {
-			// console.log("custom update logic");
-			baseUpdateMethod.apply(scene, arguments);
-			// console.log("custom update logic2");			
-		};
-
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		// this.ground = new Ground(this.bounds.left, this.bounds.bottom - 25);
-		/* this.ground.anchor.setTo(0, 0.5);
-		this.ground.body.useBoxCollision();
-		this.ground.rotation = -Math.PI / 360 * 5; */
 
 		this.player = new Player(100, 300, this.levelBounds, this.engine, controlSets.controls1);
 		this.player.on("death", () => this.lose());
@@ -74,7 +61,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.rocks = [];
 		this.rockCreator = new RockCreator(this.engine, this.scene, this.bounds, this.player, this.rocks);
 
-		this.background = new Background(0, 0, 400, 400, 5000, this.player);
+		this.background = new Background(0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, this.player);
 
 	}
 
@@ -84,10 +71,6 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
-
-		// camera rotation ?!
-		this.scene.camera.rotation += 0.47;
-		console.log("cam rot:   " + this.scene.camera.rotation + "   (level3 - start())");
 	}
 
 	dispose(): void {
@@ -99,7 +82,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 		});
 	}
 
-	private buildScene = () => {
+	private buildScene(): void {
 
 		// add actors
 		if (this.player2) this.scene.add(this.player2);

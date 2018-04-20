@@ -40,6 +40,9 @@ export default class Player extends BasePlayer {
 
 		this.oxygenMeter = oxygenMeter;
 
+		this.setWidth(Player.size.w);
+		this.setHeight(Player.size.h);
+
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
 		// this.y += this.getHeight() / 2;

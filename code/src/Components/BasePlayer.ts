@@ -7,11 +7,15 @@ export default abstract class BasePlayer extends ex.Actor {
 
 	controls: IControlSet;
 
+	cameraStrategy: ex.LockCameraToActorAxisStrategy;
+
 	constructor(x: number, y: number, controlSet: IControlSet) {
 		super(x, y, BasePlayer.size.w, BasePlayer.size.h, ex.Color.Violet);
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
 		this.controls = controlSet;
+
+		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 	}
 
 }

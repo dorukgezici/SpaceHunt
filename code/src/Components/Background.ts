@@ -16,7 +16,7 @@ export default class Background extends ex.Actor {
 	time: number = 0;
 
 	constructor(image: ex.Sprite, player: ex.Actor,
-				x: number, y: number, minLeft: number, minRight: number, lvlLen: number) {
+		x: number, y: number, minLeft: number, minRight: number, lvlLen: number) {
 		super(x, y, Background.bgWidth, Background.bgHeight);
 
 		this.anchor.setTo(0, 0);

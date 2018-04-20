@@ -152,8 +152,6 @@ export default class Player extends BasePlayer {
 	public die(info: string) {
 		if (!this.dead) {
 
-			// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
-
 			this.dead = true;
 
 			this.collisionArea.body.useBoxCollision();

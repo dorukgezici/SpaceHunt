@@ -15,7 +15,7 @@ import { controlSets } from "../../Components/BasePlayer";
 export default class Level2 extends Class<IGameElementEvents> implements IGameElement {
 
 	// create second player?
-	readonly secondPlayer: boolean = true;
+	readonly secondPlayer: boolean = false;
 	player2: Player | undefined;
 	oxygenMeter2: ex.Label | undefined; // TODO: create second oxygenMeter also on screen (this one here doesn't really work as supposed? :D)
 	players: Player[] = []; // to be passed to the bubbleCreator
@@ -74,7 +74,8 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 			this.players.push(this.player2);
 		}
 
-		this.background = new Background(0, 0, 400, 400, 5000, this.player);
+		this.background = new Background(0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, this.player);
+
 		this.bubbles = [];
 		this.crocodiles = [];
 

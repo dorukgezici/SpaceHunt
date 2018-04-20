@@ -14,7 +14,7 @@ const states = {
 
 export default class Player extends BasePlayer {
 
-	cameraStrategy: ex.LockCameraToActorStrategy;
+	cameraStrategy: ex.LockCameraToActorAxisStrategy;
 	dead: boolean = false;
 	ducked: boolean = false;
 	engine: ex.Engine;

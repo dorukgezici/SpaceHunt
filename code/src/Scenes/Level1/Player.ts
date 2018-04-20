@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer, { controlSets } from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
@@ -14,12 +14,12 @@ export default class Level1Player extends BasePlayer {
 	onBranch: boolean = true;
 	levelLength: number;
 	onVine: boolean = false;
-	cameraStrategy: ex.LockCameraToActorAxisStrategy;
+	// cameraStrategy: ex.LockCameraToActorAxisStrategy;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
-	constructor(x: number, y: number, levelLength: number) {
-		super(x, y, controlSets.controls1);
-		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
+	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet) {
+		super(x, y, controlSet);
+		// this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
 		const animation = attachPlayerAnimations(this);

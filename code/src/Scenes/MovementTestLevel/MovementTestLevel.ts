@@ -15,7 +15,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	engine: ex.Engine;
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
-	ground: Ground;
+	// ground: Ground;
 	player: Player;
 	// player2: Player;
 	loader: ex.Loader;
@@ -28,7 +28,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
+		// this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Player(this.bounds.right / 2, this.bounds.bottom - 100, this.levelBounds, bootstrap, controlSets.controls1);
 		// this.player2 = new Player(this.bounds.right / 2 + 100, this.bounds.bottom - 100, this.levelBounds, bootstrap, controlSets.controls2);
 
@@ -50,11 +50,11 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	}
 
 	dispose(): void {
-		this.ground.kill();
+		// this.ground.kill();
 	}
 
 	private buildScene = () => {
-		this.scene.add(this.ground);
+		// this.scene.add(this.ground);
 		this.scene.add(this.player);
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
