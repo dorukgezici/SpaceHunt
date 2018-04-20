@@ -12,10 +12,11 @@ declare namespace JSX {
 	type FalsyNode = false | unset;
 	type Children = Node[];
 	type DefaultAttrs = EmptyObject;
-	type Attrs<T, E extends DOMElement = DOMElement> = T & ClassAttributes<E>;
+	type Attrs<T, E = DOMElement> = T & ClassAttributes<E>;
 	type AttrsType = EmptyObject;
-	type AttrsValue<T extends AttrsType, E extends DOMElement = DOMElement> = Attrs<T, E> | null;
-	type Provider<T extends JSX.AttrsType, E extends DOMElement = DOMElement> = (attrs: AttrsValue<T, E>, children: Node[]) => Element;
+	type AttrsValue<T extends AttrsType, E = DOMElement> = Attrs<T, E> | null;
+	type Provider<T extends JSX.AttrsType, E = DOMElement> = (attrs: AttrsValue<T, E>, children: Node[]) => Element;
+	type ElementClassRender<T> = (attrs: T, children: Children) => ElementCollection;
 	type ElementClass = Component<any>;
 
 	type IntrinsicElementType<E extends HTMLAttributes<T>, T extends DOMElement> = ClassAttributes<T> & E;
@@ -25,14 +26,14 @@ declare namespace JSX {
 		/**
 		 * This value should never be references as it may be unset;
 		 */
-		_attrs?: Attrs<T>;
+		_attrs: T;
 	}
 
-	interface Component<T extends AttrsType = DefaultAttrs, E extends JSX.ElementBase = JSX.ElementBase> extends ElementAttributesProperty<T> {
+	interface Component<T extends AttrsType = DefaultAttrs> extends ElementAttributesProperty<T> {
 		/**
-		 * Provides content to render.s
+		 * Provides content to render.
 		 */
-		render(attrs: AttrsValue<T, E>, children: Children): ElementCollection;
+		render(attrs: T, children: Children): ElementCollection;
 	}
 
 	interface IntrinsicElements {
@@ -2056,7 +2057,7 @@ declare namespace JSX {
 	type TransitionEventHandler<T> = CustomEventHandler<TransitionEvent<T>>;
 	type PointerEventHandler<T> = CustomEventHandler<PointerEvent<T>>;
 
-	interface ClassAttributes<T extends DOMElement> {
+	interface ClassAttributes<T> {
 		ref?: (element: T) => void
 	}
 

@@ -1,5 +1,8 @@
 import { InterfaceBuilder } from "../../InterfaceBuilder";
 import { GameBootstrap } from "../../GameBootstrap";
+import { Class } from "../../Class";
+import Rerenderer from "../../Components/JSX/Rerenderer";
+import RerendererComponent from "../../Components/JSX/RerendererComponent";
 require("./style.scss");
 
 function range(n: number) {
@@ -9,54 +12,43 @@ function range(n: number) {
 	return arr;
 }
 
-export default class GameBar {
+interface IEvents {
+	dispose: GameBar;
+}
 
-	private _visible = false;
+interface IAttrs {
+	bootstrap: GameBootstrap;
+}
+
+export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
+
 	protected livesElement: HTMLElement | null = null;
 	protected oxygenElement: HTMLElement | null = null;
-	protected holder: HTMLDivElement;
 
-	constructor(
-		protected readonly bootstrap: GameBootstrap
-	) {
-		this.holder = document.getElementById("game-bar-holder") as HTMLDivElement;
-		const { stateListener } = bootstrap;
+	constructor(attrs: IAttrs) {
+		super(
+			<div id="game-bar-holder"></div>
+		);
+		this.rerender = this.rerender.bind(this);
+		const { stateListener } = attrs.bootstrap;
 		stateListener.on("lives", this.livesChanged);
 		stateListener.on("oxygen", this.oxygenChanged);
-		stateListener.on("showOxygen", this.forceUpdate);
-		stateListener.on("title", this.forceUpdate);
-		(window as any).b = bootstrap;
+		stateListener.on("showOxygen", this.rerender);
+		stateListener.on("title", this.rerender);
 	}
 
 	dispose() {
-		const { stateListener } = this.bootstrap;
+		const { stateListener } = this.attrs.bootstrap;
 		stateListener.off("lives", this.livesChanged);
 		stateListener.off("oxygen", this.oxygenChanged);
-		stateListener.off("showOxygen", this.forceUpdate);
-		stateListener.off("title", this.forceUpdate);
-	}
-
-	forceUpdate = () => {
-		if (!this._visible)
-			return;
-		InterfaceBuilder.replaceContent(this.holder, this.render());
-	}
-
-	toggle(visible?: boolean) {
-		const v = visible === undefined ? !this._visible : visible;
-		if (v !== this._visible) {
-			this._visible = v;
-			if (v) {
-				this.holder.style.display = "block";
-				this.forceUpdate();
-			} else
-				this.holder.style.display = "none";
-		}
+		stateListener.off("showOxygen", this.rerender);
+		stateListener.off("title", this.rerender);
+		this.emit("dispose", this);
 	}
 
 	private livesChanged = () => {
 		if (!this.livesElement) return;
-		const { lives } = this.bootstrap.state;
+		const { lives } = this.attrs.bootstrap.state;
 		const { children } = this.livesElement;
 
 		if (children.length < lives) {
@@ -70,19 +62,17 @@ export default class GameBar {
 
 	private oxygenChanged = () => {
 		if (!this.oxygenElement) return;
-		const { oxygen } = this.bootstrap.state;
+		const { oxygen } = this.attrs.bootstrap.state;
 		this.oxygenElement.style.left = `-${(1 - oxygen) * 100}%`;
 	}
 
 	render(): JSX.ElementCollection {
-		const { lives, oxygen, title } = this.bootstrap.state;
+		const { stateListener, state } = this.attrs.bootstrap;
+		const { lives, oxygen, title } = state;
 		this.oxygenElement = null;
 		return (
 			<div id="game-bar">
-				<div
-					ref={e => this.livesElement = e}
-					className="lives"
-				>
+				<div ref={e => this.livesElement = e} className="lives">
 					{range(lives).forEach(() => (
 						<div className="live"></div>
 					))}
@@ -92,10 +82,7 @@ export default class GameBar {
 				</div>
 				{!Number.isNaN(oxygen) && (
 					<div className="oxygen-holder">
-						<div
-							ref={e => this.oxygenElement = e}
-							className="oxygen-level"
-							style={{ left: `-${(1 - oxygen) * 100}%` }} />
+						<div ref={e => this.oxygenElement = e} className="oxygen-level" style={{ left: `-${(1 - oxygen) * 100}%` }} />
 					</div>
 				)}
 			</div>

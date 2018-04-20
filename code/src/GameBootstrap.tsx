@@ -14,6 +14,8 @@ import { getLoadableResources } from "./Resources";
 import * as Stories from "./Scenes/Intro/Story";
 import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
 import GameBar from "./Scenes/GameBar/GameBar";
+import GameInterface from "./Scenes/GameInterface/GameInterface";
+import { InterfaceBuilder } from "./InterfaceBuilder";
 
 /**
  * A game event that contains a related event value.
@@ -103,14 +105,12 @@ export class GameBootstrap {
 	 * The key of the root (blank) scene.
 	 */
 	readonly rootSceneKey = "root";
-	readonly gameBar: GameBar;
+	// @ts-ignore
+	readonly interface: GameInterface;
 	readonly loader: Loader;
 	private menu: Menu;
 
-	constructor(
-		public readonly canvasId: string,
-		public readonly overlay: HTMLElement
-	) {
+	constructor() {
 		this.stateListener = new StateListener<IGameBootstrapState>({
 			title: null,
 			lives: 3,
@@ -119,19 +119,29 @@ export class GameBootstrap {
 		});
 		this.state = this.stateListener.createListenableObject();
 
+		// @ts-ignore
+		this.interface = null;
+		InterfaceBuilder.replaceContent(document.body, (
+			<GameInterface
+				bootstrap={this}
+				ref={i =>
+					// @ts-ignore
+					this.interface = i
+				}
+			/>
+		));
+
 		// create the game engine
 		this.engine = new Engine({
 			width: 800,
 			height: 600,
-			canvasElementId: canvasId,
+			canvasElementId: this.interface.canvas.id,
 			backgroundColor: Color.Black,
 			pointerScope: Input.PointerScope.Canvas
 		});
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());
-
-		this.gameBar = new GameBar(this);
 
 		const level1 = new Level1(this);
 		const level2 = new Level2(this);
@@ -224,15 +234,17 @@ export class GameBootstrap {
 				sceneIndex = gameStory.indexOf(elt);
 			showScene();
 		});
+
 	}
 
 	/**
 	 * Starts the game.
 	 */
 	start() {
-		this.gameBar.toggle(true);
 		this.menu.start();
 		this.engine.start(this.loader);
 	}
 
 }
+
+export type GameBootstrapType = typeof GameBootstrap;
