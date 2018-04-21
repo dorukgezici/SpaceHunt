@@ -52,7 +52,6 @@ export default class Level3 extends BaseLevel {
 
 	buildScene(): void {
 		super.buildScene();
-
 		// start rockCreator
 		this.rockCreator.start();
 	}

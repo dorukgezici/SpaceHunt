@@ -47,7 +47,7 @@ export default class Level2 extends BaseLevel {
 					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50)
 				)])), // just one player required
 			Level2.groundTexture,
-			Resources.level3.bg.asSprite(),
+			Resources.riverTexture.asSprite(),
 			0.001 // background y movement speed
 		);
 

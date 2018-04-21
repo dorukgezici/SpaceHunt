@@ -90,7 +90,7 @@ export default class Level1Player extends BasePlayer {
 
 	onPostcollision(e: any | ex.PostCollisionEvent) {
 		if (e.other.constructor.name === "Ground") {
-			this.emit("fell");
+			this.die("died by falling on the ground");
 		}
 	}
 

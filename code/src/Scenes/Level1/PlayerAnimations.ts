@@ -2,11 +2,11 @@ import { ITransformDrawSetProviderData, createTransformDrawSetProvider, Transfor
 import { cubicEasing, IBeforeDraw, IDrawBase } from "../../Components/Animations/TransformDrawPart";
 import { IDrawSetProvider } from "../../Components/Animations/DrawAnimation";
 import { PlainDrawSet } from "../../Components/Animations/PlainDrawSet";
-import Player from "./Player";
+import Level1Player from "./Level1Player";
 import { sprites, bodyParts, IBodyParts, modelSize } from "../../Components/Animations/MichaelsonParts";
 import { allData } from "../../Components/Animations/MichelsonAnimation";
 
-export function attachPlayerAnimations(player: Player) {
+export function attachPlayerAnimations(player: Level1Player) {
 
 	allData.forEach(data => {
 		const bd = data.beforeDraw;
