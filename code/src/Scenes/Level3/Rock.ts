@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import BasePlayer from "../../Components/BasePlayer";
 import resources from "../../Resources";
 
 export const Rocktypes = { "small": 1, "big": 2 };
@@ -20,9 +20,6 @@ export default class Rock extends ex.Actor {
 
 		this.d = d;
 
-		// this.z = -1;
-
-		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center
 
 		this.collisionArea.body.useBoxCollision();
@@ -59,9 +56,8 @@ export default class Rock extends ex.Actor {
 				this.vel.y = this.yVelBounce * (this.randomIntFromInterval(90, 110) / 100);
 			}
 		} else {
-			if (ev.other.constructor.name === "Player") {
-				console.log("onPrecollision event of Rock colliding with player");
-				let player: Player = ev.other;
+			if (ev.other instanceof BasePlayer) {
+				let player: BasePlayer = ev.other;
 				player.die("You got hit by the rock!");
 			}
 		}
@@ -69,37 +65,17 @@ export default class Rock extends ex.Actor {
 	}
 
 	draw(ctx: any, delta: any) {
-		// Optionally call original 'base' method
-		// ex.Actor.prototype.draw.call(this, ctx, delta);
-
-		// Custom draw code
-		/*
-		ctx.fillStyle = this.color.toString();
-		ctx.beginPath();
-		ctx.arc(this.pos.x, this.pos.y, Math.trunc(Math.sqrt((this.d * this.d)/4.0))+1, 0, Math.PI * 2);
-		ctx.closePath();
-		ctx.fill();
-		*/
-		// TODO: calculate rotation
 		this.rotationTime += delta / 1000;
-
 		this.rotation = ((this.rotationTime * this.numberOfRotationsPerSecond) % 1) * 2 * Math.PI;
-
 		this.sprite.rotation = this.rotation;
-
 		this.sprite.draw(ctx, this.getCenter().x, this.getCenter().y);
-
 	}
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
-		// TODO: kill when far behind player
+		// TODO: kill when far behind player ?
 
-	}
-
-	kill() {
-		super.kill();
 	}
 
 	randomIntFromInterval(min: number, max: number): number {

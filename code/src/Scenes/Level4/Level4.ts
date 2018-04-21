@@ -1,10 +1,8 @@
 import * as ex from "excalibur";
-import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Level4Player from "./Level4Player";
 import Cannibal from "./Cannibal";
-import Background from "../../Components/Background";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";

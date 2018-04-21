@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import resources from "../../Resources";
 
 export default class Bubble extends ex.Actor {
@@ -15,7 +15,7 @@ export default class Bubble extends ex.Actor {
 
 	playerCollision: boolean = false;
 	playerTrapped: boolean = false;
-	collidedPlayer: Player | unset;
+	collidedPlayer: Level2Player | unset;
 	timer: number = -1;
 
 	constructor(x: number, y: number, speedX: number, speedY: number) {
@@ -29,7 +29,7 @@ export default class Bubble extends ex.Actor {
 
 		this.vel = new ex.Vector(speedX, speedY);
 
-		// On collision check if Player and trap if true
+		// On collision check if Level2Player and trap if true
 		this.on("precollision", this.onPrecollision);
 	}
 
@@ -38,7 +38,7 @@ export default class Bubble extends ex.Actor {
 		// console.log("precollision event raised");
 		// trap player if collided
 		// only if player not already in the sky
-		if (!this.playerCollision && ev.other.constructor.name === "Player" && !ev.other.trapped && this.y > Bubble.MINCOLLISIONY ) {
+		if (!this.playerCollision && ev.other.constructor.name === "Level2Player" && !ev.other.trapped && this.y > Bubble.MINCOLLISIONY ) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Bubble - onPrecollision())");
 			this.playerCollision = true;
 			this.playerTrapped = true;

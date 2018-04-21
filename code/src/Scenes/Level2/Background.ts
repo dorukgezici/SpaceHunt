@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import resources from "../../Resources";
 
 /**
@@ -15,12 +15,12 @@ export default class Background extends ex.Actor {
 	static readonly ySpeed: number = 0.001;
 
 	bgToLvlRatio: number;
-	player: Player;
+	player: Level2Player;
 	minLeft: number;
 	lvlLength: number;
 	time: number = 0;
 
-	constructor(x: number, y: number, minLeft: number, minRight: number, levelLength: number, player: Player) {
+	constructor(x: number, y: number, minLeft: number, minRight: number, levelLength: number, player: Level2Player) {
 		super(x, y, Background.bgWidth, Background.bgHeight);
 		this.player = player;
 		this.minLeft = minLeft;

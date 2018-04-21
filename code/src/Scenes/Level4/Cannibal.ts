@@ -6,7 +6,6 @@ import { IEslanAnimations, eslanAnimationFactory } from "../../Components/Animat
 
 export default class Cannibal extends ex.Actor {
 
-	// sprite: ex.Sprite;
 	minX: number;
 	maxX: number;
 	speedX: number;

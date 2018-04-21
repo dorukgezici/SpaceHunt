@@ -6,7 +6,7 @@ import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
 
-export default class Player extends BasePlayer {
+export default class Level2Player extends BasePlayer {
 
 	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
@@ -21,7 +21,7 @@ export default class Player extends BasePlayer {
 	private minY: number;
 	private maxY: number;
 
-	private speedX: number = Player.speedNormal;
+	private speedX: number = Level2Player.speedNormal;
 
 	public trapped: boolean = false; // for disabling controls in case of being trapped by a bubble
 	public dead: boolean = false;
@@ -31,18 +31,19 @@ export default class Player extends BasePlayer {
 
 	private animation: DrawAnimation<IPlayerSwimAnimations>;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, controlSet: IControlSet) {
-		// super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
+	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label) {
+		// super(x, y, Level2Player.size.w, Level2Player.size.h, ex.Color.DarkGray);
 		super(x, y, controlSet);
-		this.minX = levelBounds.left + Player.size.w / 2;
-		this.maxX = levelBounds.right - Player.size.w / 2;
-		this.minY = levelBounds.top + Player.size.h / 2;
-		this.maxY = levelBounds.bottom - Player.size.h / 2;
+		this.minX = Level2.levelBounds.left + Level2Player.size.w / 2;
+		this.maxX = Level2.levelBounds.right - Level2Player.size.w / 2;
+		this.minY = Level2.levelBounds.top + Level2Player.size.h / 2;
+		this.maxY = Level2.levelBounds.bottom - Level2Player.size.h / 2;
 
 		this.oxygenMeter = oxygenMeter;
+		this.oxygenMeter.fontSize = 30;
 
-		this.setWidth(Player.size.w);
-		this.setHeight(Player.size.h);
+		this.setWidth(Level2Player.size.w);
+		this.setHeight(Level2Player.size.h);
 
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
@@ -58,16 +59,8 @@ export default class Player extends BasePlayer {
 	onPrecollision(ev: any) {
 		// Reset Oxygen Level to 100
 		if (ev.other.constructor.name === "Sky") {
-
 			// refill oxygen
 			this.oxygenLevel = 100;
-
-			// free if trapped??
-			// if (this.trapped) {
-			// this.trapped = false;
-			// this.vel.x = 0;
-			// }
-
 		} else if (ev.other.constructor.name === "Bubble" && !this.trapped) { // Bubbles add 20 oxygen points
 			this.oxygenLevel = (this.oxygenLevel + 20) < 100 ? this.oxygenLevel + 20 : 100;
 		}
@@ -88,31 +81,31 @@ export default class Player extends BasePlayer {
 		if (!this.trapped) {
 			// X movement
 			if (engine.input.keyboard.wasPressed(this.controls.left)) {
-				this.speedX = Player.speedDec;
+				this.speedX = Level2Player.speedDec;
 			}
 
 			if (engine.input.keyboard.wasPressed(this.controls.right)) {
-				this.speedX = Player.speedAcc;
+				this.speedX = Level2Player.speedAcc;
 			}
 
 			if (engine.input.keyboard.wasReleased(this.controls.left)) {
 				if (engine.input.keyboard.isHeld(this.controls.right)) {
-					this.speedX = Player.speedAcc;
+					this.speedX = Level2Player.speedAcc;
 				} else {
-					this.speedX = Player.speedNormal;
+					this.speedX = Level2Player.speedNormal;
 				}
 			}
 
 			if (engine.input.keyboard.wasReleased(this.controls.right)) {
 				if (engine.input.keyboard.isHeld(this.controls.left)) {
-					this.speedX = Player.speedDec;
+					this.speedX = Level2Player.speedDec;
 				} else {
-					this.speedX = Player.speedNormal;
+					this.speedX = Level2Player.speedNormal;
 				}
 			}
 
 			if (engine.input.keyboard.isHeld(this.controls.left) && engine.input.keyboard.isHeld(this.controls.right)) {
-				this.speedX = Player.speedNormal;
+				this.speedX = Level2Player.speedNormal;
 			}
 
 			this.vel.x = this.speedX;
@@ -131,45 +124,30 @@ export default class Player extends BasePlayer {
 		}
 
 		if (this.speedX !== oldSpeedX) {
-			if (this.speedX === Player.speedNormal)
+			if (this.speedX === Level2Player.speedNormal)
 				this.animation.changeState("normal");
-			else if (this.speedX === Player.speedAcc)
+			else if (this.speedX === Level2Player.speedAcc)
 				this.animation.changeState("fast");
-			else if (this.speedX === Player.speedDec)
+			else if (this.speedX === Level2Player.speedDec)
 				this.animation.changeState("slow");
 		}
 
 		if (this.getWorldPos().x > 4950) {
-			this.emit("won");
+			this.win("won by reaching the level end");
 		}
 
 	}
-
-	public die(info: string) {
-		if (!this.dead) {
-			this.dead = true;
-			this.kill();
-			this.emit("death");
-			/*
-			alert(info);
-			let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
-			restartLabel.fontSize = 30;
-			this.scene.addUIActor(restartLabel);
-			*/
-		}
-	}
-
 
 	private moveUp() {
 		// to not move too far into the sky
 		if (this.pos.y > (this.minY + 100)) {
-			this.pos.y -= Player.speedY;
+			this.pos.y -= Level2Player.speedY;
 		}
 	}
 
 	private moveDown() {
 		if (this.pos.y < this.maxY) { // maxX?
-			this.pos.y += Player.speedY;
+			this.pos.y += Level2Player.speedY;
 		}
 	}
 }

@@ -23,7 +23,7 @@ export default class Level4Player extends BasePlayer {
 
 	private isJumping: boolean = false;
 
-	constructor(x: number, y: number, /*levelBounds: ex.BoundingBox,*/ controlSet: IControlSet) {
+	constructor(x: number, y: number, controlSet: IControlSet) {
 		super(x, y, controlSet);
 		this.minX = Level4.levelBounds.left + Level4Player.size.w / 2;
 		this.maxX = Level4.levelBounds.right - Level4Player.size.w / 2;

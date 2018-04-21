@@ -27,7 +27,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 	frontPlayer: BasePlayer;
 
 
-	constructor(sceneKey: string, bootstrap: GameBootstrap, levelBounds: ex.BoundingBox, players: BasePlayer[], groundTexture: ex.Texture, background: ex.Sprite) {
+	constructor(sceneKey: string, bootstrap: GameBootstrap, levelBounds: ex.BoundingBox, players: BasePlayer[], groundTexture: ex.Texture, background: ex.Sprite, backgroundYSpeed?: number) {
 		super();
 
 		this.sceneKey = sceneKey;
@@ -60,7 +60,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 		// ground & background
 		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - BaseLevel.groundHeight / 2, groundTexture, BaseLevel.groundHeight);
-		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000);
+		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, backgroundYSpeed);
 
 		// further scene properties
 		ex.Physics.acc.setTo(0, 2000);

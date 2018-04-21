@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import Bubble from "./Bubble";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 
 // class for cyclically creating new bubbles and adding them to the scene, in front of the player
 
@@ -8,13 +8,13 @@ export default class BubbleCreator {
 
 	engine: ex.Engine;
 	scene: ex.Scene;
-	players: Player[];
+	players: Level2Player[];
 	bubbles: Bubble[];
 	bounds: ex.BoundingBox;
 
 	timer: number[] = [-1]; // to be passed by reference
 
-	constructor(engine: ex.Engine, scene: ex.Scene, bounds: ex.BoundingBox, players: Player[], bubbles: Bubble[]) {
+	constructor(engine: ex.Engine, scene: ex.Scene, bounds: ex.BoundingBox, players: Level2Player[], bubbles: Bubble[]) {
 		this.engine = engine;
 		this.scene = scene;
 		this.bounds = bounds;
@@ -42,7 +42,7 @@ export default class BubbleCreator {
 	}
 
 	// TODO: random position(hitting the player based on it's current speed and y-distance?) & intervals
-	createNewBubbleRT(scene: ex.Scene, bounds: ex.BoundingBox, players: Player[], bubbles: Bubble[], timer: number[]) {
+	createNewBubbleRT(scene: ex.Scene, bounds: ex.BoundingBox, players: Level2Player[], bubbles: Bubble[], timer: number[]) {
 		console.log("creating new bubble... (Level2 - BubbleCreator - createNewBubbleRT()");
 
 		for (let player of players) {

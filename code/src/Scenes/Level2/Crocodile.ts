@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import resources from "../../Resources";
 import { GameBootstrap } from "../../GameBootstrap";
 
@@ -23,7 +23,7 @@ export default class Crocodile extends ex.Actor {
 
 		this.vel = new ex.Vector(speedX, speedY);
 
-		// On collision check if Player and trapp if true
+		// On collision check if Level2Player and trapp if true
 		this.on("precollision", this.onPrecollision);
 
 		// Sprite drawings
@@ -35,8 +35,8 @@ export default class Crocodile extends ex.Actor {
 	// raised every frame while colliding
 	onPrecollision(ev: any) {
 		// Trap player if collided
-		if (ev.other.constructor.name === "Player") {
-			let player: Player = ev.other;
+		if (ev.other.constructor.name === "Level2Player") {
+			let player: Level2Player = ev.other;
 			player.die("You got eaten by a crocodile!");
 		}
 	}

@@ -1,5 +1,4 @@
 import * as ex from "excalibur";
-import resources from "../../Resources";
 
 export default class Sky extends ex.Actor {
 

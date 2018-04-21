@@ -80,7 +80,7 @@ const defaultGameBootstrapState: IGameBootstrapState = {
 	lives: 3,
 	oxygen: 1,
 	showOxygen: false,
-	names: ["a", "b"]
+	names: ["a"]// , "b"]
 };
 
 /**
