@@ -42,6 +42,8 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
+
+		this.start();
 	}
 
 	init(bootstrap: GameBootstrap): void {

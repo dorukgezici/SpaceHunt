@@ -164,12 +164,14 @@ export class GameBootstrap {
 
 		// create the game engine
 		this.engine = new Engine({
-			width: 800,
+			width: 1000,
 			height: 600,
 			canvasElementId: this.interface.canvas.id,
 			backgroundColor: Color.Black,
 			pointerScope: Input.PointerScope.Canvas
 		});
+
+		this.engine.isDebug = true;
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());

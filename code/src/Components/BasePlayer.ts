@@ -1,5 +1,6 @@
 import * as ex from "excalibur";
 import { modelSize } from "./Animations/MichaelsonParts";
+import BaseLevel from "./BaseLevel";
 
 export default abstract class BasePlayer extends ex.Actor {
 
@@ -9,6 +10,9 @@ export default abstract class BasePlayer extends ex.Actor {
 
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
 
+	dead: boolean = false;
+	won: boolean = false;
+
 	constructor(x: number, y: number, controlSet: IControlSet) {
 		super(x, y, BasePlayer.size.w, BasePlayer.size.h, ex.Color.Violet);
 		this.collisionArea.body.useBoxCollision();
@@ -16,6 +20,32 @@ export default abstract class BasePlayer extends ex.Actor {
 		this.controls = controlSet;
 
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
+	}
+
+	public die(info: string) {
+		if (!this.dead) {
+			this.dead = true;
+			this.scene.camera.shake(50, 50, 500);
+			this.kill();
+			this.emit("death");
+		}
+	}
+
+	public win(info: string) {
+		if (!this.won) {
+			this.won = true;
+			this.emit("won");
+		}
+	}
+
+	// check if the player is at ground level
+	isGround(): boolean {
+		let groundLevel = this.scene.engine.getWorldBounds().bottom - BaseLevel.groundHeight;
+		if (groundLevel - this.getBottom() <= 5) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

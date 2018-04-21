@@ -10,7 +10,6 @@ const resources = {
 
 	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),
 	seaBed: new Texture(require("./Scenes/Level2/seabed.jpg")),
-	// sky: new Texture(require("./Scenes/Level2/cloud.jpg")),
 	ground: new Texture(require("./Scenes/MovementTestLevel/brick.jpg")),
 	bubble: new Texture(require("./Scenes/Level2/bubble.png")),
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
@@ -29,7 +28,6 @@ const resources = {
 	},
 	level4: {
 		bg: new Texture(require("./Resources/Images/level4Texture.png")),
-		// bg: new Texture(require("./Resources/Images/lvl4background2.png")),
 		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
 		pot: new Texture(require("./Scenes/Level4/pot.png")),
 	},

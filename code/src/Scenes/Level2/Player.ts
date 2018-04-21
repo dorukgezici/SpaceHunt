@@ -4,6 +4,7 @@ import Level2 from "./Level2";
 import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
+import BaseLevel from "../../Components/BaseLevel";
 
 export default class Player extends BasePlayer {
 

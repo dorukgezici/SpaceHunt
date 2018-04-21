@@ -2,10 +2,9 @@ import * as ex from "excalibur";
 import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
-import Ground from "./Ground";
-import Player from "./Player";
+import Level4Player from "./Level4Player";
 import Cannibal from "./Cannibal";
-import Background from "./Background";
+import Background from "../../Components/Background";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";
@@ -16,32 +15,29 @@ import Resources from "../../Resources";
 
 export default class Level4 extends BaseLevel {
 
-	// readonly secondPlayer: boolean = true;
-
 	readonly numCannibals: number = 3;
-	readonly sceneKey: string = "level4";
+	static readonly sceneKey: string = "level4";
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
+	static readonly groundTexture: ex.Texture = Resources.level4.ground;
 
 	cannibals: Cannibal[] = [];
 	vine: Vine;
 	princess: Princess;
 	pot: Pot;
 
-	// static players: Player[] = [new Player(100, 400, Level4.levelBounds, controlSets.controls1)];
-
-	level4Players: Player[];
-
-	static groundTexture: ex.Texture = Resources.level4.ground;
+	level4Players: Level4Player[];
 
 	constructor(bootstrap: GameBootstrap) {
-		// check for 
 		super(
-			bootstrap, 
+			Level4.sceneKey,
+			bootstrap,
+			Level4.levelBounds,
 			(bootstrap.state.names.length === 2
-				? ([new Player(100, 400, Level4.levelBounds, controlSets.controls1), new Player(50, 350, Level4.levelBounds, controlSets.controls2)])
-				: ([new Player(100, 400, Level4.levelBounds, controlSets.controls1)])),
-				Level4.groundTexture, Resources.level4.bg.asSprite());
-		this.level4Players = this.players as Player[];
+				? ([new Level4Player(100, 400, controlSets.controls1), new Level4Player(30, 250, controlSets.controls2)]) // two players required
+				: ([new Level4Player(100, 400, controlSets.controls1)])), // just one player required
+			Level4.groundTexture,
+			Resources.level4.bg.asSprite()
+		);
 
 		// vine + wife + pot
 		this.vine = new Vine(4800, 0, 28, 2, 0.05);
@@ -53,41 +49,36 @@ export default class Level4 extends BaseLevel {
 			const xStart = this.randomIntFromInterval(500, 4500);
 			const speedX = this.randomIntFromInterval(100, 200);
 			const { w, h } = modelSize;
-			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - BaseLevel.groundHeight - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Level4.groundHeight - h / 2, w, h, speedX, 400, 4600));
 		}
 
+		// player handling - init level-specific animations
+		this.level4Players = this.players as Level4Player[];
 		for (let p of this.level4Players) {
 			p.initAnimations();
 		}
 
-		this.start();
-	}
-
-	start(): void {
-		super.start();
+		// add actors to scene
 		this.buildScene();
 	}
 
-	dispose(): void {
-		super.dispose();
-		this.engine.removeScene(this.sceneKey);
-	}
+	buildScene(): void {
+		super.buildScene();
 
-	private buildScene(): void {
-		this.buildBaseScene();
 		// add scene specific actors
 		for (let vinePart of this.vine.getAllParts()) {
 			this.scene.add(vinePart);
 		}
 		this.scene.add(this.princess);
 		this.scene.add(this.pot);
-
 		for (let b of this.cannibals) {
 			this.scene.add(b);
 		}
+	}
 
-		this.engine.addScene(this.sceneKey, this.scene);
-		this.engine.goToScene(this.sceneKey);
+	dispose(): void {
+		super.dispose();
+		// & cancel open timeouts if any
 	}
 
 }

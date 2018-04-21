@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import BasePlayer from "../../Components/BasePlayer";
 import resources from "../../Resources";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { IEslanAnimations, eslanAnimationFactory } from "../../Components/Animations/EslanAnimation";
@@ -35,26 +35,16 @@ export default class Cannibal extends ex.Actor {
 			this.animation.changeState("walk-left");
 		}
 
-		// On collision check if Player and trap if true
+		// On collision check if Player and kill if true
 		this.on("precollision", this.onPrecollision);
 	}
 
 	// raised every frame while colliding
 	onPrecollision(ev: any) {
-		// console.log("precollision event raised");
-		if (ev.other.constructor.name === "Player") {
-			console.log("onPrecollision event of cannibal colliding with player");
-			let player: Player = ev.other;
+		if (ev.other instanceof BasePlayer) {
+			let player: BasePlayer = ev.other;
 			player.die("You got hit by a cannibal!");
 		}
-
-	}
-
-	draw(ctx: any, delta: any) {
-		// Optionally call original 'base' method
-		ex.Actor.prototype.draw.call(this, ctx, delta);
-
-		// this.sprite.draw(ctx, this.getCenter().x, this.getCenter().y);
 
 	}
 
@@ -71,10 +61,6 @@ export default class Cannibal extends ex.Actor {
 			this.animation.changeState("walk-left");
 		}
 
-	}
-
-	kill() {
-		super.kill();
 	}
 
 	randomIntFromInterval(min: number, max: number): number {

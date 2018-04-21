@@ -28,6 +28,8 @@ export default class Player extends BasePlayer {
 		this.animation = playerAnimationFactory.attachTo(this);
 	}
 
+	initAnimations(): void { }
+
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
@@ -101,12 +103,12 @@ export default class Player extends BasePlayer {
 
 	private duck() {
 		if (this.ducked)
-		return; // already ducked
+			return; // already ducked
 		this.ducked = true;
 		this.setHeight(Player.duckSize.h);
 		this.collisionArea.body.useBoxCollision();
 	}
-	
+
 	private unDuck() {
 		if (!this.ducked)
 			return; // already ducked

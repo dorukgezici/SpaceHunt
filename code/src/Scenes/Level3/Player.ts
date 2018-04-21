@@ -206,6 +206,7 @@ export default class Player extends BasePlayer {
 		}
 	}
 
+	/*
 	private isGround(): boolean {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
 		if (groundLevel - this.getBottom() < 15) {
@@ -214,5 +215,6 @@ export default class Player extends BasePlayer {
 			return false;
 		}
 	}
+	*/
 
 }

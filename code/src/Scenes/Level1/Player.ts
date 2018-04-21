@@ -27,6 +27,8 @@ export default class Level1Player extends BasePlayer {
 		this.levelLength = levelLength;
 	}
 
+	// initAnimations(): void { }
+
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 		const { animationStateHandler: ash } = this;

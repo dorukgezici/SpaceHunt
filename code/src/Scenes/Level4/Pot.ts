@@ -17,11 +17,7 @@ export default class Pot extends ex.Actor {
 	}
 
 	draw(ctx: any, delta: any) {
-		// Optionally call original 'base' method
-		// ex.Actor.prototype.draw.call(this, ctx, delta);
-
 		this.sprite.draw(ctx, this.getCenter().x, this.getBottom());
-
 	}
 
 }

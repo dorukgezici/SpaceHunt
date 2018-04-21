@@ -9,16 +9,17 @@ import LockLevelCameraStrategy from "./LockLevelCameraStrategy";
 
 export default abstract class BaseLevel extends Class<IGameElementEvents> implements IGameElement {
 
-	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
-	static groundHeight: number = 40;
+	sceneKey: string;
+
+	levelBounds: ex.BoundingBox; // = new ex.BoundingBox(0, 0, 5000, 600);
 	engine: ex.Engine;
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
 	loader: ex.Loader;
 
 	// actors
-	// actors: ex.Actor[] = []; // array of all actors for joint adding & disposal?
 	ground: Ground;
+	static groundHeight: number = 40;
 	background: Background;
 
 	// players
@@ -26,14 +27,15 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 	frontPlayer: BasePlayer;
 
 
-	constructor(bootstrap: GameBootstrap, players: BasePlayer[], groundTexture: ex.Texture, background: ex.Sprite) {
-		// TODO: throw error if players.length === 0 ?
+	constructor(sceneKey: string, bootstrap: GameBootstrap, levelBounds: ex.BoundingBox, players: BasePlayer[], groundTexture: ex.Texture, background: ex.Sprite) {
 		super();
 
+		this.sceneKey = sceneKey;
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
+		this.levelBounds = levelBounds;
 
 		this.players = players;
 
@@ -43,7 +45,6 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		const scene = this.scene;
 		const level = this;
 		this.scene.update = function () {
-			
 			for (let p of level.players) {
 				if (p.x > level.frontPlayer.x) {
 					scene.camera.removeStrategy(level.frontPlayer.cameraStrategy);
@@ -57,23 +58,24 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		};
 		// end of extended update method
 
+		// ground & background
 		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - BaseLevel.groundHeight / 2, groundTexture, BaseLevel.groundHeight);
 		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000);
 
-	}
-
-	start(): void {
+		// further scene properties
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(this.players[0].cameraStrategy);
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 
+		// wiring general player events
 		for (let p of this.players) {
 			p.on("death", () => this.lose());
 			p.on("won", () => this.win());
 		}
+
 	}
 
-	buildBaseScene(): void {
+	buildScene(): void {
 		// add base actors
 		this.scene.add(this.ground);
 		this.scene.add(this.background);
@@ -81,13 +83,12 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		for (let p of this.players) {
 			this.scene.add(p);
 		}
+		this.engine.addScene(this.sceneKey, this.scene);
+		this.engine.goToScene(this.sceneKey);
 	}
 
 	dispose(): void {
-		// something can be done here, instead of just getting rid of TSlint
-		// TODO: just cancel open timeouts?
-		// &:
-		// this.engine.removeScene(this.sceneKey);
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	win = (): void => {
