@@ -1,17 +1,16 @@
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const configFactory = require("./webpack.base");
+const {	paths } = require("./helpers")
 
 const config = configFactory({
-	assetName: "[hash].[ext]"
+	assetName: "[hash].[ext]",
+	envEntry: paths.code.env.prod
 });
 
 module.exports = {
 	...config,
-	devtool: "source-map",
 	plugins: [
 		...config.plugins,
-		new UglifyJsPlugin({
-			sourceMap: true
-		})
+		new UglifyJsPlugin()
 	]
 };

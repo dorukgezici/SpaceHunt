@@ -17,6 +17,11 @@ exports.paths = {
 			app: resolve("code/app.ts"),
 			polyfills: resolve("code/polyfills.ts")
 		},
+		env: {
+			test: resolve("code/env.test.ts"),
+			dev: resolve("code/env.dev.ts"),
+			prod: resolve("code/env.prod.ts")
+		},
 		static: resolve("code/static"),
 		html: resolve("code/index.html"),
 		favicon: resolve("code/favicon.png")

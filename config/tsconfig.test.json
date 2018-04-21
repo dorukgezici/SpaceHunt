@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"target": "es5",
+		"strict": true,
+		"noImplicitAny": false,
+		"sourceMap": true,
+		"jsx": "react",
+		"jsxFactory": "InterfaceBuilder.createElement",
+		"lib": [
+			"dom",
+			"es2017"
+		],
+		"typeRoots": [
+			"../node_modules/@types",
+			"../code/types"
+		]
+	},
+	"include": [
+		"../test",
+		"../code/types"
+	]
+}

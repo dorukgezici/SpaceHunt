@@ -1,7 +1,6 @@
 const autoprefixer = require("autoprefixer");
 const CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
@@ -12,7 +11,10 @@ const sassExtractPlugin = new ExtractTextPlugin({
 });
 
 module.exports = options => ({
-	entry: paths.code.entryPoints,
+	entry: {
+		env: options.envEntry,
+		...paths.code.entryPoints
+	},
 	output: {
 		path: paths.build.dir,
 		filename: "[name].js",
@@ -95,10 +97,6 @@ module.exports = options => ({
 			name: "polyfills",
 			chunks: ["polyfills"]
 		}),
-		sassExtractPlugin,
-		new EvalSourceMapDevToolPlugin({
-			moduleFilenameTemplate: "[resource-path]",
-			sourceRoot: "source:///"
-		})
+		sassExtractPlugin
 	]
 });

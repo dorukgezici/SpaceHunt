@@ -1,21 +1,3 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"strict": true,
-		"noImplicitAny": true,
-		"sourceMap": true,
-		"jsx": "react",
-		"jsxFactory": "InterfaceBuilder.createElement",
-		"lib": [
-			"dom",
-			"es2017"
-		],
-		"typeRoots": [
-			"node_modules/@types",
-			"code/types"
-		]
-	},
-	"include": [
-		"code"
-	]
+	"extends": "./config/tsconfig.base.json"
 }
