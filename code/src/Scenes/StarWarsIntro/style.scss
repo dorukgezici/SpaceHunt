@@ -23,7 +23,6 @@ $sw-perspective: 500px;
 #swintro {
 	@extend %stretch;
 	overflow: hidden;
-	background: black;
 
 	.hidden {
 		position: absolute;
@@ -93,10 +92,10 @@ $sw-perspective: 500px;
 		font-weight: 300;
 		color: $sw-blue;
 		font-size: 36px;
-		transition: all 1s;
 		opacity: 0;
-		transition: opacity 1s ease-in-out;
+		transition: opacity 1s ease-in-out, transform 12300ms linear;
 		padding: 0 24px;
+		display: none;
 	}
 
 	#spacehunt-logo {

@@ -1,13 +1,19 @@
 import { Class } from "../Class";
 
 interface IEvents {
-	done: AnimationSequence;
+	done: {
+		cancelled: boolean;
+		target: AnimationSequence;
+	};
+	cancelled: AnimationSequence; // whether the animation has been cancelled
+	finished: AnimationSequence; // whether the animation has been cancelled
 }
 
 interface IAnimation {
 	from: number;
 	to: number;
 	duration: number;
+	easing?: (path: number) => number;
 	callback: (value: number) => void;
 }
 
@@ -19,6 +25,7 @@ export class AnimationSequence extends Class<IEvents> {
 	private index: number = -1; // not running if less than 0
 	private awaiting = 0;
 	private animationFrames: { [key: string]: number } = {};
+	private subSequences: AnimationSequence[] = [];
 	private timeoutId = NaN;
 	private timestamp = 0;
 
@@ -57,8 +64,15 @@ export class AnimationSequence extends Class<IEvents> {
 					});
 				} else if (item instanceof AnimationSequence) {
 					this.awaiting++;
+					this.subSequences.push(item);
 					item.start();
-					item.once("done", () => this.checkProgress());
+					item.once("done", ({ cancelled }) => {
+						if (!cancelled) {
+							const index = this.subSequences.indexOf(item as AnimationSequence);
+							this.subSequences.splice(index, 1);
+							this.checkProgress();
+						}
+					});
 				} else {
 					this.doAnimation(item);
 				}
@@ -72,7 +86,7 @@ export class AnimationSequence extends Class<IEvents> {
 		const start = this.timestamp = performance.now();
 		const end = start + animation.duration;
 		const duration = end - start;
-		const { from, to, callback } = animation;
+		const { from, to, callback, easing } = animation;
 		const diff = to - from;
 		const render = (delta: number) => {
 			if (delta > end) {
@@ -80,7 +94,9 @@ export class AnimationSequence extends Class<IEvents> {
 				this.checkProgress();
 				delete this.animationFrames[id];
 			} else {
-				const path = (delta - start) / duration;
+				let path = (delta - start) / duration;
+				if (easing)
+					path = easing(path);
 				const value = path * diff + from;
 				callback(value);
 				this.animationFrames[id] = requestAnimationFrame(render);
@@ -101,20 +117,29 @@ export class AnimationSequence extends Class<IEvents> {
 		}, delay);
 	}
 
-	private done() {
+	private done(cancelled = false) {
 		this.index = -1;
-		this.emit("done", this);
+		if (cancelled)
+			this.emit("cancelled", this);
+		else
+			this.emit("finished", this);
+		this.emit("done", {
+			target: this,
+			cancelled
+		});
 	}
 
 	cancel() {
-		if (!Number.isNaN(this.timeoutId)) {
+		if (!Number.isNaN(this.timeoutId))
 			clearTimeout(this.timeoutId);
-			this.timeoutId = NaN;
-		}
-		for (let symbol in Object.getOwnPropertySymbols(this.animationFrames))
+		for (let symbol of Object.getOwnPropertySymbols(this.animationFrames))
 			cancelAnimationFrame(this.animationFrames[symbol]);
+		for (let subSequence of this.subSequences)
+			subSequence.cancel();
+		this.subSequences = [];
 		this.animationFrames = {};
-		this.done();
+		this.timeoutId = NaN;
+		this.done(true);
 	}
 
 }

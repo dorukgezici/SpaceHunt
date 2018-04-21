@@ -149,12 +149,11 @@ export class GameBootstrap {
 		const level4 = new Level4(this);
 		const nameEnquiry = new NameEnquiry();
 		const intro = new Intro(this);
-		const starWarsIntro = new StarWarsIntro();
 		const menu = this.menu = new Menu();
 		const movementTestLevel = new MovementTestLevel(this);
 
-		const gameElements = [level1, level2, level3, level4, nameEnquiry, intro, starWarsIntro, menu];
-		const gameStory = [nameEnquiry, starWarsIntro, Stories.level1, level1, Stories.level2, level2, Stories.level3, level3, Stories.level4, level4, Stories.end];
+		const gameElements = [level1, level2, level3, level4, nameEnquiry, intro, menu];
+		const gameStory = [nameEnquiry, Stories.level1, level1, Stories.level2, level2, Stories.level3, level3, Stories.level4, level4, Stories.end];
 
 		let sceneIndex = 0;
 		let currentGameElement: IGameElement = menu;
@@ -215,9 +214,6 @@ export class GameBootstrap {
 		}, {
 			element: level4,
 			name: "Level 4"
-		}, {
-			element: starWarsIntro,
-			name: "StarWars Intro"
 		}, {
 			element: nameEnquiry,
 			name: "Start the Game"

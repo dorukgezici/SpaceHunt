@@ -1,9 +1,54 @@
+#viewport-wrapper {
+	perspective: 600px;
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	>.display-above,
+	>.display-below {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		transition: all 2s;
+		opacity: 1;
+		>.background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: -1;
+		}
+	}
+	>.display-above {
+		opacity: 0;
+		top: -100%;
+		transform: rotateX(-45deg) scale(1.5);
+	}
+	>.display-below {
+		opacity: 1;
+		top: 0;
+		transform: rotateX(0) scale(1);
+	}
+	&.up {
+		>.display-above {
+			top: 0%;
+			opacity: 1;
+			transform: rotateX(0) scale(1);
+		}
+		>.display-below {
+			opacity: 0;
+			top: 100%;
+			transform: rotateX(45deg) scale(1.5);
+		}
+	}
+}
+
 #app {
 	height: 100%;
 	width: 100%;
 	position: absolute;
 	display: block;
-
 	&.hide {
 		display: none;
 	}
@@ -17,7 +62,6 @@
 	justify-content: center;
 	position: absolute;
 	flex-direction: column;
-
 	&.hide {
 		display: none;
 	}
@@ -26,4 +70,39 @@
 #canvas {
 	max-width: 100%;
 	max-height: 100%;
+}
+
+.saturn-bg-holder {
+	>* {
+		overflow: hidden;
+	}
+	>.saturn,
+	>.bg {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-position: center;
+		background-size: cover;
+	}
+	>.bg {
+		background-image: url("../../Resources/Images/BgSaturn-bg.png");
+	}
+	>.saturn {
+		background-image: url("../../Resources/Images/BgSaturn-saturn.png");
+	}
+	>.abstract-canvas-holder {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 60%;
+	}
+}
+
+.bg-stars {
+	background-image: url("../../Resources/Images/stars.png");
+	background-position: center;
+	background-size: cover;
 }
