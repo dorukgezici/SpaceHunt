@@ -84,30 +84,12 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		// CrocodileCreator for generation of new crocodiles
 		this.crocodileCreator = new CrocodileCreator(bootstrap, this.scene, this.bounds, this.player, this.crocodiles);
-	}
 
-	start(): void {
 		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 0);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
-	}
-
-	dispose(): void {
-		this.ground.kill();
-		this.sky.kill();
-		this.oxygenMeter.kill();
-
-		this.bubbleCreator.stop();
-		this.bubbles.forEach(function (b) {
-			if (!b.isKilled) { b.kill(); }
-		});
-
-		this.crocodileCreator.stop();
-		this.crocodiles.forEach(function (b) {
-			if (!b.isKilled) { b.kill(); }
-		});
 	}
 
 	private buildScene = () => {
@@ -127,6 +109,12 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
+	}
+
+	dispose(): void {
+		this.engine.removeScene(this.sceneKey);
+		this.bubbleCreator.stop();
+		this.crocodileCreator.stop();
 	}
 
 	win() {

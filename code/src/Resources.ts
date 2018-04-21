@@ -1,4 +1,4 @@
-import { Texture, ILoadable } from "excalibur";
+import { Texture, ILoadable, Resource } from "excalibur";
 import { texture as michealsonTexture, textureDuck } from "./Components/Animations/MichaelsonParts";
 import { texture as eslanTexture } from "./Components/Animations/EslanParts";
 
@@ -11,6 +11,7 @@ const resources = {
 	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),
 	seaBed: new Texture(require("./Scenes/Level2/seabed.jpg")),
 	// sky: new Texture(require("./Scenes/Level2/cloud.jpg")),
+	ground: new Texture(require("./Scenes/MovementTestLevel/brick.jpg")),
 	bubble: new Texture(require("./Scenes/Level2/bubble.png")),
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
 	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
@@ -19,7 +20,8 @@ const resources = {
 	level1: {
 		bg: new Texture(require("./Resources/Images/JungleBackground.png")),
 		ground: new Texture(require("./Resources/Images/Grass.png")),
-		tree: new Texture(require("./Resources/Images/Tree.png"))
+		tree: new Texture(require("./Resources/Images/Tree.png")),
+		arrow: new Texture(require("./Scenes/Level1/Arrow.png"))
 	},
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),
@@ -31,6 +33,10 @@ const resources = {
 		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
 		pot: new Texture(require("./Scenes/Level4/pot.png")),
 	},
+	fonts: {
+		fontO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy Outline.ttf"), "blob"),
+		fontAO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy AltOutline.ttf"), "blob"),
+	},
 	michealsonTexture,
 	eslanTexture,
 	textureDuck
@@ -41,8 +47,8 @@ export default resources as IResources as typeof resources;
 export function getLoadableResources() {
 	const arr = Object.values(resources);
 	let i = -1;
-	while ((i = arr.findIndex(t => !(t instanceof Texture))) > 0) {
+	while ((i = arr.findIndex(t => !(t instanceof Resource))) > 0) {
 		arr.splice(i, 1, ...(Object.values(arr[i]) as any[]));
 	}
-	return arr as Texture[];
+	return arr as Resource<any>[];
 }

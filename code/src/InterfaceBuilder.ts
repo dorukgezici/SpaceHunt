@@ -1,17 +1,20 @@
-export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, E extends JSX.ElementBase = JSX.ElementBase> implements JSX.Component<T> {
+import { Class, IDefaultEvents } from "./Class";
+
+export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, IEvents = IDefaultEvents> extends Class<IEvents> implements JSX.Component<T> {
 
 	/**
 	 * This value will always be undefined unless manually set. Use `attrs` property instead.
 	 */
-	_attrs?: JSX.Attrs<T, E>;
+	// @ts-ignore
+	_attrs: T;
 	/**
-	 * Current attributes of the component, if any.
+	 * Current attributes of the component. May be `undefined` if created by a custom instance provider.
 	 */
-	attrs?: JSX.AttrsValue<T, E> = null;
+	attrs: T;
 
-	constructor();
-	constructor(attrs: JSX.AttrsValue<T, E>);
-	constructor(attrs?: JSX.AttrsValue<T, E>) {
+	constructor(attrs?: T) {
+		super();
+		// @ts-ignore
 		this.attrs = attrs;
 	}
 
@@ -21,13 +24,13 @@ export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, E ex
 	 * Implement this method to apply custom logic.
 	 * @param nextAttrs New attributes.
 	 */
-	componentWillReceiveAttrs?(nextAttrs: JSX.AttrsValue<T>): void;
+	componentWillReceiveAttrs?(nextAttrs: T): void;
 	/**
 	 * Called by JSX engine when new content is to be rendered.
 	 * @param attrs Attributes to render.
 	 * @param children Children to append.
 	 */
-	abstract render(attrs: JSX.AttrsValue<T>, children: JSX.Children): JSX.ElementCollection;
+	abstract render(attrs: T, children: JSX.Children): JSX.ElementCollection;
 
 }
 
@@ -264,7 +267,7 @@ export namespace InterfaceBuilder {
 		for (let attr in attrs) {
 			if (attr === "ref")
 				continue;
-			const value = attrs[attr] as any;
+			const value = attrs[attr as keyof typeof attrs] as any;
 			if (value === null || value === undefined)
 				continue;
 			if (attr === "style")
@@ -327,7 +330,7 @@ export namespace InterfaceBuilder {
 	 * @param attrs Attributes to assign.
 	 * @param children Children to append.
 	 */
-	export function createComponentClassElement<T extends JSX.AttrsType, C extends Component<T>, E extends JSX.ElementBase>(componentClass: IComponentClass<T, E>, attrs: JSX.AttrsValue<T>, children: JSX.NodeCollection[]): JSX.ElementCollection {
+	export function createComponentClassElement<T, C extends Component<T>, E extends JSX.ElementBase>(componentClass: IComponentClass<T, E>, attrs: T, children: JSX.NodeCollection[]): JSX.ElementCollection {
 		const c = flatten(children);
 		let instance: Component<T> | unset;
 		if (componentClass.instanceProvider)
@@ -336,8 +339,9 @@ export namespace InterfaceBuilder {
 			instance = componentClass.instance;
 		if (!instance) {
 			instance = new (componentClass as IComponentClassDefault<T>)(attrs);
+			instance.attrs = attrs;
 			if (componentClass.instanceCreated)
-				componentClass.instanceCreated(instance as C);
+				componentClass.instanceCreated(instance as any);
 		}
 		return instance.render(attrs, c);
 	}
@@ -456,20 +460,28 @@ export namespace InterfaceBuilder {
 		element.remove();
 	}
 
+	function internalHideElement(element: HTMLElement) {
+		element.classList.add("hide");
+	}
+
+	function internalShowElement(element: HTMLElement) {
+		element.classList.remove("hide");
+	}
+
 	/**
 	 * Hides an HTML element by setting its display CSS property to "none".
 	 * @param element Element to hide.
 	 */
-	export function hideElement(element: HTMLElement) {
+	export function _hideElement(element: HTMLElement) {
 		element.style.display = "none";
 	}
 
 	/**
-	 * 	Unhides an HTML elemenet by setting its display CSS property to something other than "none".
+	 * 	Unhides an HTML element by setting its display CSS property to something other than "none".
 	 * @param element Element to unhide.
 	 * @param displayStyle Display CSS property, if other than "block";
 	 */
-	export function showElement(element: HTMLElement, displayStyle: string = "block") {
+	export function _showElement(element: HTMLElement, displayStyle: string = "block") {
 		element.style.display = displayStyle;
 	}
 
@@ -482,8 +494,8 @@ export namespace InterfaceBuilder {
 		const ch = getCanvasHolder();
 		if (app && ch) {
 			replaceContent(getApp(), elementCollection);
-			hideElement(ch);
-			showElement(app);
+			internalHideElement(ch);
+			internalShowElement(app);
 		} else throw new DOMContentNotLoaded(); // throw if not loaded
 	}
 
@@ -495,8 +507,8 @@ export namespace InterfaceBuilder {
 		const ch = getCanvasHolder();
 		if (app && ch) {
 			clearContent(app);
-			hideElement(app);
-			showElement(ch);
+			internalHideElement(app);
+			internalShowElement(ch);
 		} else throw new DOMContentNotLoaded(); // throw if not loaded
 	}
 
@@ -506,13 +518,6 @@ export namespace InterfaceBuilder {
 	 */
 	export function onDOMContentLoaded(callback: EventListenerOrEventListenerObject) {
 		document.addEventListener("DOMContentLoaded", callback);
-	}
-
-	/**
-	 * Returns a promise which is resolved when DOM content gets loaded.
-	 */
-	export function awaitDOMContentLoaded() {
-		return new Promise(resolve => document.addEventListener("DOMContentLoaded", resolve));
 	}
 
 }

@@ -12,11 +12,21 @@ export default class Intro extends Class implements IGameElement {
 	private story?: IStory;
 	private storyPage: number; // index of a page of a story
 
-	constructor(bootstrap: GameBootstrap) {
+	constructor(bootstrap: GameBootstrap, story: IStory) {
 		super();
 
 		this.gameBoostrap = bootstrap;
 		this.storyPage = 0;
+		this.story = story;
+
+		InterfaceBuilder.displayDefault(this.render());
+		this.renderStoryPage();
+		if (this.button)
+			this.button.focus();
+	}
+
+	dispose() {
+		InterfaceBuilder.clearDefault();
 	}
 
 	private renderStoryPage() {
@@ -28,18 +38,6 @@ export default class Intro extends Class implements IGameElement {
 		this.story = story;
 		this.storyPage = storyPage;
 		this.renderStoryPage();
-	}
-
-	start() {
-		InterfaceBuilder.displayDefault(this.render());
-		this.renderStoryPage();
-		if (this.button)
-			this.button.focus();
-	}
-
-	dispose() {
-		InterfaceBuilder.clearDefault();
-		this.storyElement = undefined;
 	}
 
 	private done() {

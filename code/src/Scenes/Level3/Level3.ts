@@ -63,9 +63,6 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 
 		this.background = new Background(0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, this.player);
 
-	}
-
-	start(): void {
 		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 2000);
 		this.scene.camera.addStrategy(this.player.cameraStrategy);
@@ -74,16 +71,11 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	dispose(): void {
-		this.ground.kill();
-
 		this.rockCreator.stop();
-		this.rocks.forEach(function (b) {
-			if (!b.isKilled) { b.kill(); }
-		});
+		this.engine.removeScene(this.sceneKey);
 	}
 
-	private buildScene(): void {
-
+	private buildScene = () => {
 		// add actors
 		if (this.player2) this.scene.add(this.player2);
 		this.scene.add(this.ground);

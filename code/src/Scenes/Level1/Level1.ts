@@ -42,7 +42,6 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
-		this.registerResources();
 	}
 
 	init(bootstrap: GameBootstrap): void {
@@ -66,13 +65,12 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		// this.scene.camera.removeStrategy(this.player.cameraStrategy);
 
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+
 		this.buildScene();
 	}
 
 	dispose(): void {
-		for (let actor of this.scene.actors) {
-			actor.kill();
-		}
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	win = (): void => {
@@ -91,10 +89,6 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 			target: this,
 			type: GameElementDoneType.Aborted
 		});
-	}
-
-	private registerResources() {
-		this.loader.addResources(Arrow.resources);
 	}
 
 	private buildScene = () => {

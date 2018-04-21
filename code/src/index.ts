@@ -1,19 +1,20 @@
-import { GameBootstrap } from "./GameBootstrap";
-import { InterfaceBuilder } from "./InterfaceBuilder";
+import { GameBootstrapType } from "./GameBootstrap";
 
-async function init() {
-	// wait for the document to load
-	await InterfaceBuilder.awaitDOMContentLoaded();
-	// create new GameBootstrap object
-	const gb = new GameBootstrap(InterfaceBuilder.canvasId, InterfaceBuilder.getApp() as HTMLElement);
-	// start the game
-	gb.start();
-}
+document.addEventListener("DOMContentLoaded", function () {
 
-// check whether the user is using Internet Explorer
-if (navigator.userAgent.match(/MSIE|Trident/))
-	// criticise the user
-	alert("Internet Explorer is currently not supported.");
-else
-	// start everything
-	init();
+	// check whether the user is using Internet Explorer
+	if (navigator.userAgent.match(/MSIE|Trident/)) {
+		// criticise the user
+		(document.getElementById("init-message") as HTMLDivElement).innerText = "Internet Explorer is currently not supported.";
+	} else {
+		// do not use ES6 imports as old browsers *khm* IE *khm* may not be able to handle loading of other modules without additional polyfill support.
+		const { GameBootstrap } = require("./GameBootstrap") as { GameBootstrap: GameBootstrapType };
+		// create new GameBootstrap object
+		const gb = new GameBootstrap();
+		// TODO: move to development environment only
+		(window as any).bootstrap = gb;
+		// start the game
+		gb.start();
+	}
+
+});

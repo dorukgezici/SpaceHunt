@@ -59,6 +59,8 @@ export default class Level4 extends BaseLevel {
 		for (let p of this.level4Players) {
 			p.initAnimations();
 		}
+
+		this.start();
 	}
 
 	start(): void {
@@ -68,7 +70,7 @@ export default class Level4 extends BaseLevel {
 
 	dispose(): void {
 		super.dispose();
-		this.ground.kill();
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	private buildScene(): void {
