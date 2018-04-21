@@ -16,7 +16,7 @@ import Resources from "../../Resources";
 
 export default class Level4 extends BaseLevel {
 
-	readonly secondPlayer: boolean = true;
+	// readonly secondPlayer: boolean = true;
 
 	readonly numCannibals: number = 3;
 	readonly sceneKey: string = "level4";
@@ -27,23 +27,21 @@ export default class Level4 extends BaseLevel {
 	princess: Princess;
 	pot: Pot;
 
-	static players: Player[] = [new Player(100, 400, Level4.levelBounds, controlSets.controls1)];
+	// static players: Player[] = [new Player(100, 400, Level4.levelBounds, controlSets.controls1)];
+
+	level4Players: Player[];
 
 	static groundTexture: ex.Texture = Resources.level4.ground;
 
 	constructor(bootstrap: GameBootstrap) {
-		super(bootstrap, Level4.players, Level4.groundTexture, Resources.level4.bg.asSprite());
-
-		// players
-		// Level4.players = []; TODO: -> this does not work (reference seems to be removed?) - what to do here? BaseLevel needs access to players to adjust the camera...
-		// Level4.players[0] = (new Player(100, 400, Level4.levelBounds, controlSets.controls1));
-		Level4.players.length = 0;
-
-		Level4.players.push(new Player(100, 400, Level4.levelBounds, controlSets.controls1));
-
-		if (this.secondPlayer) {
-			Level4.players.push(new Player(50, 350, this.levelBounds, controlSets.controls2));
-		}
+		// check for 
+		super(
+			bootstrap, 
+			(bootstrap.state.names.length === 2
+				? ([new Player(100, 400, Level4.levelBounds, controlSets.controls1), new Player(50, 350, Level4.levelBounds, controlSets.controls2)])
+				: ([new Player(100, 400, Level4.levelBounds, controlSets.controls1)])),
+				Level4.groundTexture, Resources.level4.bg.asSprite());
+		this.level4Players = this.players as Player[];
 
 		// vine + wife + pot
 		this.vine = new Vine(4800, 0, 28, 2, 0.05);
@@ -58,7 +56,7 @@ export default class Level4 extends BaseLevel {
 			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - BaseLevel.groundHeight - h / 2, w, h, speedX, 400, 4600));
 		}
 
-		for (let p of Level4.players) {
+		for (let p of this.level4Players) {
 			p.initAnimations();
 		}
 	}

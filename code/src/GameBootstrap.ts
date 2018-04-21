@@ -74,6 +74,7 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
  */
 export interface IGameBootstrapState {
 	name: string | null;
+	names: string[];
 }
 
 /**
@@ -107,7 +108,8 @@ export class GameBootstrap {
 		public readonly overlay: HTMLElement
 	) {
 		this.stateListener = new StateListener<IGameBootstrapState>({
-			name: null
+			name: null,
+			names: ["a", "b"]
 		});
 		this.state = this.stateListener.createListenableObject();
 

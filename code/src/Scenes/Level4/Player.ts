@@ -159,12 +159,12 @@ export default class Player extends BasePlayer {
 			this.scene.camera.shake(50, 50, 500);
 
 			let player: Player = this;
-			setTimeout(() => {
+			// setTimeout(() => {
 
-				player.kill();
-				this.emit("death");
+			player.kill();
+			this.emit("death");
 
-			}, 550);
+			// }, 550);
 		}
 	}
 

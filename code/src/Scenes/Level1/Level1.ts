@@ -14,7 +14,7 @@ import { controlSets } from "../../Components/BasePlayer";
 
 export default class Level1 extends Class<IGameElementEvents> implements IGameElement {
 
-	secondPlayer: boolean = false;
+	secondPlayer: boolean = true;
 	player2: Level1Player | any = null;
 
 	readonly sceneKey: string = "level1";

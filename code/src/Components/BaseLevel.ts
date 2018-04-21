@@ -22,7 +22,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 	background: Background;
 
 	// players
-	private players: BasePlayer[];
+	protected players: BasePlayer[];
 	frontPlayer: BasePlayer;
 
 
@@ -37,7 +37,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 		this.players = players;
 
-		// extend update method of the scene to let the camera focus the player in front
+		// extend update method of the scene to let the camera focus the player in front -> extra function to be called after construction (and after players have been added to the array)
 		this.frontPlayer = this.players[0];
 		const baseUpdateMethod = this.scene.update;
 		const scene = this.scene;
@@ -85,6 +85,9 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 	dispose(): void {
 		// something can be done here, instead of just getting rid of TSlint
+		// TODO: just cancel open timeouts?
+		// &:
+		// this.engine.removeScene(this.sceneKey);
 	}
 
 	win = (): void => {
