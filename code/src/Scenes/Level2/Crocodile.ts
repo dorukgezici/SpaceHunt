@@ -41,13 +41,6 @@ export default class Crocodile extends ex.Actor {
 		}
 	}
 
-	draw(ctx: CanvasRenderingContext2D, delta: number) {
-		super.draw(ctx, delta);
-		// Drawing asset
-		// let sprite = this.crocodileTexture.asSprite();
-		// sprite.draw(ctx, this.getRight(), this.getCenter().y);
-	}
-
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 	}

@@ -4,7 +4,7 @@ import Level2Player from "./Level2Player";
 import { GameBootstrap } from "../../GameBootstrap";
 import BaseLevel from "../../Components/BaseLevel";
 
-// class for cyclically creating new bubbles and adding them to the scene, in front of the player
+// class for cyclically creating new crocodiles and adding them to the scene, in front of the player
 export default class CrocodileCreator {
 
 	engine: ex.Engine;

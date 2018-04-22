@@ -5,9 +5,10 @@ export default class Ground extends ex.Actor {
 
 	sprite: ex.Sprite;
 	width: number;
+	static readonly height: number = 40;
 	
-	constructor(x: number, y: number, texture: ex.Texture, width: number, height: number) {
-		super(x, y, width, height, ex.Color.Gray);
+	constructor(x: number, y: number, texture: ex.Texture, width: number) {
+		super(x, y, width, Ground.height, ex.Color.Gray);
 		this.collisionType = ex.CollisionType.Fixed;
 		this.sprite = texture.asSprite();
 		this.sprite.anchor.setTo(0, 1);

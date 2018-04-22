@@ -4,6 +4,7 @@ import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
 import Level3 from "./Level3";
 import BaseLevel from "../../Components/BaseLevel";
+import Ground from "../../Components/Ground";
 
 
 const states = {
@@ -70,7 +71,7 @@ export default class Level3Player extends BasePlayer {
 		if (this.isGround()) {
 
 			// just landed
-			let groundLevel = this.scene.engine.getWorldBounds().bottom - BaseLevel.groundHeight;
+			let groundLevel = this.scene.engine.getWorldBounds().bottom - Ground.height;
 			if (this.state === states.jump && this.posYold < (groundLevel - 5)) {
 				console.log("just landed");
 				updateState(states.default);

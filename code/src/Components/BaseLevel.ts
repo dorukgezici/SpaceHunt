@@ -19,7 +19,6 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 	// actors
 	ground: Ground;
-	static groundHeight: number = 40;
 	background: Background;
 
 	// players
@@ -59,7 +58,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		// end of extended update method
 
 		// ground & background
-		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - BaseLevel.groundHeight / 2, groundTexture, levelBounds.getWidth(), BaseLevel.groundHeight);
+		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - Ground.height / 2, groundTexture, levelBounds.getWidth());
 		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, backgroundYSpeed);
 
 		// further scene properties
@@ -91,7 +90,11 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		this.engine.removeScene(this.sceneKey);
 	}
 
+	winners: number = 0;
 	win = (): void => {
+		// count and only emit done if all players finished the game? // same for lose?? -> only in last level
+		this.winners++;
+		if(this.winners >= this.players.length)
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished

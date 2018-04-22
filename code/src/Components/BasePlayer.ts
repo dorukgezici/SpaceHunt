@@ -1,6 +1,7 @@
 import * as ex from "excalibur";
 import { modelSize } from "./Animations/MichaelsonParts";
 import BaseLevel from "./BaseLevel";
+import Ground from "./Ground";
 
 export default abstract class BasePlayer extends ex.Actor {
 
@@ -27,6 +28,7 @@ export default abstract class BasePlayer extends ex.Actor {
 			this.dead = true;
 			this.scene.camera.shake(50, 50, 500);
 			this.kill();
+			this.x = -1000;
 			this.emit("death");
 		}
 	}
@@ -40,7 +42,7 @@ export default abstract class BasePlayer extends ex.Actor {
 
 	// check if the player is at ground level
 	isGround(): boolean {
-		let groundLevel = this.scene.engine.getWorldBounds().bottom - BaseLevel.groundHeight;
+		let groundLevel = this.scene.engine.getWorldBounds().bottom - Ground.height;
 		if (groundLevel - this.getBottom() <= 5) {
 			return true;
 		} else {

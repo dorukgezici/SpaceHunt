@@ -10,7 +10,7 @@ export default class Level2Player extends BasePlayer {
 
 	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
-	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
+	// to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
 	static readonly speedAcc: number = 200;
 	static readonly speedNormal: number = 100;
@@ -32,7 +32,6 @@ export default class Level2Player extends BasePlayer {
 	private animation: DrawAnimation<IPlayerSwimAnimations>;
 
 	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label) {
-		// super(x, y, Level2Player.size.w, Level2Player.size.h, ex.Color.DarkGray);
 		super(x, y, controlSet);
 		this.minX = Level2.levelBounds.left + Level2Player.size.w / 2;
 		this.maxX = Level2.levelBounds.right - Level2Player.size.w / 2;
@@ -46,8 +45,7 @@ export default class Level2Player extends BasePlayer {
 		this.setHeight(Level2Player.size.h);
 
 		// Anchor
-		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
-		// this.y += this.getHeight() / 2;
+		this.anchor.setTo(0.5, 0.5); // set anchor to the center
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
@@ -146,7 +144,7 @@ export default class Level2Player extends BasePlayer {
 	}
 
 	private moveDown() {
-		if (this.pos.y < this.maxY) { // maxX?
+		if (this.pos.y < this.maxY) {
 			this.pos.y += Level2Player.speedY;
 		}
 	}

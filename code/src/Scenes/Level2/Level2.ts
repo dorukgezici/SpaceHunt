@@ -61,7 +61,7 @@ export default class Level2 extends BaseLevel {
 
 
 		// Actor creation
-		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 62);
+		this.sky = new Sky(this.levelBounds.right / 2, this.levelBounds.top + 62, this.levelBounds.right, 124);
 
 		this.bubbles = [];
 		this.crocodiles = [];
@@ -83,6 +83,8 @@ export default class Level2 extends BaseLevel {
 		for (let p of this.level2Players) {
 			this.scene.addUIActor(p.oxygenMeter);
 		}
+
+		this.ground.z = 1;
 
 		// start bubbleCreator and crocodileCreator
 		this.bubbleCreator.start();

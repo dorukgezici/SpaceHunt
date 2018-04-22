@@ -10,10 +10,12 @@ import { modelSize } from "../../Components/Animations/EslanParts";
 import { controlSets } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
 import Resources from "../../Resources";
+import Ground from "../../Components/Ground";
 
 export default class Level4 extends BaseLevel {
 
-	readonly numCannibals: number = 2;
+	readonly numCannibals: number = 3;
+	
 	static readonly sceneKey: string = "level4";
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	static readonly groundTexture: ex.Texture = Resources.level4.ground;
@@ -47,7 +49,7 @@ export default class Level4 extends BaseLevel {
 			const xStart = this.randomIntFromInterval(500, 4500);
 			const speedX = this.randomIntFromInterval(100, 200);
 			const { w, h } = modelSize;
-			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Level4.groundHeight - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Ground.height - h / 2, w, h, speedX, 400, 4600));
 		}
 
 		// player handling - init level-specific animations
@@ -74,9 +76,23 @@ export default class Level4 extends BaseLevel {
 		}
 	}
 
-	dispose(): void {
-		super.dispose();
-		// & cancel open timeouts if any
+
+	// modify multiplayer winning / losing: it's sufficient if one player reaches the princess here
+	losers: number = 0;
+	lose = (): void => {
+		this.losers++;
+		if(this.losers >= this.players.length)
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Aborted
+		});
 	}
 
+	win = (): void => {
+		this.emit("done", {
+			target: this,
+			type: GameElementDoneType.Finished
+		});
+	}
+	
 }

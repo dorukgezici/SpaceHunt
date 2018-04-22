@@ -33,10 +33,9 @@ export default class BubbleCreator {
 	}
 
 	stop() {
-		// cancel timer // kill bubbles ? 
+		// cancel timer
 		console.log("bubbleCreator stopped! (Level2 - BubbleCreator - stop())");
 		if (this.timer[0] !== -1) {
-
 			clearInterval(this.timer[0]);
 		}
 	}

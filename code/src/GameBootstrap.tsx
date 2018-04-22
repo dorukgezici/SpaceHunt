@@ -80,7 +80,7 @@ const defaultGameBootstrapState: IGameBootstrapState = {
 	lives: 3,
 	oxygen: 1,
 	showOxygen: false,
-	names: ["a"]// , "b"]
+	names: ["a" , "b"]
 };
 
 /**
@@ -164,7 +164,7 @@ export class GameBootstrap {
 
 		// create the game engine
 		this.engine = new Engine({
-			width: 1000,
+			width: 1600,
 			height: 600,
 			canvasElementId: this.interface.canvas.id,
 			backgroundColor: Color.Black,
