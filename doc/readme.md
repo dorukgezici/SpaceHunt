@@ -9,10 +9,10 @@ Add you own `.md` files to annotate what you feel needs some extra explanation.
 
 Topics:
 
-- [Project Setup](setup.md).
+- [Project Setup](setup.md),
 - [Build Process and Project Structure](build-process.md),
 - [Dependency Management and Imports](dependency-management.md),
 - [DOM Manipulation](dom-manipulation.md),
 - [Git Workflow](git-workflow.md),
-- [Definition of Done](definition-of-done.md)
-- [Deployment to Web](deployment-process.md)
+- [Definition of Done](definition-of-done.md),
+- [Deployment to Web](deployment-process.md).
