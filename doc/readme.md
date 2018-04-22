@@ -4,12 +4,15 @@ Please find attached the G10 _TheGroup_'s project plan as [G10_project_plan](./G
 
 # Project Documentation
 
-This directory should include project documentation and notes. Add you own `.md` files to annotate what you feel needs some extra explanation.
+This directory should include project documentation and notes.
+Add you own `.md` files to annotate what you feel needs some extra explanation.
 
 Topics:
 
+- [Project Setup](setup.md).
 - [Build Process and Project Structure](build-process.md),
 - [Dependency Management and Imports](dependency-management.md),
 - [DOM Manipulation](dom-manipulation.md),
 - [Git Workflow](git-workflow.md),
-- [Project Setup](setup.md).
+- [Definition of Done](definition-of-done.md)
+- [Deployment to Web](deployment-process.md)
