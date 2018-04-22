@@ -10,11 +10,7 @@ const sassExtractPlugin = new ExtractTextPlugin({
 	filename: "style.css"
 });
 
-module.exports = options => ({
-	entry: {
-		env: options.envEntry,
-		...paths.code.entryPoints
-	},
+module.exports = config => ({
 	output: {
 		path: paths.build.dir,
 		filename: "[name].js",
@@ -32,7 +28,7 @@ module.exports = options => ({
 				options: {
 					outputPath: "assets/",
 					relative: true,
-					name: options.assetName
+					name: config.assetName
 				}
 			}
 		}, {
@@ -43,7 +39,7 @@ module.exports = options => ({
 				options: {
 					relative: true,
 					emitFile: false,
-					name: file => console.log(file) || normalisePath(path.join("static", path.relative(paths.code.static, file)))
+					name: file => normalisePath(path.join("static", path.relative(paths.code.static, file)))
 				}
 			}
 		}, {

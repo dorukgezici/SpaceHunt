@@ -14,7 +14,8 @@ exports.paths = {
 		dir: resolve("code"),
 		src: resolve("code/src"),
 		entryPoints: {
-			app: resolve("code/app.ts"),
+			appDev: resolve("code/app.dev.ts"),
+			appProd: resolve("code/app.prod.ts"),
 			polyfills: resolve("code/polyfills.ts")
 		},
 		env: {
@@ -30,5 +31,9 @@ exports.paths = {
 		dir: resolve("build"),
 		static: resolve("build/static"),
 		assets: resolve("build/assets")
+	},
+	test: {
+		entry: resolve("test/index.ts"),
+		dir: resolve("build-test")
 	}
 };

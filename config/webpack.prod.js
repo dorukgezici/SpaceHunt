@@ -9,6 +9,10 @@ const config = configFactory({
 
 module.exports = {
 	...config,
+	entry: {
+		app: paths.code.entryPoints.appProd,
+		polyfills: paths.code.entryPoints.polyfills
+	},
 	plugins: [
 		...config.plugins,
 		new UglifyJsPlugin()

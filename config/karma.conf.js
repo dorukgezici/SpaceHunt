@@ -1,12 +1,14 @@
-const webpackTestConfig = require("./webpack.test")
-
 module.exports = function (config) {
 	config.set({
-		browsers: ["Chrome", "ChromeHeadless", "CustomChrome"],
+		browsers: ["Chrome", "ChromeHeadless", "CustomChrome", "FirefoxHeadless", "Firefox", "FirefoxDeveloper", "FirefoxAurora", "FirefoxNightly"],
 		customLaunchers: {
 			CustomChrome: {
 				base: "ChromeHeadless",
 				flags: ["--disable-translate", "--disable-extensions"]
+			},
+			FirefoxHeadless: {
+				base: "Firefox",
+				flags: ["-headless"]
 			}
 		},
 		frameworks: ["jasmine"],
@@ -18,18 +20,11 @@ module.exports = function (config) {
 		singleRun: true,
 		concurrency: Infinity,
 		files: [{
-			pattern: "test/**/*.ts",
+			pattern: "build-test/test.js",
 			watched: false
 		}],
 		preprocessors: {
-			"../test/**/*.ts": ["webpack", "sourcemap"],
-		},
-		webpack: webpackTestConfig,
-		webpackMiddleware: {
-			stats: "errors-only"
-		},
-		mime: {
-			"text/x-typescript": ["ts"]
-		},
+			"build-test/test.js": ["sourcemap"],
+		}
 	})
 }
