@@ -16,7 +16,7 @@ import BaseLevel from "../../Components/BaseLevel";
 export default class Level1 extends BaseLevel {
 
 	static readonly sceneKey: string = "level1";
-	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
+	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 800);
 
 	static readonly groundTexture: ex.Texture = resources.level1.ground;
 

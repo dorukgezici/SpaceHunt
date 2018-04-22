@@ -36,9 +36,9 @@ export default class Rock extends ex.Actor {
 
 		this.typ = typ;
 		if (typ === Rocktypes.small) {
-			this.sprite = resources.smallRock.asSprite();
+			this.sprite = resources.level3.smallRock.asSprite();
 		} else {
-			this.sprite = resources.bigRock.asSprite();
+			this.sprite = resources.level3.bigRock.asSprite();
 		}
 		this.sprite.anchor.setTo(0.5, 0.5);
 

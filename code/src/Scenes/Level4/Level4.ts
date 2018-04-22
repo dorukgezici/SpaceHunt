@@ -13,7 +13,7 @@ import Resources from "../../Resources";
 
 export default class Level4 extends BaseLevel {
 
-	readonly numCannibals: number = 3;
+	readonly numCannibals: number = 2;
 	static readonly sceneKey: string = "level4";
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 	static readonly groundTexture: ex.Texture = Resources.level4.ground;
@@ -40,7 +40,7 @@ export default class Level4 extends BaseLevel {
 		// vine + wife + pot
 		this.vine = new Vine(4800, 0, 28, 2, 0.05);
 		this.princess = new Princess(this.vine);
-		this.pot = new Pot(4800, 550, 5, 5);
+		this.pot = new Pot(4800, 550, 150, 150);
 
 		// cannibals
 		for (let i = 0; i < this.numCannibals; i++) {

@@ -10,7 +10,7 @@ export default class Pot extends ex.Actor {
 		this.anchor.setTo(0.5, 1);
 		this.y = y;
 
-		this.collisionType = ex.CollisionType.Passive;
+		this.collisionType = ex.CollisionType.PreventCollision;
 		this.sprite = resources.level4.pot.asSprite();
 		this.sprite.anchor.setTo(0.5, 1);
 		

@@ -14,20 +14,16 @@ export default class Level1Player extends BasePlayer {
 	onBranch: boolean = true;
 	levelLength: number;
 	onVine: boolean = false;
-	// cameraStrategy: ex.LockCameraToActorAxisStrategy;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
 	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet) {
 		super(x, y, controlSet);
-		// this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
 		const animation = attachPlayerAnimations(this);
 		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
 		this.levelLength = levelLength;
 	}
-
-	// initAnimations(): void { }
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);

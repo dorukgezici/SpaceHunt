@@ -171,7 +171,7 @@ export class GameBootstrap {
 			pointerScope: Input.PointerScope.Canvas
 		});
 
-		this.engine.isDebug = true;
+		// this.engine.isDebug = true;
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());

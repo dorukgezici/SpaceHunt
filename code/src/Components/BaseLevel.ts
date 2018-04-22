@@ -11,7 +11,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 	sceneKey: string;
 
-	levelBounds: ex.BoundingBox; // = new ex.BoundingBox(0, 0, 5000, 600);
+	levelBounds: ex.BoundingBox;
 	engine: ex.Engine;
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
@@ -59,7 +59,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		// end of extended update method
 
 		// ground & background
-		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - BaseLevel.groundHeight / 2, groundTexture, BaseLevel.groundHeight);
+		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - BaseLevel.groundHeight / 2, groundTexture, levelBounds.getWidth(), BaseLevel.groundHeight);
 		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, backgroundYSpeed);
 
 		// further scene properties

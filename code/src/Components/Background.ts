@@ -18,8 +18,7 @@ export default class Background extends ex.Actor {
 	player: ex.Actor;
 	time: number = 0;
 
-	constructor(image: ex.Sprite, player: ex.Actor,
-		x: number, y: number, minLeft: number, minRight: number, lvlLen: number, ySpeed?: number) {
+	constructor(image: ex.Sprite, player: ex.Actor, x: number, y: number, minLeft: number, minRight: number, lvlLen: number, ySpeed?: number) {
 		super(x, y, Background.bgWidth, Background.bgHeight);
 
 		this.anchor.setTo(0, 0);
@@ -39,7 +38,7 @@ export default class Background extends ex.Actor {
 		this.x = this.x < 0 ? 0 : this.x;
 		this.x = this.x + Background.bgWidth > this.lvlLength ? this.lvlLength - Background.bgWidth : this.x;
 
-		if(this.ySpeed)this.y = - Math.abs(Math.sin(this.time * this.ySpeed)) * Background.maxYMovement;
+		if (this.ySpeed) this.y = - Math.abs(Math.sin(this.time * this.ySpeed)) * Background.maxYMovement;
 	}
 
 	draw(ctx: CanvasRenderingContext2D, delta: number) {

@@ -83,7 +83,7 @@ export default class Bubble extends ex.Actor {
 		ctx.fill();
 		*/
 
-		let sprite = resources.bubble.asSprite();
+		let sprite = resources.level2.bubble.asSprite();
 		sprite.draw(ctx, this.getCenter().x - 32, this.getCenter().y - 35);
 	}
 

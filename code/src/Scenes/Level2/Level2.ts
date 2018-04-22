@@ -15,7 +15,7 @@ export default class Level2 extends BaseLevel {
 	static readonly sceneKey: string = "level2";
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 
-	static readonly groundTexture: ex.Texture = Resources.seaBed;
+	static readonly groundTexture: ex.Texture = Resources.level2.ground;
 
 	// players
 	level2Players: Level2Player[];
@@ -47,7 +47,7 @@ export default class Level2 extends BaseLevel {
 					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50)
 				)])), // just one player required
 			Level2.groundTexture,
-			Resources.riverTexture.asSprite(),
+			Resources.level2.bg.asSprite(),
 			0.001 // background y movement speed
 		);
 

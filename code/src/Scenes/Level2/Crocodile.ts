@@ -27,7 +27,7 @@ export default class Crocodile extends ex.Actor {
 		this.on("precollision", this.onPrecollision);
 
 		// Sprite drawings
-		const spriteSheet = new ex.SpriteSheet(resources.crocodile, 1, 8, Crocodile.size.w, Crocodile.size.h);
+		const spriteSheet = new ex.SpriteSheet(resources.level2.crocodile, 1, 8, Crocodile.size.w, Crocodile.size.h);
 		const animation = spriteSheet.getAnimationForAll(bootstrap.engine, 100);
 		this.addDrawing("idle", animation as any);
 	}
