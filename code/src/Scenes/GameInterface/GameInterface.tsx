@@ -4,7 +4,8 @@ import GameBar from "../GameBar/GameBar";
 import { GameBootstrap } from "../../GameBootstrap";
 import ParticlesJS from "../../Components/ParticlesJS";
 import StarWarsIntro from "../StarWarsIntro/StarWarsIntro";
-require("./style.scss");
+import NameEnquiry from "./NameEnquiry";
+require("./game-interface.scss");
 const particlesJSConfig = require("./ParticlesJSConfig.json");
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
 
@@ -20,7 +21,8 @@ const homeParticlesID = "home-particles";
 export default class GameInterface extends Component<IAttrs, IEvents> {
 
 	canvas = <canvas id="canvas" height="600" width="800" /> as HTMLCanvasElement;
-	app = <div id="app" /> as HTMLDivElement;
+	// @ts-ignore
+	public app: HTMLDivElement;
 	// @ts-ignore
 	private viewportWrapper: HTMLDivElement;
 	// @ts-ignore
@@ -111,29 +113,46 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 
 	private displayAboveShown() { /* */ }
 
+	private start(name1: string, name2?: string) {
+		this.showIntro();
+	}
+
+	private showInfo() {
+		alert("info");
+	}
+
 	render(attrs: IAttrs) {
 		const { bootstrap, ref } = attrs;
 		const { canvas, app } = this;
 
 		const ret = (
 			<div id="viewport-wrapper" ref={e => this.viewportWrapper = e}>
+
 				<div className="display-above bg-stars" ref={e => this.displayAbove = e}>
 					<StarWarsIntro ref={swi => this.starWarsIntro = swi} />
 				</div>
+
 				<div className="display-below" ref={e => this.displayBelow = e}>
+
 					<div className="background saturn-bg-holder">
 						<div className="abstract-canvas-holder" id={homeParticlesID} />
 						<div className="saturn" />
 						<div className="bg" />
 					</div>
+
 					<div id="canvas-holder">
 						<div id="canvas-wrapper">
 							<GameBar bootstrap={bootstrap} />
 							{canvas}
 						</div>
 					</div>
-					{app}
-					<div style={{ color: "black", fontSize: 24, fontfamily: "monospace", lineHeight: 48, textAlign: "center", background: "#e5b13a", height: 48, width: 48, borderRadius: "50%", position: "absolute", bottom: 24, right: 24 }} onclick={e => this.showIntro()}>+</div>
+
+					<div id="name-enquiry-wrapper">
+						<NameEnquiry info={this.showInfo.bind(this)} start={this.start.bind(this)} />
+					</div>
+
+					<div id="app" style={{ top: "100vh" }} ref={app => this.app = app}></div>
+
 				</div>
 			</div>
 		);

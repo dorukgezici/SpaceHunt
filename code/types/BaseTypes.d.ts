@@ -14,3 +14,8 @@ interface ObjectConstructor {
 type ObjectValueMap<K, V, T extends keyof K = keyof K> = {
 	[P in T]: V;
 }
+
+interface HTMLElement {
+	// The TypeScript compiler may have trouble resolving the `animate` method. Thus, let's declare it explicitly.
+	animate(keyframes: AnimationKeyFrame | AnimationKeyFrame[], options: number | AnimationOptions): Animation;
+}

@@ -462,7 +462,7 @@ const allData = [
 	armFront,
 ];
 
-const animationProviders = allData
+export const animationProviders = allData
 	.map(baseDataExtender)
 	.map(createTransformDrawSetProvider);
 

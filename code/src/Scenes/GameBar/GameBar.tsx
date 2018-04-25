@@ -73,7 +73,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 		return (
 			<div id="game-bar">
 				<div ref={e => this.livesElement = e} className="lives">
-					{range(lives).forEach(() => (
+					{range(lives).map(() => (
 						<div className="live"></div>
 					))}
 				</div>

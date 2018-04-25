@@ -98,8 +98,8 @@ export class TransformDrawPart<T extends string> {
 		return t;
 	}
 
-	resetDelta(delta: number) {
-		this.timestamp = delta;
+	resetDelta(delta?: number) {
+		this.timestamp = delta === undefined ? performance.now() : delta;
 	}
 
 	makeTransition(startTransformation: ITransformation, endTransformation: ITransformation, delta: number, duration?: number, easing?: IEasing) {

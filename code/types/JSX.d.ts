@@ -12,10 +12,9 @@ declare namespace JSX {
 	type FalsyNode = false | unset;
 	type Children = Node[];
 	type DefaultAttrs = EmptyObject;
-	type Attrs<T, E = DOMElement> = T & ClassAttributes<E>;
+	type Attrs<T = DefaultAttrs, E = DOMElement> = T & ClassAttributes<E>;
 	type AttrsType = EmptyObject;
-	type AttrsValue<T extends AttrsType, E = DOMElement> = Attrs<T, E> | null;
-	type Provider<T extends JSX.AttrsType, E = DOMElement> = (attrs: AttrsValue<T, E>, children: Node[]) => Element;
+	type Provider<T extends JSX.AttrsType, E = DOMElement> = (attrs: T, children: Node[]) => Element;
 	type ElementClassRender<T> = (attrs: T, children: Children) => ElementCollection;
 	type ElementClass = Component<any>;
 

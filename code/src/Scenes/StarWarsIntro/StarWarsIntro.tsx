@@ -195,7 +195,7 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 					from: 1,
 					to: 0,
 					duration: 1000,
-					callback: i => this.audio.volume = i
+					callback: i => this.audio.volume = Math.min(1, Math.max(i, 0))
 				}
 			),
 			() => this.stop()
