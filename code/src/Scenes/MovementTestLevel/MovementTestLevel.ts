@@ -33,13 +33,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 			if (e.keyCode === 27)
 				this.emit("done", { target: this, type: GameElementDoneType.Finished });
 		});
-	}
 
-	init(bootstrap: GameBootstrap): void {
-		//
-	}
-
-	start(): void {
 		ex.Physics.acc.setTo(0, 3000);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
@@ -47,7 +41,7 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 	}
 
 	dispose(): void {
-		this.ground.kill();
+		this.engine.removeScene(this.sceneKey);
 	}
 
 	private buildScene = () => {
@@ -56,4 +50,5 @@ export default class MovementTestLevel extends Class<IGameElementEvents> impleme
 		this.engine.addScene(this.sceneKey, this.scene);
 		this.engine.goToScene(this.sceneKey);
 	}
+	
 }

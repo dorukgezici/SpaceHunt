@@ -27,24 +27,12 @@ export default class ExampleLevel extends Class<IGameElementEvents> implements I
 		this.gameBootstrap.engine.input.pointers.primary.on("move", function (evt: any) {
 			paddle.pos.x = evt.x;
 		});
-	}
-
-	init(bootstrap: GameBootstrap): void {
-		//
-	}
-
-	start(): void {
 		this.createElements();
 		this.gameBootstrap.engine.goToScene(this.sceneKey);
 	}
 
-	dispose(): void {
-		const { engine, rootSceneKey } = this.gameBootstrap;
-		this.bricks.forEach(t => t.kill());
-		this.bricks = [];
-		if (this.ball)
-			this.ball.kill();
-		engine.goToScene(rootSceneKey);
+	dispose() {
+		this.gameBootstrap.engine.removeScene(this.sceneKey);
 	}
 
 	win() {

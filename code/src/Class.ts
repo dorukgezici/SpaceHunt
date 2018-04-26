@@ -1,13 +1,13 @@
 import { EventDispatcher } from "excalibur";
 
-interface IEventMapping<T = any> {
+export interface IDefaultEvents<T = any> {
 	[key: string]: T;
 }
 
 /**
- * Strongly-typed event interface. Prefered over Excalibur's.
+ * Strongly-typed event interface. Preferred over Excalibur's.
  */
-export interface IEvented<T = IEventMapping> {
+export interface IEvented<T = IDefaultEvents> {
 
 	/**
 	 * Emits an event for target
@@ -47,7 +47,7 @@ export interface IEvented<T = IEventMapping> {
 /**
  * Base class which implements stronlgy-typed event handling. Preferd over Excalibur's.
  */
-export class Class<T = IEventMapping> implements IEvented<T> {
+export class Class<T = IDefaultEvents> implements IEvented<T> {
 
 	/**
 	 * Direct access to the game object event dispatcher.

@@ -83,14 +83,8 @@ export default class StarWarsIntro extends Class<IGameElementEvents> implements 
 
 	private handlers: AnimationSequence[] = [];
 
-	init(bootstrap: GameBootstrap) {
-		bootstrap.loader.addResources([
-			new Resource(fontO, "blob"),
-			new Resource(fontAO, "blob")
-		]);
-	}
-
-	start(): void {
+	constructor() {
+		super();
 		const res = this.render();
 		const ahs = createHandlers(res.prelude, res.logo, res.crawl);
 		InterfaceBuilder.displayDefault(res.elt);

@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import {Class} from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, IGameBootstrapState, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Sky from "./Sky";
 import Player from "./Player";
@@ -20,6 +20,8 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	engine: ex.Engine;
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
+
+	state: IGameBootstrapState;
 
 	// actors
 	ground: Ground;
@@ -46,12 +48,14 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
+		this.state = bootstrap.state;
+
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 62);
 		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
 		this.oxygenMeter.fontSize = 30;
-		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter);
+		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter, this.state);
 		this.player.on("win", this.win.bind(this));
 		this.player.on("death", this.lose.bind(this));
 		this.background = new Background(0, 0, 400, 400, 5000, this.player);
@@ -63,30 +67,12 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 
 		// CrocodileCreator for generation of new crocodiles
 		this.crocodileCreator = new CrocodileCreator(bootstrap, this.scene, this.bounds, this.player, this.crocodiles);
-	}
 
-	start(): void {
 		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
 		ex.Physics.acc.setTo(0, 0);
 		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
 		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
-	}
-
-	dispose(): void {
-		this.ground.kill();
-		this.sky.kill();
-		this.oxygenMeter.kill();
-
-		this.bubbleCreator.stop();
-		this.bubbles.forEach(function (b) {
-			if (!b.isKilled) { b.kill(); }
-		});
-
-		this.crocodileCreator.stop();
-		this.crocodiles.forEach(function (b) {
-			if (!b.isKilled) { b.kill(); }
-		});
 	}
 
 	private buildScene = () => {
@@ -107,6 +93,12 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 		this.engine.goToScene(this.sceneKey);
 	}
 
+	dispose(): void {
+		this.engine.removeScene(this.sceneKey);
+		this.bubbleCreator.stop();
+		this.crocodileCreator.stop();
+	}
+
 	win() {
 		this.emit("done", {
 			target: this,
@@ -115,10 +107,14 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose() {
-		this.emit("done", {
-			target: this,
-			type: GameElementDoneType.Aborted
-		});
+		if (this.state.lives > 1) {
+			this.state.lives -= 1;
+		} else {
+			this.emit("done", {
+				target: this,
+				type: GameElementDoneType.Aborted
+			});	
+		}
 	}
 
 }

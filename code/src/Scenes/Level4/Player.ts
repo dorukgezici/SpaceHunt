@@ -3,6 +3,7 @@ import BasePlayer from "../../Components/BasePlayer";
 import Level4 from "./Level4";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states } from "../../Components/Animations/MichelsonAnimation";
+import { IGameBootstrapState } from "../../GameBootstrap";
 
 type IStateX = "right" | "left";
 type IStateY = "idle" | "walk" | "jump" | "duck";
@@ -25,8 +26,8 @@ export default class Player extends BasePlayer {
 
 	private won: boolean = false;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox) {
-		super(x, y);
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, state: IGameBootstrapState) {
+		super(x, y, state);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.anchor.setTo(0.5, 1);
@@ -151,22 +152,28 @@ export default class Player extends BasePlayer {
 
 	public die(info: string) {
 		if (!this.dead) {
+			if (this.state.lives > 1) {
+				this.dead = true;
+				this.state.lives -= 1;
+				var fake_this = this;
+				setTimeout(function() { fake_this.dead = false; }, 1000);
+			} else {
+				// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
 
-			// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
+				this.dead = true;
 
-			this.dead = true;
+				this.collisionArea.body.useBoxCollision();
 
-			this.collisionArea.body.useBoxCollision();
+				this.scene.camera.shake(50, 50, 500);
 
-			this.scene.camera.shake(50, 50, 500);
+				let player: Player = this;
+				setTimeout(() => {
 
-			let player: Player = this;
-			setTimeout(() => {
+					player.kill();
+					this.emit("death");
 
-				player.kill();
-				this.emit("death");
-
-			}, 550);
+				}, 550);
+			}
 		}
 	}
 
