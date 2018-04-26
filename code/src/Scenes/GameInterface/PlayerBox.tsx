@@ -10,6 +10,7 @@ interface IAttrs {
 	keyNames?: IKeyNames;
 	position: "right" | "left";
 	hidden?: boolean;
+	value?: string;
 	ref?: (pb: PlayerBox) => void;
 	refCA?: (ca: CanvasAbstraction) => void;
 	refPC?: (ca: PlayerControls) => void;
@@ -66,6 +67,7 @@ export default class PlayerBox extends Component<IAttrs> {
 						<div className="player-info">
 							<h1>{children}</h1>
 							<input
+								value={attrs.value}
 								ref={e => (this.input = e, attrs.refInput && attrs.refInput(e))}
 								type="text"
 								maxLength={24}

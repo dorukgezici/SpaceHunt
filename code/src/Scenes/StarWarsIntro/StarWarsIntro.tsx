@@ -8,18 +8,21 @@ require("./style.scss");
 const preludeText = "Let me tell you a story from our distant future...";
 const episodeText = "Episode 1";
 const titleText = "Unexpected kidnap";
-const storyText = [
+const storyText = ({ state: { names } }: GameBootstrap) => [
 	"The year 3020 is written, and travel between planets and galaxies is finally becoming common, but this fact carries some pitfalls. The technological war between the Earth and the planet Eslan from a nearby galaxy broke out.",
-	"During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband Freddy Mikelson."
+	"During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband " + (names[1]
+		? `and his brother, ${names[0]} and ${names[1]} Mikelson.`
+		: `${names[0]} Mikelson.`
+	)
 ];
 
 const timing = {
 	beforePrelude: 6500,
 	prelude: 12300,
-	afterPrelude: 6200,
+	afterPrelude: 6150,
 	logoFlow: 18000,
 	crawlDelay: 3000,
-	crawlDuration: 67150,
+	crawlDuration: 67300,
 	after: 1000
 };
 
@@ -120,6 +123,7 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 
 	private prelude?: HTMLElement;
 	private loading?: HTMLElement;
+	private storyElement?: HTMLElement;
 	private crawl?: HTMLElement;
 	private crawlText?: HTMLElement;
 	private logo?: SVGElement;
@@ -137,16 +141,19 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 	}
 
 	showIntro(): Promise<any> {
-		const { running, prelude, logo, crawl, attrs } = this;
-		if (!prelude || !logo || !crawl)
+		const { running, prelude, logo, crawl, storyElement, audio, audioEnabled, attrs } = this;
+		if (!prelude || !logo || !crawl || !storyElement)
 			throw new Error("Component not rendered.");
 
 		this.start();
+
+		InterfaceBuilder.replaceContent(storyElement, storyText(attrs.bootstrap).map(t => <p>{t}</p>));
 		const awaitLoading = attrs.bootstrap.state.loaded || new Promise(resolve => attrs.bootstrap.stateListener.once("loaded", resolve));
 		const showLoading = () => {
 			if (!attrs.bootstrap.state.loaded)
 				this.toggleLoading(true);
 		};
+
 		const animation = createHandlers(prelude, logo, crawl, this.done.bind(this), awaitLoading, showLoading);
 
 		const promise = Promise.race([
@@ -154,9 +161,9 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 			new Promise(resolve => {
 				const callback = () => {
 					resolve();
-					this.audio.removeEventListener("playing", callback);
+					audio.removeEventListener("playing", callback);
 				};
-				this.audio.addEventListener("playing", callback);
+				audio.addEventListener("playing", callback);
 			})
 		]);
 
@@ -165,10 +172,10 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 			animation
 		]);
 
-		if (this.audioEnabled) {
-			this.audio.currentTime = 0.5;
-			this.audio.volume = 1;
-			this.audio.play();
+		if (audioEnabled) {
+			audio.currentTime = 0.5;
+			audio.volume = 1;
+			audio.play();
 		}
 
 		this.animation.once("finished", this.end.bind(this));
@@ -335,7 +342,7 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 						<div className="perspective-content">
 							<p className="episode">{episodeText}</p>
 							<p className="title">{titleText}</p>
-							{storyText.map(t => <p>{t}</p>)}
+							<div className="story-text" ref={e => this.storyElement = e} />
 						</div>
 					</div>
 					<div className="perspective-holder" ref={e => this.crawlText = e}>

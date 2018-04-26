@@ -117,6 +117,9 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 	private displayAboveShown() { /* */ }
 
 	private start(name1: string, name2?: string) {
+		const { state } = this.attrs.bootstrap;
+		state.names = name2 ? [name1, name2] : [name1];
+		state.title = state.names.join(" & ");
 		this.showIntro();
 	}
 
@@ -152,7 +155,7 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 							</div>
 
 							<div id="name-enquiry-wrapper">
-								<NameEnquiry info={this.showModal.bind(this)} start={this.start.bind(this)} />
+								<NameEnquiry bootstrap={bootstrap} info={this.showModal.bind(this)} start={this.start.bind(this)} />
 							</div>
 
 							<div id="app" style={{ top: "100vh" }} ref={app => this.app = app}></div>

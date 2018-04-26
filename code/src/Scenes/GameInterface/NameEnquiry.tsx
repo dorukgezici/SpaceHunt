@@ -4,6 +4,7 @@ import { texture, textureDuck } from "../../Components/Animations/MichaelsonPart
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import CanvasAbstraction from "./CanvasAbstraction";
 import PlayerBox from "./PlayerBox";
+import { GameBootstrap } from "../../GameBootstrap";
 require("./name-enquiry.scss");
 
 export interface IKeyInterface {
@@ -35,6 +36,7 @@ interface IAttrs {
 	ref?: (ne: NameEnquiry) => void;
 	start?: (name1: string, name2?: string) => void;
 	info?: () => void;
+	bootstrap: GameBootstrap;
 }
 
 export default class NameEnquiry extends Component<IAttrs> {
@@ -169,6 +171,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 					<PlayerBox
 						position="left"
 						keys={keys1}
+						value={attrs.bootstrap.state.names[0]}
 						ref={pb => this.pb1 = pb}
 						refCA={ca => this.ca1 = ca}
 						refPC={pc => this.pc1 = pc}
@@ -209,6 +212,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 							<PlayerBox
 								position="right"
 								keys={keys2}
+								value={attrs.bootstrap.state.names[1]}
 								keyNames={{ left: "⬅", right: "⮕", up: "⬆", down: "⬇" }}
 								hidden={true}
 								ref={pb => this.pb2 = pb}
@@ -252,7 +256,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 		const name2 = this.secondPlayer ? this.input2.value.trim() : undefined;
 
 		const name1ok = !!name1;
-		const name2ok = this.secondPlayer ? !!name2 : true;
+		const name2ok = this.secondPlayer ? name2 !== name1 : true;
 
 		if (name1ok && name2ok) {
 			if (start)

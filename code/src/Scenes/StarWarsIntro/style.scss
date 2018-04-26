@@ -60,6 +60,10 @@ $sw-perspective: 500px;
     line-height: 28px;
 		letter-spacing: 1.5px;
 
+		.story-text {
+			margin-top: 20px;
+		}
+
 		p {
 			margin: 0;
 			color: $sw-gold;
@@ -69,7 +73,6 @@ $sw-perspective: 500px;
 			-webkit-font-smoothing: subpixel-antialiased;
 			-moz-osx-font-smoothing: grayscale;
 			font-smoothing: always;
-
 			+p {
 				margin-top: 20px;
 			}
