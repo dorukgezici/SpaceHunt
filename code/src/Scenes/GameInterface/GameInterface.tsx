@@ -1,11 +1,11 @@
 import { AnimationSequence } from "../../Components/AnimationSequence";
+import ParticlesJS from "../../Components/ParticlesJS";
+import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import GameBar from "../GameBar/GameBar";
-import { GameBootstrap } from "../../GameBootstrap";
-import ParticlesJS from "../../Components/ParticlesJS";
 import StarWarsIntro from "../StarWarsIntro/StarWarsIntro";
-import NameEnquiry from "./NameEnquiry";
 import Modal, { ModalContentWrapper } from "./Modal";
+import NameEnquiry from "./NameEnquiry";
 require("./game-interface.scss");
 const particlesJSConfig = require("./ParticlesJSConfig.json");
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
@@ -75,8 +75,8 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		this.downAnimation.start();
 	}
 
-	showIntro() {
-		this.starWarsIntro.showIntro();
+	async showIntro() {
+		await this.starWarsIntro.showIntro();
 		this.moveUp();
 		return new Promise(resolve => {
 			this.starWarsIntro.once("done", () => {
@@ -131,8 +131,8 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		const ret = (
 			<div id="viewport-wrapper" ref={e => this.viewportWrapper = e}>
 
-				<div className="display-above bg-stars" ref={e => this.displayAbove = e}>
-					<StarWarsIntro ref={swi => this.starWarsIntro = swi} />
+				<div className="display-above bg-stars" ref={e => this.displayAbove = e} style={{ display: "none" }}>
+					<StarWarsIntro bootstrap={attrs.bootstrap} ref={swi => this.starWarsIntro = swi} />
 				</div>
 
 				<div className="display-below" ref={e => this.displayBelow = e}>

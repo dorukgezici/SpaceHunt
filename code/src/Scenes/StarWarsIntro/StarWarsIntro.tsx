@@ -1,8 +1,7 @@
-import { Class } from "../../Class";
-import { IGameElement, IGameElementEvents, GameElementDoneType, GameBootstrap } from "../../GameBootstrap";
-import { InterfaceBuilder, Component } from "../../InterfaceBuilder";
 import { AnimationSequence } from "../../Components/AnimationSequence";
-import { Resource } from "excalibur";
+import { preloadAudio } from "../../Components/Preloader";
+import { GameBootstrap } from "../../GameBootstrap";
+import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
 require("./style.scss");
 
@@ -17,10 +16,10 @@ const storyText = [
 const timing = {
 	beforePrelude: 6500,
 	prelude: 12300,
-	afterPrelude: 6350,
-	logoFlow: 16000,
+	afterPrelude: 6200,
+	logoFlow: 18000,
 	crawlDelay: 3000,
-	crawlDuration: 60000,
+	crawlDuration: 67150,
 	after: 1000
 };
 
@@ -48,15 +47,15 @@ function createCrawlHandler(crawl: HTMLElement, endCallback: () => void) {
 	]);
 }
 
-function createHandlers(prelude: HTMLElement, logo: SVGElement, crawl: HTMLElement, fadeAudio: (volume: number) => void, doneFn: () => void) {
+function createHandlers(prelude: HTMLElement, logo: SVGElement, crawl: HTMLElement, doneFn: () => void, awaitLoading: Promise<any> | boolean, showLoading: () => void) {
 	const crawlAH = new AnimationSequence([
 		timing.crawlDelay,
 		[
 			() => crawl.style.display = "flex",
 			() => crawl.style.opacity = "1",
 			{
-				from: 100,
-				to: 0,
+				from: 110,
+				to: -10,
 				duration: timing.crawlDuration,
 				callback: e => crawl.style.transform = `rotateX(50deg) translateY(${e}vh) translateZ(20vh)`
 			},
@@ -66,14 +65,9 @@ function createHandlers(prelude: HTMLElement, logo: SVGElement, crawl: HTMLEleme
 			]),
 			new AnimationSequence([
 				timing.crawlDuration - 2000,
+				showLoading,
+				awaitLoading,
 				() => doneFn(),
-				{
-					from: 1,
-					to: 0,
-					duration: 2000,
-					easing: p => 1 - ((1 - p) ** 2),
-					callback: fadeAudio
-				}
 			])
 		],
 		() => crawl.style.display = "none"
@@ -109,11 +103,7 @@ function createHandlers(prelude: HTMLElement, logo: SVGElement, crawl: HTMLEleme
 		[logoAH, crawlAH],
 		timing.after
 	]);
-	return {
-		preludeAH,
-		logoAH,
-		crawlAH
-	};
+	return preludeAH;
 }
 
 interface IEvents {
@@ -123,41 +113,68 @@ interface IEvents {
 
 interface IAttrs {
 	ref?: (e: StarWarsIntro) => void;
+	bootstrap: GameBootstrap;
 }
 
 export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 
 	private prelude?: HTMLElement;
+	private loading?: HTMLElement;
 	private crawl?: HTMLElement;
 	private crawlText?: HTMLElement;
 	private logo?: SVGElement;
-	private handlers: AnimationSequence[] | unset = null;
-	private audio = new Audio(audioURL);
+	private animation: AnimationSequence | unset = null;
+	private audio: HTMLAudioElement;
 	private isDone = true;
 	private running = false;
+	private fadeAudioId = NaN;
 	audioEnabled = true;
 
 	constructor(attrs: IAttrs) {
 		super(attrs);
-		this.audio.preload = "auto";
-		this.audio.currentTime = 0.2;
-		this.audio.load();
+		this.audio = preloadAudio(audioURL).audio;
+		this.audio.currentTime = 0.5;
 	}
 
-	showIntro() {
-		const { running, prelude, logo, crawl } = this;
+	showIntro(): Promise<any> {
+		const { running, prelude, logo, crawl, attrs } = this;
 		if (!prelude || !logo || !crawl)
 			throw new Error("Component not rendered.");
+
 		this.start();
-		const ahs = createHandlers(prelude, logo, crawl, volume => this.audio.volume = volume, this.done.bind(this));
-		this.handlers = Object.values(ahs);
-		ahs.preludeAH.once("finished", this.end.bind(this));
+		const awaitLoading = attrs.bootstrap.state.loaded || new Promise(resolve => attrs.bootstrap.stateListener.once("loaded", resolve));
+		const showLoading = () => {
+			if (!attrs.bootstrap.state.loaded)
+				this.toggleLoading(true);
+		};
+		const animation = createHandlers(prelude, logo, crawl, this.done.bind(this), awaitLoading, showLoading);
+
+		const promise = Promise.race([
+			new Promise(resolve => setTimeout(resolve, 300)),
+			new Promise(resolve => {
+				const callback = () => {
+					resolve();
+					this.audio.removeEventListener("playing", callback);
+				};
+				this.audio.addEventListener("playing", callback);
+			})
+		]);
+
+		this.animation = new AnimationSequence([
+			promise,
+			animation
+		]);
+
 		if (this.audioEnabled) {
 			this.audio.currentTime = 0.5;
 			this.audio.volume = 1;
 			this.audio.play();
 		}
-		ahs.preludeAH.start();
+
+		this.animation.once("finished", this.end.bind(this));
+		promise.then(() => this.animation && this.animation.start());
+
+		return new Promise(resolve => promise.then(() => setTimeout(resolve, 100)));
 	}
 
 	showText(text: string) {
@@ -166,47 +183,53 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 		this.start();
 		const p = this.crawlText.children[0].children[0] as HTMLElement;
 		p.innerText = text;
-		const ah = createCrawlHandler(this.crawlText, this.done.bind(this));
-		ah.once("finished", this.end.bind(this));
-		this.handlers = [ah];
-		ah.start();
+		const animation = this.animation = createCrawlHandler(this.crawlText, this.done.bind(this));
+		animation.once("finished", this.end.bind(this));
+		animation.start();
 	}
 
+	private fadeAudio(time = 2000) {
+		const start = performance.now();
+		const end = start + Math.abs(time);
+		const initValue = this.audio.volume;
+
+		if (!Number.isNaN(this.fadeAudioId) || this.audio.paused || this.audio.volume === 0)
+			return;
+
+		this.fadeAudioId = setInterval(() => {
+			const t = performance.now();
+			let vol = Math.max(0, Math.min(1, initValue * (end - t) / (end - start)));
+			vol = vol ** 2;
+			this.audio.volume = vol;
+			if (vol === 0) {
+				this.audio.pause();
+				this.cancelFadeAudio();
+			}
+		}, 10);
+	}
+
+	private cancelFadeAudio() {
+		if (!Number.isNaN(this.fadeAudioId)) {
+			clearTimeout(this.fadeAudioId);
+			this.fadeAudioId = NaN;
+		}
+	}
+
+	/**
+	 * Sets listeners and running state.
+	 */
 	private start() {
 		if (this.running)
 			this.stop();
+		this.toggleLoading(false);
 		this.running = true;
 		this.isDone = false;
 		window.addEventListener("keypress", this.onKey);
 	}
 
-	skip() {
-		if (!this.running || this.isDone) return;
-		this.done();
-		const ah = new AnimationSequence([
-			() => [this.prelude, this.logo, this.crawl, this.crawlText].forEach(t => {
-				if (t && t.style.display !== "none") {
-					t.style.opacity = "0";
-				}
-			}),
-			(this.audio.paused
-				? 1000
-				: {
-					from: 1,
-					to: 0,
-					duration: 1000,
-					callback: i => this.audio.volume = Math.min(1, Math.max(i, 0))
-				}
-			),
-			() => this.stop()
-		]);
-		if (this.handlers)
-			this.handlers.push(ah);
-		else
-			this.handlers = [ah];
-		ah.start();
-	}
-
+	/**
+	 * Ends the animation.
+	 */
 	private end() {
 		document.removeEventListener("keypress", this.onKey);
 		if (!this.isDone)
@@ -215,27 +238,58 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 			this.emit("finished", void (0));
 		this.running = false;
 		if (!this.audio.paused)
-			this.audio.pause();
+			this.fadeAudio();
 	}
 
+	/**
+	 * Cancels all pending animations.
+	 */
 	private cancel() {
-		if (this.handlers) {
-			this.handlers.forEach(t => t.cancel());
-			this.handlers = null;
-		}
+		if (this.animation)
+			this.animation.cancel();
 	}
 
+	/**
+	 * Emits the `done` event and fades audio away.
+	 * 
+	 * Represents the event when all animations are done, but haven't finished.
+	 */
 	private done() {
-		if (!this.isDone) {
+		if (!this.isDone && this.running) {
 			this.emit("done", void (0));
 			this.isDone = true;
+			this.fadeAudio();
 		}
 	}
 
+	/**
+	 * Puts an immediate stop to pending animations.
+	 */
 	stop() {
 		this.cancel();
 		this.end();
+		if (!this.audio.paused)
+			this.audio.pause();
 		[this.prelude, this.logo, this.crawl, this.crawlText].forEach(t => t && (t.style.display = "none"));
+	}
+
+	private toggleLoading(show: boolean = this.attrs.bootstrap.state.loaded) {
+		if (!this.loading)
+			throw new Error("Component not rendered.");
+		if (show)
+			this.loading.classList.add("show");
+		else
+			this.loading.classList.remove("show");
+	}
+
+	skip() {
+		const { bootstrap } = this.attrs;
+		if (bootstrap.state.loaded)
+			this.done();
+		else {
+			this.toggleLoading(true);
+			bootstrap.stateListener.once("loaded", this.skip.bind(this));
+		}
 	}
 
 	dispose() {
@@ -269,8 +323,11 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 					<span className="o">o</span>
 					<span className="oa">oa</span>
 				</div>
+				<div className="blue-text loading" ref={e => this.loading = e}>
+					Loading...
+				</div>
 				<div className="center-wrapper">
-					<div ref={e => this.prelude = e} className="prelude">{preludeText}</div>
+					<div ref={e => this.prelude = e} className="prelude blue-text">{preludeText}</div>
 				</div>
 				<div className="center-wrapper" ref={e => this.logo = this.fillSvg(e)}></div>
 				<div className="perspective-wrapper">

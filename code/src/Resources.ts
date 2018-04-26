@@ -6,6 +6,16 @@ export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };
 }
 
+/**
+ * These resources are loaded before GameBootstrap is initialised.
+ */
+export const initialResources: string[] = [
+	michealsonTexture.src,
+	textureDuck.src,
+	require("./Resources/Images/BgSaturn-bg.png"),
+	require("./Resources/Images/BgSaturn-saturn.png")
+];
+
 const resources = {
 
 	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),

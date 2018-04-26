@@ -22,3 +22,7 @@ body>#init-loader {
 		padding: 24px;
 	}
 }
+
+canvas {
+	user-select: none;
+}

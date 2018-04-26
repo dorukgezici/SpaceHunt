@@ -77,6 +77,7 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
  */
 export interface IGameBootstrapState {
 	title: string | null;
+	loaded: boolean;
 	lives: number; // [1, 2, 3, ...]
 	oxygen: number; // [0, 1]
 	showOxygen: boolean;
@@ -113,6 +114,7 @@ export class GameBootstrap {
 	constructor() {
 		this.stateListener = new StateListener<IGameBootstrapState>({
 			title: null,
+			loaded: false,
 			lives: 3,
 			oxygen: 1,
 			showOxygen: false,
@@ -238,7 +240,14 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.menu.start();
-		this.engine.start(this.loader);
+		this.loader.load().then(() => {
+			this.state.loaded = true;
+			/**
+			 * Do not start the engine with `this.loader` as this will try to load
+			 * resources twice, resulting in an error due to a bug in Excalibur.
+			 */
+			this.engine.start();
+		});
 	}
 
 }

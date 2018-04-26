@@ -17,7 +17,7 @@ export default class PlayerAnimationCanvas {
 	}
 
 	changeState(state: IPlayerAnimations) {
-		this.drawSets.forEach(t => t.changeState(state));
+		this.drawSets.forEach(t => t.changeState(state, performance.now()));
 	}
 
 	private draw(delta: number) {

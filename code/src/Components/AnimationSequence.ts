@@ -17,8 +17,9 @@ interface IAnimation {
 	callback: (value: number) => void;
 }
 
-type IPart = IAnimation | AnimationSequence | (() => void);
-type ISequence = (IPart | IPart[] | number)[];
+type IAsyncPart = IAnimation | AnimationSequence | (() => void);
+type IPart = IAsyncPart | IAsyncPart[] | number | Promise<any> | null | undefined | boolean;
+type ISequence = IPart[];
 
 export class AnimationSequence extends Class<IEvents> {
 
@@ -48,10 +49,14 @@ export class AnimationSequence extends Class<IEvents> {
 			this.done();
 			return;
 		}
-		let step = this.states[this.index] as IPart | IPart[] | number;
+		let step = this.states[this.index] as IPart;
 		this.awaiting = 0;
-		if (typeof step === "number") {
+		if (!step || step === true) {
+			this.performStep();
+		} else if (typeof step === "number") {
 			this.doDelay(step);
+		} else if (step instanceof Promise) {
+			this.awaitPromise(step);
 		} else {
 			for (let item of Array.isArray(step) ? step : [step]) {
 				if (typeof item === "function") {
@@ -67,9 +72,11 @@ export class AnimationSequence extends Class<IEvents> {
 					this.subSequences.push(item);
 					item.start();
 					item.once("done", ({ cancelled }) => {
-						if (!cancelled) {
-							const index = this.subSequences.indexOf(item as AnimationSequence);
-							this.subSequences.splice(index, 1);
+						const index = this.subSequences.indexOf(item as AnimationSequence);
+						this.subSequences.splice(index, 1);
+						if (cancelled) {
+							this.cancel();
+						} else {
 							this.checkProgress();
 						}
 					});
@@ -108,6 +115,12 @@ export class AnimationSequence extends Class<IEvents> {
 	private checkProgress() {
 		if (--this.awaiting <= 0)
 			this.performStep();
+	}
+
+	private awaitPromise(promise: Promise<any>) {
+		promise
+			.then(() => this.performStep())
+			.catch(() => this.cancel());
 	}
 
 	private doDelay(delay: number) {
