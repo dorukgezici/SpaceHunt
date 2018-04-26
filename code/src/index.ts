@@ -1,12 +1,17 @@
 function init() {
 	/**
-	 *  check whether the user is using Internet Explorer
+	 * Check whether the user is using Internet Explorer.
 	 */
 	if (navigator.userAgent.match(/MSIE|Trident/)) {
 		/**
-		 *  criticise the user
+		 * Criticise the user.
 		 */
 		(document.getElementById("init-message") as HTMLDivElement).innerText = "Internet Explorer is currently not supported.";
+	} else if (navigator.userAgent.indexOf("Edge") > -1) {
+		/**
+		 * Nope, even Edge can't handle our game.
+		 */
+		(document.getElementById("init-message") as HTMLDivElement).innerText = "Edge isn't good enough to be able to run our game. Sorry.";
 	} else {
 		/**
 		 * Do NOT import this method in the beginning of this file, as
