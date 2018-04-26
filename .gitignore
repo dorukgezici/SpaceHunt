@@ -1,8 +1,8 @@
 # Project folders
 .npm
 node_modules/
-# build/
 internal/
+.scannerwork/
 
 # IDE related
 .idea/
