@@ -5,7 +5,10 @@ const EvalSourceMapDevToolPlugin = require("webpack/lib/EvalSourceMapDevToolPlug
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const { paths, normalisePath } = require("./helpers");
+const {
+	paths,
+	normalisePath
+} = require("./helpers");
 
 const sassExtractPlugin = new ExtractTextPlugin({
 	filename: "style.css"
@@ -49,7 +52,22 @@ module.exports = options => ({
 			use: "raw-loader"
 		}, {
 			test: /\.tsx?$/,
+			exclude: /node_modules/,
 			use: "ts-loader"
+		}, {
+			test: /\.jsx?$/,
+			exclude: /node_modules/,
+			use: {
+				loader: "babel-loader",
+				options: {
+					presets: ["babel-preset-es2017", "babel-preset-react"],
+					plugins: [
+						["transform-react-jsx", {
+							"pragma": "InterfaceBuilder.createElement"
+						}]
+					]
+				}
+			}
 		}, {
 			test: /\.json$/,
 			use: "json-loader"

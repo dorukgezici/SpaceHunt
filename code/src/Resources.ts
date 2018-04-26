@@ -26,9 +26,9 @@ const resources = {
 		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
 		pot: new Texture(require("./Scenes/Level4/pot.png")),
 	},
-	michealsonTexture,
+	michealsonTexture: michealsonTexture.exTexture(),
 	eslanTexture,
-	textureDuck
+	textureDuck: textureDuck.exTexture()
 };
 
 export default resources as IResources as typeof resources;
