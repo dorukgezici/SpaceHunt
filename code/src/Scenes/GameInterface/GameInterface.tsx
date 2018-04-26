@@ -5,6 +5,7 @@ import { GameBootstrap } from "../../GameBootstrap";
 import ParticlesJS from "../../Components/ParticlesJS";
 import StarWarsIntro from "../StarWarsIntro/StarWarsIntro";
 import NameEnquiry from "./NameEnquiry";
+import Modal, { ModalContentWrapper } from "./Modal";
 require("./game-interface.scss");
 const particlesJSConfig = require("./ParticlesJSConfig.json");
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
@@ -31,6 +32,8 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 	private displayBelow: HTMLDivElement;
 	// @ts-ignore
 	private starWarsIntro: StarWarsIntro;
+	// @ts-ignore
+	private modal: Modal;
 	private upAnimation: AnimationSequence;
 	private downAnimation: AnimationSequence;
 	private particles: ParticlesJS | null = null;
@@ -117,8 +120,8 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		this.showIntro();
 	}
 
-	private showInfo() {
-		alert("info");
+	private showModal() {
+		this.modal.show();
 	}
 
 	render(attrs: IAttrs) {
@@ -133,26 +136,46 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 				</div>
 
 				<div className="display-below" ref={e => this.displayBelow = e}>
+					<Modal ref={m => this.modal = m}>
+						<div style={{ height: "100%" }}>
+							<div className="background saturn-bg-holder">
+								<div className="abstract-canvas-holder" id={homeParticlesID} />
+								<div className="saturn" />
+								<div className="bg" />
+							</div>
 
-					<div className="background saturn-bg-holder">
-						<div className="abstract-canvas-holder" id={homeParticlesID} />
-						<div className="saturn" />
-						<div className="bg" />
-					</div>
+							<div id="canvas-holder">
+								<div id="canvas-wrapper">
+									<GameBar bootstrap={bootstrap} />
+									{canvas}
+								</div>
+							</div>
 
-					<div id="canvas-holder">
-						<div id="canvas-wrapper">
-							<GameBar bootstrap={bootstrap} />
-							{canvas}
+							<div id="name-enquiry-wrapper">
+								<NameEnquiry info={this.showModal.bind(this)} start={this.start.bind(this)} />
+							</div>
+
+							<div id="app" style={{ top: "100vh" }} ref={app => this.app = app}></div>
 						</div>
-					</div>
 
-					<div id="name-enquiry-wrapper">
-						<NameEnquiry info={this.showInfo.bind(this)} start={this.start.bind(this)} />
-					</div>
+						<ModalContentWrapper>
+							<div>
+								<h1>About SpaceHunt</h1>
+								<p>Game developed by:</p>
+								<ul>
+									<li>Ali Doruk Gezici</li>
+									<li>Anna Vankova</li>
+									<li>Milos Svana</li>
+									<li>Nejc Maček</li>
+									<li>Wladimir Hofmann</li>
+								</ul>
+								<p style={{ textAlign: "right" }}>
+									<button className="control" onclick={() => this.modal.hide()}>🡰</button>
+								</p>
+							</div>
+						</ModalContentWrapper>
 
-					<div id="app" style={{ top: "100vh" }} ref={app => this.app = app}></div>
-
+					</Modal>
 				</div>
 			</div>
 		);

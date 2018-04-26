@@ -87,14 +87,17 @@
 		background-size: cover;
 	}
 	>.bg {
+		pointer-events: none;
 		background-image: url("../../Resources/Images/BgSaturn-bg.png");
 	}
 	>.saturn {
+		pointer-events: none;
 		background-image: url("../../Resources/Images/BgSaturn-saturn.png");
 	}
 	>.abstract-canvas-holder {
 		position: absolute;
 		top: 0;
+		margin-top: -10%;
 		left: 0;
 		right: 0;
 		height: 60%;
