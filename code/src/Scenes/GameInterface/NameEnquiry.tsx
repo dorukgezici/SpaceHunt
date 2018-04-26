@@ -256,7 +256,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 		const name2 = this.secondPlayer ? this.input2.value.trim() : undefined;
 
 		const name1ok = !!name1;
-		const name2ok = this.secondPlayer ? name2 !== name1 : true;
+		const name2ok = this.secondPlayer ? (name2 && name2 !== name1) : true;
 
 		if (name1ok && name2ok) {
 			if (start)
