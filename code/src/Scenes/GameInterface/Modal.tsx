@@ -1,7 +1,7 @@
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import { AnimationSequence } from "../../Components/AnimationSequence";
 import CanvasAbstraction from "./CanvasAbstraction";
-require("./modal.scss");
+require("./modal-style.scss");
 
 const modalSize = 400;
 
