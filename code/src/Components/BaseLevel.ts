@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import { Class } from "../Class";
-import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, IGameBootstrapState, GameElementDoneType } from "../GameBootstrap";
 import Ground from "./Ground";
 import Background from "./Background";
 import BasePlayer from "./BasePlayer";
@@ -16,6 +16,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
 	loader: ex.Loader;
+	state: IGameBootstrapState;
 
 	// actors
 	ground: Ground;
@@ -35,6 +36,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 		this.levelBounds = levelBounds;
+		this.state = bootstrap.state;
 
 		this.players = players;
 
