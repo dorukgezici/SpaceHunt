@@ -29,11 +29,16 @@
 		width: 128px;
 		height: 48px;
 	}
+
+	.oxygen-wrapper {
+		margin-right: 12px;
+		display: flex;
+	}
 	
 	.oxygen-holder {
 		overflow: hidden;
 		position: relative;
-		margin-right: 24px;
+		margin-right: 12px;
 	}
 
 	.oxygen-level {

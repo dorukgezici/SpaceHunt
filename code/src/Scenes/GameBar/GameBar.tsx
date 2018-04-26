@@ -23,7 +23,7 @@ interface IAttrs {
 export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 
 	protected livesElement: HTMLElement | null = null;
-	protected oxygenElement: HTMLElement | null = null;
+	protected oxygenElements: HTMLElement[] = [];
 
 	constructor(attrs: IAttrs) {
 		super(
@@ -61,15 +61,21 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 	}
 
 	private oxygenChanged = () => {
-		if (!this.oxygenElement) return;
 		const { oxygen } = this.attrs.bootstrap.state;
-		this.oxygenElement.style.left = `-${(1 - oxygen) * 100}%`;
+
+		if (oxygen.length !== this.oxygenElements.length)
+			this.rerender();
+		else
+			this.oxygenElements.forEach((t, i) => {
+				t.style.left = `-${(1 - oxygen[i]) * 100}%`;
+			});
 	}
 
 	render(): JSX.ElementCollection {
 		const { stateListener, state } = this.attrs.bootstrap;
-		const { lives, oxygen, title } = state;
-		this.oxygenElement = null;
+		const { lives, oxygen, title, showOxygen } = state;
+		this.oxygenElements = [];
+
 		return (
 			<div id="game-bar">
 				<div ref={e => this.livesElement = e} className="lives">
@@ -80,9 +86,13 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 				<div className="title">
 					{title}
 				</div>
-				{!Number.isNaN(oxygen) && (
-					<div className="oxygen-holder">
-						<div ref={e => this.oxygenElement = e} className="oxygen-level" style={{ left: `-${(1 - oxygen) * 100}%` }} />
+				{(showOxygen && oxygen.length || false) && (
+					<div className="oxygen-wrapper">
+						{(this.oxygenElements = oxygen.map(t => (
+							<div className="oxygen-level" style={{ left: `-${(1 - t) * 100}%` }} />
+						) as HTMLDivElement)).map(t => (
+							<div className="oxygen-holder">	{t}</div>
+						))}
 					</div>
 				)}
 			</div>

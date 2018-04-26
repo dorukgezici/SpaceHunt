@@ -78,8 +78,8 @@ export interface IGameElement<T extends IGameElementEvents = IGameElementEvents>
 export interface IGameBootstrapState {
 	title: string | null;
 	loaded: boolean;
-	lives: number; // [1, 2, 3, ...]
-	oxygen: number; // [0, 1]
+	lives: number;
+	oxygen: number[]; // array of numbers from interval [0, 1]
 	showOxygen: boolean;
 }
 
@@ -116,7 +116,7 @@ export class GameBootstrap {
 			title: null,
 			loaded: false,
 			lives: 3,
-			oxygen: 1,
+			oxygen: [1, 1],
 			showOxygen: false,
 		});
 		this.state = this.stateListener.createListenableObject();
