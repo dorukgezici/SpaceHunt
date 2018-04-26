@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
+import { IGameBootstrapState } from "../../GameBootstrap";
 
 const states = {
 	default: maStates.walkRight,
@@ -34,10 +35,10 @@ export default class Player extends BasePlayer {
 	private maxX: number;
 
 
-	private state: IPlayerAnimations = states.default;
+	private animationState: IPlayerAnimations = states.default;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine) {
-		super(x, y);
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine, state: IGameBootstrapState) {
+		super(x, y, state);
 
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
 		// this.y += this.getHeight();
@@ -69,25 +70,25 @@ export default class Player extends BasePlayer {
 		let stateChanged = false;
 		const updateState = (state: IPlayerAnimations) => {
 			stateChanged = true;
-			this.state = state;
+			this.animationState = state;
 		};
 
 		// change movement if not currently in the air
 		if (this.isGround()) {
 
 			// just landed
-			if (this.state === states.jump && this.posYold < (600 - 65)) {
+			if (this.animationState === states.jump && this.posYold < (600 - 65)) {
 				console.log("just landed");
 				updateState(states.default);
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.state !== states.jump) {
+			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.animationState !== states.jump) {
 				this.jump();
 				this.ducked = false;
 				updateState(states.jump);
 			}
 
-			if (this.state !== states.jump) {
+			if (this.animationState !== states.jump) {
 
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
 					this.duck();
@@ -101,7 +102,7 @@ export default class Player extends BasePlayer {
 
 			}
 
-			if (this.state !== states.jump && this.state !== states.duck) {
+			if (this.animationState !== states.jump && this.animationState !== states.duck) {
 
 				// X movement
 				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
@@ -156,7 +157,7 @@ export default class Player extends BasePlayer {
 		this.posYold = this.pos.y;
 
 		if (stateChanged && this.animation)
-			this.animation.changeState(this.state);
+			this.animation.changeState(this.animationState);
 
 	}
 
@@ -182,24 +183,30 @@ export default class Player extends BasePlayer {
 
 	public die(info: string) {
 		if (!this.dead) {
+			if (this.state.lives > 1) {
+				this.dead = true;
+				this.state.lives -= 1;
+				var fake_this = this;
+				setTimeout(function() { fake_this.dead = false; }, 1000);
+			} else {
+				// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
 
-			// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
+				this.dead = true;
 
-			this.dead = true;
+				// this.rotation = Math.PI / 2;
+				this.setHeight(this.getHeight() / 4);
+				this.collisionArea.body.useBoxCollision();
 
-			// this.rotation = Math.PI / 2;
-			this.setHeight(this.getHeight() / 4);
-			this.collisionArea.body.useBoxCollision();
+				this.scene.camera.shake(50, 50, 500);
 
-			this.scene.camera.shake(50, 50, 500);
+				let player: Player = this;
+				setTimeout(() => {
 
-			let player: Player = this;
-			setTimeout(() => {
+					player.kill();
+					this.emit("death");
 
-				player.kill();
-				this.emit("death");
-
-			}, 550);
+				}, 550);
+			}
 		}
 	}
 

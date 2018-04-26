@@ -183,10 +183,7 @@ export class GameBootstrap {
 	}
 
 	private resetLevel() {
-		if (this.currentGameElement && this.currentGameElement.dispose)
-			this.currentGameElement.dispose();
-
-		this.currentGameElement = this.levels[this.sceneIndex]();
+		this.showScene();
 	}
 
 	private resetGame() {
@@ -222,7 +219,7 @@ export class GameBootstrap {
 				this.sceneIndex++;
 				this.showScene();
 			} else {
-				if (this.state.lives > 0) {
+				if (this.state.lives > 1) {
 					this.state.lives -= 1;
 					this.resetLevel();
 				} else {

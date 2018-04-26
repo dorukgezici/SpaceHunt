@@ -39,7 +39,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.arrow = new Arrow(this.levelBounds.left + 200, this.levelBounds.top + 200);
 
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199);
+		this.player = new Level1Player(this.levelBounds.right - 100, this.levelBounds.top + 199, this.state);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
 		ex.Physics.acc.setTo(0, 2000);

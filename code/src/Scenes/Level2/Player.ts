@@ -3,6 +3,7 @@ import Sky from "./Sky";
 import Level2 from "./Level2";
 import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { IGameBootstrapState } from "../../GameBootstrap";
 
 export default class Player extends ex.Actor {
 
@@ -27,14 +28,18 @@ export default class Player extends ex.Actor {
 	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
+	public state: IGameBootstrapState;
+
 	private animation: DrawAnimation<IPlayerSwimAnimations>;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label) {
+	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, state: IGameBootstrapState) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
 		this.minX = levelBounds.left + Player.size.w / 2;
 		this.maxX = levelBounds.right - Player.size.w / 2;
 		this.minY = levelBounds.top + Player.size.h / 2;
 		this.maxY = levelBounds.bottom - Player.size.h / 2;
+
+		this.state = state;
 
 		this.oxygenMeter = oxygenMeter;
 
@@ -141,15 +146,22 @@ export default class Player extends ex.Actor {
 
 	public die(info: string) {
 		if (!this.dead) {
-			this.dead = true;
-			this.kill();
-			this.emit("death");
-			/*
-			alert(info);
-			let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
-			restartLabel.fontSize = 30;
-			this.scene.addUIActor(restartLabel);
-			*/
+			if (this.state.lives > 1) {
+				this.dead = true;
+				this.state.lives -= 1;
+				var fake_this = this;
+				setTimeout(function() { fake_this.dead = false; }, 1000);
+			} else {
+				this.dead = true;
+				this.kill();
+				this.emit("death");
+				/*
+				alert(info);
+				let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
+				restartLabel.fontSize = 30;
+				this.scene.addUIActor(restartLabel);
+				*/
+			}
 		}
 	}
 

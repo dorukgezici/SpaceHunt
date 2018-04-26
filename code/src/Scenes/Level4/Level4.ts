@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
+import { GameBootstrap, IGameElement, IGameElementEvents, IGameBootstrapState, GameElementDoneType } from "../../GameBootstrap";
 import Ground from "./Ground";
 import Player from "./Player";
 import Cannibal from "./Cannibal";
@@ -22,6 +22,8 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	engine: ex.Engine;
 	scene: ex.Scene;
 	bounds: ex.BoundingBox;
+
+	state: IGameBootstrapState;
 
 	// actors
 	ground: Ground;
@@ -48,9 +50,11 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
 
+		this.state = bootstrap.state;
+
 		// Actor creation
 		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(100, 400, this.levelBounds);
+		this.player = new Player(100, 400, this.levelBounds, this.state);
 		this.player.on("death", () => this.lose());
 		this.player.on("won", () => this.win());
 		this.player.initAnimations();
@@ -120,11 +124,14 @@ export default class Level4 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose = (): void => {
-		// alert("died - Level4-lose()");
-		this.emit("done", {
-			target: this,
-			type: GameElementDoneType.Aborted
-		});
+		if (this.state.lives > 1) {
+			this.state.lives -= 1;
+		} else {
+			this.emit("done", {
+				target: this,
+				type: GameElementDoneType.Aborted
+			});	
+		}
 	}
 
 }

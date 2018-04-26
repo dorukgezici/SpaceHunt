@@ -3,6 +3,7 @@ import BasePlayer from "../../Components/BasePlayer";
 import Vine from "./Vine";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
+import { IGameBootstrapState } from "../../GameBootstrap";
 
 export default class Level1Player extends BasePlayer {
 
@@ -12,8 +13,8 @@ export default class Level1Player extends BasePlayer {
 	private animation: DrawAnimation<ITarzanAnimations>;
 	private hasStarted = false;
 
-	constructor(x: number, y: number) {
-		super(x, y);
+	constructor(x: number, y: number, state: IGameBootstrapState) {
+		super(x, y, state);
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
