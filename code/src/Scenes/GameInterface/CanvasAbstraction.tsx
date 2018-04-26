@@ -1,17 +1,21 @@
-import SimplexNoise from "../../Components/NoiseAbstraction/SimplexNoise";
-import Point from "../../Components/NoiseAbstraction/Point";
 import Color from "../../Components/NoiseAbstraction/Color";
-import { random, extend } from "../../Components/NoiseAbstraction/Static";
+import Point from "../../Components/NoiseAbstraction/Point";
+import SimplexNoise from "../../Components/NoiseAbstraction/SimplexNoise";
+import { random } from "../../Components/NoiseAbstraction/Static";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 
 const PARTICLE_NUM = 500;
 const STEP = 3;
 const Z_INC = 0.001;
-const S = 100; // Saturate
-const L = 50; // Lightness
+export const H = 0; // Hue
+export const S = 100; // Saturate
+export const L = 50; // Lightness
+export const A = 0; // Alpha
+const defaultColor = new Color.HSLA(H, S, L, A);
 
 interface IAttrs {
 	ref?: (ca: CanvasAbstraction) => void;
+	baseColor?: Color.RGBA | Color.HSLA;
 }
 
 export default class CanvasAbstraction extends Component<IAttrs> {
@@ -21,7 +25,7 @@ export default class CanvasAbstraction extends Component<IAttrs> {
 
 	constructor(attrs: IAttrs) {
 		super(attrs);
-		this.renderer = new Renderer(this.canvas);
+		this.renderer = new Renderer(this.canvas, attrs.baseColor);
 		(window as any).ca = this;
 	}
 
@@ -56,12 +60,16 @@ export class Renderer {
 	private animationFrame = NaN;
 
 	constructor(
-		protected readonly canvas: HTMLCanvasElement
+		protected readonly canvas: HTMLCanvasElement,
+		baseColor?: Color.HSLA | Color.RGBA
 	) {
 		this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
 		this.particles = new Array(PARTICLE_NUM);
+		const color = baseColor
+			? (baseColor instanceof Color.RGBA ? baseColor.toHSLA() : baseColor)
+			: defaultColor;
 		for (let i = 0; i < PARTICLE_NUM; i++)
-			this.particles[i] = new Particle(this as any);
+			this.particles[i] = new Particle(this as any, color, !baseColor);
 	}
 
 	start() {
@@ -147,24 +155,28 @@ export class Renderer {
 class Particle extends Point {
 
 	latest: Point;
-	color: Color.HSLA;
+	color: Color.HSLA | Color.RGBA;
 	age = 0;
+	readonly changeHue: boolean;
 
 	constructor(
-		private ca: { canvasWidth: number; canvasHeight: number, center: Point }
+		private ca: { canvasWidth: number; canvasHeight: number, center: Point },
+		baseColor: Color.HSLA | Color.RGBA,
+		changeHue = baseColor instanceof Color.HSLA
 	) {
 		super();
+		this.changeHue = changeHue && baseColor instanceof Color.HSLA;
 		this.latest = new Point();
-		this.color = new Color.HSLA(0, S, L, 0.5);
+		this.color = baseColor.clone();
 		this.reborn();
-
 	}
 
 	reborn() {
 		this.set(random(this.ca.canvasWidth), random(this.ca.canvasHeight));
 		this.latest.set(this);
 		this.age = 0;
-		this.color.h = this.ca.center.subtract(this).angle() * 180 / Math.PI;
+		if (this.changeHue)
+			(this.color as Color.HSLA).h = this.ca.center.subtract(this).angle() * 180 / Math.PI;
 		this.color.a = 0;
 	}
 

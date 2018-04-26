@@ -19,7 +19,7 @@ declare namespace Color {
 		constructor(h?: number, s?: number, l?: number, a?: number);
 		toRGBA(): RGBA;
 		toArray(): number[];
-		clone(): RGBA;
+		clone(): HSLA;
 	}
 
 }

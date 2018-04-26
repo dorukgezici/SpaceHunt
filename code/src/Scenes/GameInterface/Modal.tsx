@@ -1,6 +1,7 @@
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import { AnimationSequence } from "../../Components/AnimationSequence";
-import CanvasAbstraction from "./CanvasAbstraction";
+import CanvasAbstraction, { A } from "./CanvasAbstraction";
+import Color from "../../Components/NoiseAbstraction/Color";
 require("./modal-style.scss");
 
 const modalSize = 400;
@@ -69,7 +70,7 @@ export default class Modal extends Component<IAttrs> {
 				<div className="modal-overlay" onclick={this.hide.bind(this)} />
 				<div className="modal-dialog" ref={e => this.modalDialog = e}>
 					<div className="container">
-						<CanvasAbstraction ref={ca => {
+						<CanvasAbstraction baseColor={new Color.RGBA(229, 177, 58, A)} ref={ca => {
 							this.canvasAbstraction = ca;
 							ca.canvas.style.opacity = "0.4";
 						}} />

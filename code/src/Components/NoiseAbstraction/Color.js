@@ -279,7 +279,7 @@ Color.RGBA = function (r, g, b, a) {
 Color.RGBA.prototype = {
 	toHSLA: function () {
 		var hsl = rgbToHsl(Math.round(this.r), Math.round(this.g), Math.round(this.b));
-		return new Hsla(hsl[0], hsl[1], hsl[2], this.a);
+		return new Color.HSLA(hsl[0], hsl[1], hsl[2], this.a);
 	},
 
 	toArray: function () {
