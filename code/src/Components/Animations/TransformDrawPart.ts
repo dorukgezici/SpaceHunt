@@ -48,21 +48,24 @@ export class TransformDrawPart<T extends string> {
 	 * @param delta Milliseconds since the animation has started.
 	 */
 	getPath(delta: number) {
-		const { tmpDuration, duration, timestamp } = this;
-
-		let d = tmpDuration || duration;
-		if (tmpDuration && (delta > timestamp + tmpDuration)) {
-			this.clearTmp();
-			d = duration;
-		}
-
-		const path = (d - Math.abs((delta - this.timestamp) % (2 * d) - d)) / d;
-
-		if (this.tmpEasing)
-			return this.tmpEasing(path);
-		else if (this.easing)
-			return this.easing(path);
+		const { duration, timestamp, easing } = this;
+		const path = (duration - Math.abs((delta - timestamp) % (2 * duration) - duration)) / duration;
+		if (easing)
+			return easing(path);
 		return path;
+	}
+
+	/**
+	 * Number from interval [0, 1] indicating state of the animation transition.
+	 * @param delta Milliseconds since the animation has started.
+	 */
+	getTmpPath(delta: number) {
+		const { tmpDuration: d, timestamp, tmpEasing } = this;
+		if (!d) return 0;
+		const p = Math.max(0, Math.min(1, (delta - timestamp) / d));
+		if (tmpEasing)
+			return tmpEasing(p);
+		return p;
 	}
 
 	/**
@@ -90,12 +93,24 @@ export class TransformDrawPart<T extends string> {
 	/**
 	 * Gets current transformation based on given path.
 	 * @param path Number from interval [0, 1] indicating state of the animation.
+	 * @param tmpPath Number from interval [0, 1] indicating state of the animation transition.
 	 */
-	getTransformation(path: number) {
+	getTransformation(path: number, tmpPath?: number) {
 		let t = TransformDrawPart.getTransformation(this.startTransformation, this.endTransformation, path);
-		if (this.tmpTransformation)
-			t = TransformDrawPart.getTransformation(this.tmpTransformation, t, path);
+		if (this.tmpTransformation && tmpPath !== undefined)
+			t = TransformDrawPart.getTransformation(this.tmpTransformation, t, tmpPath);
 		return t;
+	}
+
+	/**
+	 * Gets current transformation based on given delta time.
+	 * @param delta Milliseconds since the animation has started.
+	 */
+	getTransformationByTime(delta: number) {
+		if (this.tmpTransformation)
+			return this.getTransformation(this.getPath(delta), this.getTmpPath(delta));
+		else
+			return this.getTransformation(this.getPath(delta));
 	}
 
 	resetDelta(delta?: number) {
@@ -103,7 +118,7 @@ export class TransformDrawPart<T extends string> {
 	}
 
 	makeTransition(startTransformation: ITransformation, endTransformation: ITransformation, delta: number, duration?: number, easing?: IEasing) {
-		this.tmpTransformation = this.getTransformation(this.getPath(delta));
+		this.tmpTransformation = this.getTransformationByTime(delta);
 		this.tmpDuration = duration || 0;
 		this.tmpEasing = easing || null;
 		this.resetDelta(delta);
@@ -147,7 +162,7 @@ export class TransformDrawPart<T extends string> {
 	 */
 	draw(ctx: CanvasRenderingContext2D, delta: number, position: Vector | undefined, state: T) {
 		const path = this.getPath(delta);
-		const t = this.getTransformation(path);
+		const t = this.getTransformationByTime(delta);
 		let customTransformation: ITransformation | null = null;
 
 		ctx.save();

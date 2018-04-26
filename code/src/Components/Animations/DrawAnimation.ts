@@ -12,7 +12,7 @@ export interface IDrawableSet {
 }
 
 export interface IStateSet<T extends string> {
-	changeState(state: T, delta?: number): void;
+	changeState(state: T, delta: number): void;
 }
 
 export interface IDrawSet<T extends string> extends IDrawableSet, IStateSet<T> { }

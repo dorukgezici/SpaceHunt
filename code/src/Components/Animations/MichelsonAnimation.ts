@@ -125,13 +125,13 @@ const armFront: IRLData = {
 			duration: 1000,
 			start: { rotate: -0.1 },
 			end: { rotate: 0.1 },
-			transitionDuration: 2000
+			transitionDuration: 200
 		},
 		walk: {
 			duration: 400,
 			start: { rotate: -0.3 },
 			end: { rotate: 0.3 },
-			transitionDuration: 2000
+			transitionDuration: 200
 		},
 		"walk-fast": {
 			duration: 250,
