@@ -431,6 +431,6 @@ const allData = [
 
 const animationProviders = allData
 	.map(baseDataExtender)
-	.map(createTransformDrawSetProvider);
+	.map(t => createTransformDrawSetProvider(t));
 
 export const eslanAnimationFactory = new TransformDrawAnimationFactory(animationProviders);

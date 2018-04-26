@@ -502,6 +502,6 @@ export const allData = [
 
 const animationProviders = allData
 	.map(baseDataExtender)
-	.map(createTransformDrawSetProvider);
+	.map(t => createTransformDrawSetProvider(t));
 
 export const playerAnimationFactory = new TransformDrawAnimationFactory(animationProviders);

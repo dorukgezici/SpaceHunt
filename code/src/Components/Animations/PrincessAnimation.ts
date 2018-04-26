@@ -110,6 +110,6 @@ const allData = [
 	armRight,
 ];
 
-const animationProviders = allData.map(createTransformDrawSetProvider);
+const animationProviders = allData.map(t => createTransformDrawSetProvider(t));
 
 export const princessAnimationFactory = new TransformDrawAnimationFactory(animationProviders);
