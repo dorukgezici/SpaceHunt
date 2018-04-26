@@ -1,43 +1,67 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import Vine from "./Vine";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { attachPlayerAnimations, ITarzanAnimations } from "./PlayerAnimations";
-import { IGameBootstrapState } from "../../GameBootstrap";
+import {attachPlayerAnimations} from "./PlayerAnimations";
+import {IGameBootstrapState} from "../../GameBootstrap";
+import {IPlayerAnimations, selectedState} from "../../Components/Animations/MichelsonAnimation";
+import AnimationStateHandler from "../../Components/Animations/AnimationStateHandler";
 
 export default class Level1Player extends BasePlayer {
+	static readonly MOVEMENT_SPEED = 8;
+	static readonly SCREEN_END_X = 5;
 
 	inJump: boolean = false;
+	onBranch: boolean = true;
+	levelLength: number;
 	onVine: boolean = false;
 	cameraStrategy: ex.LockCameraToActorAxisStrategy;
-	private animation: DrawAnimation<ITarzanAnimations>;
-	private hasStarted = false;
+	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
-	constructor(x: number, y: number, state: IGameBootstrapState) {
+	constructor(x: number, y: number, state: IGameBootstrapState, levelLength: number) {
 		super(x, y, state);
 		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
-		this.animation = attachPlayerAnimations(this);
+		const animation = attachPlayerAnimations(this);
+		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
+		this.levelLength = levelLength;
 	}
 
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
+		const { animationStateHandler: ash } = this;
 
 		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
 			this.jump();
-			if (!this.hasStarted) {
-				this.hasStarted = true;
-				this.animation.changeState("jump");
-			}
+			ash.changeState("jump-right");
 		}
 
-		if (this.getWorldPos().x < -10) {
+		if (!this.onVine && engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
+			ash.changeState("idle-left");
+		}
+
+		if (!this.onVine && engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+			ash.changeState("idle-right");
+		}
+
+		if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+			this.moveLeft();
+			ash.changeState("walk-left");
+		}
+
+		if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+			this.moveRight();
+			ash.changeState("walk-right");
+		}
+
+		if (this.getWorldPos().x > this.levelLength + 10) {
 			this.emit("won");
 		}
 	}
 
 	jump() {
+		this.onBranch = false;
+
 		if (!this.inJump) {
 			if (this.onVine) {
 				let parent = this.parent;
@@ -48,11 +72,10 @@ export default class Level1Player extends BasePlayer {
 				this.cameraStrategy.target = this;
 			}
 
-			this.vel.setTo(-600, -500);
+			this.vel.setTo(600, -500);
 			this.rotation = - Math.PI / 6;
 			this.inJump = true;
 			this.onVine = false;
-			this.animation.changeState("jump");
 		}
 	}
 
@@ -79,11 +102,25 @@ export default class Level1Player extends BasePlayer {
 		}
 
 		this.onVine = true;
-		this.pos.x = 2;
-		this.pos.y = Level1Player.size.h / 2;
+		this.pos.y = 20 + Level1Player.size.h / 2;
+		this.pos.x = 0;
 		this.vel.setTo(0, 0);
 		this.rotation = 0;
 		this.cameraStrategy.target = vine;
-		this.animation.changeState("grab");
+		this.animationStateHandler.changeState("grab-right");
+	}
+
+	private moveLeft() {
+		if (this.onBranch) {
+			let newPos = this.pos.x - Level1Player.MOVEMENT_SPEED;
+			newPos = newPos < Level1Player.SCREEN_END_X ? Level1Player.SCREEN_END_X : newPos;
+			this.pos.x = newPos;
+		}
+	}
+
+	private moveRight() {
+		if (this.onBranch) {
+			this.pos.x += Level1Player.MOVEMENT_SPEED;
+		}
 	}
 }

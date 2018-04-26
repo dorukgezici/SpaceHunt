@@ -1,10 +1,8 @@
-import { Engine, GameEvent, Color, Input, Loader, Texture } from "excalibur";
-import { IEvented, Class } from "./Class";
+import { Engine, GameEvent, Color, Input, Loader} from "excalibur";
+import { IEvented } from "./Class";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
-import ExampleLevel from "./Scenes/ExampleLevel/ExampleLevel";
 import Menu from "./Scenes/Menu/Menu";
 import Intro from "./Scenes/Intro/Intro";
-import MovementTestLevel from "./Scenes/MovementTestLevel/MovementTestLevel";
 import StateListener from "./Components/StateListener";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
@@ -13,7 +11,6 @@ import Level4 from "./Scenes/Level4/Level4";
 import { getLoadableResources } from "./Resources";
 import * as Stories from "./Scenes/Intro/Story";
 import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
-import GameBar from "./Scenes/GameBar/GameBar";
 import GameInterface from "./Scenes/GameInterface/GameInterface";
 import { InterfaceBuilder } from "./InterfaceBuilder";
 

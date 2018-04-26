@@ -1,16 +1,14 @@
-import { Texture, ILoadable, Resource } from "excalibur";
-import { texture as michealsonTexture, textureDuck } from "./Components/Animations/MichaelsonParts";
-import { texture as eslanTexture } from "./Components/Animations/EslanParts";
+import {ILoadable, Resource, Texture} from "excalibur";
+import {texture as michealsonTexture, textureDuck} from "./Components/Animations/MichaelsonParts";
+import {texture as eslanTexture} from "./Components/Animations/EslanParts";
 
 export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };
 }
 
 const resources = {
-
 	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),
 	seaBed: new Texture(require("./Scenes/Level2/seabed.jpg")),
-	// sky: new Texture(require("./Scenes/Level2/cloud.jpg")),
 	ground: new Texture(require("./Scenes/MovementTestLevel/brick.jpg")),
 	bubble: new Texture(require("./Scenes/Level2/bubble.png")),
 	vine: new Texture(require("./Scenes/Level1/Vine.png")),
@@ -18,7 +16,10 @@ const resources = {
 	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
 	riverTexture: new Texture(require("./Resources/Images/RiverTexture.png")),
 	level1: {
-		arrow: new Texture(require("./Scenes/Level1/Arrow.png"))
+		arrow: new Texture(require("./Scenes/Level1/Arrow.png")),
+		bg: new Texture(require("./Resources/Images/JungleBackground.png")),
+		ground: new Texture(require("./Resources/Images/Grass.png")),
+		tree: new Texture(require("./Resources/Images/Tree.png"))
 	},
 	level3: {
 		bg: new Texture(require("./Resources/Images/level3Texture.png")),
