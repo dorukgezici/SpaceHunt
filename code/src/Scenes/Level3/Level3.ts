@@ -95,7 +95,7 @@ export default class Level3 extends Class<IGameElementEvents> implements IGameEl
 	}
 
 	lose = (): void => {
-		alert("died - Level3-lose()");
+		// alert("died - Level3-lose()");
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Aborted

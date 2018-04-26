@@ -76,7 +76,7 @@ export interface IGameBootstrapState {
 
 const defaultGameBootstrapState: IGameBootstrapState = {
 	title: null,
-	lives: 3,
+	lives: 5,
 	oxygen: 1,
 	showOxygen: false,
 };
@@ -182,11 +182,18 @@ export class GameBootstrap {
 		});
 	}
 
+	private resetLevel() {
+		if (this.currentGameElement && this.currentGameElement.dispose)
+			this.currentGameElement.dispose();
+
+		this.currentGameElement = this.levels[this.sceneIndex]();
+	}
+
 	private resetGame() {
 		if (this.currentGameElement && this.currentGameElement.dispose)
 			this.currentGameElement.dispose();
 		this.sceneIndex = 0;
-		this.showMenu();
+		this.showScene();
 	}
 
 	private showDeathStory() {
@@ -207,12 +214,21 @@ export class GameBootstrap {
 			this.currentGameElement.dispose();
 		this.currentGameElement = this.levels[this.sceneIndex]();
 
+		// Trigger to show lives
+		this.state.lives = this.state.lives;
+
 		this.currentGameElement.once("done", ({ type }) => {
 			if (type === GameElementDoneType.Finished) {
 				this.sceneIndex++;
 				this.showScene();
-			} else
-				this.showDeathStory();
+			} else {
+				if (this.state.lives > 0) {
+					this.state.lives -= 1;
+					this.resetLevel();
+				} else {
+					this.showDeathStory();
+				}
+			}
 		});
 
 	}

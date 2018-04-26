@@ -1,6 +1,6 @@
 import * as ex from "excalibur";
 import { Class } from "../../Class";
-import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
+import { GameBootstrap, IGameBootstrapState, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Arrow from "./Arrow";
 import Ground from "../../Components/Ground";
@@ -14,6 +14,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 	readonly sceneKey: string = "level1";
 	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
 
+	state: IGameBootstrapState;
 	arrow: Arrow;
 	bounds: ex.BoundingBox;
 	engine: ex.Engine;
@@ -26,6 +27,7 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 
 	constructor(bootstrap: GameBootstrap) {
 		super();
+		this.state = bootstrap.state;
 		this.engine = bootstrap.engine;
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
