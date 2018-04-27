@@ -2,14 +2,16 @@ import * as ex from "excalibur";
 import Sky from "./Sky";
 import Level2 from "./Level2";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { IGameBootstrapState } from "../../GameBootstrap";
 import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
+import BaseLevel from "../../Components/BaseLevel";
+import { IGameBootstrapState } from "../../GameBootstrap";
 
-export default class Player extends ex.Actor {
+export default class Level2Player extends BasePlayer {
 
 	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
-	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
+	// to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
 	static readonly speedAcc: number = 200;
 	static readonly speedNormal: number = 100;
@@ -20,7 +22,9 @@ export default class Player extends ex.Actor {
 	private minY: number;
 	private maxY: number;
 
-	private speedX: number = Player.speedNormal;
+	private animation: DrawAnimation<IPlayerAnimations>;
+
+	private speedX: number = Level2Player.speedNormal;
 
 	public trapped: boolean = false; // for disabling controls in case of being trapped by a bubble
 	public dead: boolean = false;
@@ -28,24 +32,21 @@ export default class Player extends ex.Actor {
 	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
-	public state: IGameBootstrapState;
-
-	private animation: DrawAnimation<IPlayerAnimations>;
-
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, state: IGameBootstrapState) {
-		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
-		this.minX = levelBounds.left + Player.size.w / 2;
-		this.maxX = levelBounds.right - Player.size.w / 2;
-		this.minY = levelBounds.top + Player.size.h / 2;
-		this.maxY = levelBounds.bottom - Player.size.h / 2;
-
-		this.state = state;
+	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label, state: IGameBootstrapState) {
+		super(x, y, controlSet, state);
+		this.minX = Level2.levelBounds.left + Level2Player.size.w / 2;
+		this.maxX = Level2.levelBounds.right - Level2Player.size.w / 2;
+		this.minY = Level2.levelBounds.top + Level2Player.size.h / 2;
+		this.maxY = Level2.levelBounds.bottom - Level2Player.size.h / 2;
 
 		this.oxygenMeter = oxygenMeter;
+		this.oxygenMeter.fontSize = 30;
+
+		this.setWidth(Level2Player.size.w);
+		this.setHeight(Level2Player.size.h);
 
 		// Anchor
-		this.anchor.setTo(0.5, 0.5); // set anchor to the center of the right edge (?)
-		// this.y += this.getHeight() / 2;
+		this.anchor.setTo(0.5, 0.5); // set anchor to the center
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Active;
@@ -58,16 +59,8 @@ export default class Player extends ex.Actor {
 	onPrecollision(ev: any) {
 		// Reset Oxygen Level to 100
 		if (ev.other.constructor.name === "Sky") {
-
 			// refill oxygen
 			this.oxygenLevel = 100;
-
-			// free if trapped??
-			// if (this.trapped) {
-			// this.trapped = false;
-			// this.vel.x = 0;
-			// }
-
 		} else if (ev.other.constructor.name === "Bubble" && !this.trapped) { // Bubbles add 20 oxygen points
 			this.oxygenLevel = (this.oxygenLevel + 20) < 100 ? this.oxygenLevel + 20 : 100;
 		}
@@ -87,32 +80,32 @@ export default class Player extends ex.Actor {
 
 		if (!this.trapped) {
 			// X movement
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
-				this.speedX = Player.speedDec;
+			if (engine.input.keyboard.wasPressed(this.controls.left)) {
+				this.speedX = Level2Player.speedDec;
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
-				this.speedX = Player.speedAcc;
+			if (engine.input.keyboard.wasPressed(this.controls.right)) {
+				this.speedX = Level2Player.speedAcc;
 			}
 
-			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
-					this.speedX = Player.speedAcc;
+			if (engine.input.keyboard.wasReleased(this.controls.left)) {
+				if (engine.input.keyboard.isHeld(this.controls.right)) {
+					this.speedX = Level2Player.speedAcc;
 				} else {
-					this.speedX = Player.speedNormal;
+					this.speedX = Level2Player.speedNormal;
 				}
 			}
 
-			if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
-					this.speedX = Player.speedDec;
+			if (engine.input.keyboard.wasReleased(this.controls.right)) {
+				if (engine.input.keyboard.isHeld(this.controls.left)) {
+					this.speedX = Level2Player.speedDec;
 				} else {
-					this.speedX = Player.speedNormal;
+					this.speedX = Level2Player.speedNormal;
 				}
 			}
 
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
-				this.speedX = Player.speedNormal;
+			if (engine.input.keyboard.isHeld(this.controls.left) && engine.input.keyboard.isHeld(this.controls.right)) {
+				this.speedX = Level2Player.speedNormal;
 			}
 
 			this.vel.x = this.speedX;
@@ -121,26 +114,26 @@ export default class Player extends ex.Actor {
 				this.emit("win");
 
 			// Y movement
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Up)) {
+			if (engine.input.keyboard.isHeld(this.controls.up)) {
 				this.moveUp();
 			}
 
-			if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
+			if (engine.input.keyboard.isHeld(this.controls.down)) {
 				this.moveDown();
 			}
 		}
 
 		if (this.speedX !== oldSpeedX) {
-			if (this.speedX === Player.speedNormal)
+			if (this.speedX === Level2Player.speedNormal)
 				this.animation.changeState("swim-right");
-			else if (this.speedX === Player.speedAcc)
+			else if (this.speedX === Level2Player.speedAcc)
 				this.animation.changeState("swim-right-fast");
-			else if (this.speedX === Player.speedDec)
+			else if (this.speedX === Level2Player.speedDec)
 				this.animation.changeState("swim-right-slow");
 		}
 
 		if (this.getWorldPos().x > 4950) {
-			this.emit("won");
+			this.win("won by reaching the level end");
 		}
 
 	}
@@ -166,17 +159,16 @@ export default class Player extends ex.Actor {
 		}
 	}
 
-
 	private moveUp() {
 		// to not move too far into the sky
 		if (this.pos.y > (this.minY + 100)) {
-			this.pos.y -= Player.speedY;
+			this.pos.y -= Level2Player.speedY;
 		}
 	}
 
 	private moveDown() {
-		if (this.pos.y < this.maxY) { // maxX?
-			this.pos.y += Player.speedY;
+		if (this.pos.y < this.maxY) {
+			this.pos.y += Level2Player.speedY;
 		}
 	}
 }

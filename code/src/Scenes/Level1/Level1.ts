@@ -1,105 +1,64 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
-import {
-	GameBootstrap,
-	GameElementDoneType,
-	IGameBootstrapState,
-	IGameElement,
-	IGameElementEvents
-} from "../../GameBootstrap";
+import { Class } from "../../Class";
+import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
 import Arrow from "./Arrow";
 import Background from "../../Components/Background";
 import Ground from "../../Components/Ground";
-import Level1Player from "./Player";
+import Level1Player from "./Level1Player";
 import TreeBranch from "./TreeBranch";
 import VineCreator from "./VineCreator";
 import resources from "../../Resources";
+import { controlSets } from "../../Components/BasePlayer";
+import BaseLevel from "../../Components/BaseLevel";
 
 
-export default class Level1 extends Class<IGameElementEvents> implements IGameElement {
+export default class Level1 extends BaseLevel {
 
-	readonly sceneKey: string = "level1";
-	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000);
+	static readonly sceneKey: string = "level1";
+	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 800);
 
-	state: IGameBootstrapState;
+	static readonly groundTexture: ex.Texture = resources.level1.ground;
+
 	arrow: Arrow;
-	background: Background | any = null;
-	bounds: ex.BoundingBox;
-	engine: ex.Engine;
-	ground: Ground;
-	loader: ex.Loader;
-	player: Level1Player | any = null;
-	scene: ex.Scene;
 	treeBranch: TreeBranch;
 	vineCreator: VineCreator;
 
 	constructor(bootstrap: GameBootstrap) {
-		super();
-		this.state = bootstrap.state;
-		this.engine = bootstrap.engine;
-		this.scene = new ex.Scene(this.engine);
-		this.bounds = this.engine.getWorldBounds();
-		this.loader = bootstrap.loader;
-		this.ground = new Ground(2500, this.bounds.bottom - 35);
+		super(
+			Level1.sceneKey,
+			bootstrap,
+			Level1.levelBounds,
+			// players[]
+			(bootstrap.state.names.length === 2
+				? ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state),
+				new Level1Player(30, 0, Level1.levelBounds.right, controlSets.controls2, bootstrap.state)]) // two players required
+				: ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state)])), // just one player required
+			Level1.groundTexture,
+			resources.level1.bg.asSprite()
+		);
+
 		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
-		this.treeBranch = new TreeBranch(
-			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
+		this.treeBranch = new TreeBranch(this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
-		this.player = new Level1Player(this.levelBounds.left + 100, this.levelBounds.top + 199, this.state, 5000);
-		this.background = new Background(resources.level1.bg.asSprite(), this.player, 0, 0, 500, 500, 5000);
-		this.player.on("fell", this.lose);
-		this.player.on("won", this.win);
-		ex.Physics.acc.setTo(0, 2000);
-		this.scene.camera.addStrategy(this.player.cameraStrategy);
-		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
-		
+
 		this.buildScene();
 	}
 
-	buildScene() {
+	buildScene(): void {
+		super.buildScene();
+
 		let vines = this.vineCreator.createVines();
-		
 		for (let vine of vines) {
 			for (let vinePart of vine.getAllParts()) {
 				this.scene.add(vinePart);
 			}
 		}
 
-		this.scene.add(this.ground);
 		this.ground.z = 2;
-
 		this.scene.add(this.treeBranch);
-		this.scene.add(this.player);
 		this.scene.add(this.arrow);
 		this.arrow.z = -1;
-
-		this.scene.add(this.background);
 		this.background.z = -2;
-
-		this.engine.addScene(this.sceneKey, this.scene);
-		this.engine.goToScene(this.sceneKey);
-	}
-
-	dispose(): void {
-		this.engine.removeScene(this.sceneKey);
-	}
-
-	win = (): void => {
-		// alert("You won!");
-		this.player.off("won");
-		this.emit("done", {
-			target: this,
-			type: GameElementDoneType.Finished
-		});
-	}
-
-	lose = (): void => {
-		// alert("You fell down and died");
-		this.player.off("fell");
-		this.emit("done", {
-			target: this,
-			type: GameElementDoneType.Aborted
-		});
 	}
 }

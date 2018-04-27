@@ -1,13 +1,14 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import resources from "../../Resources";
 
 export default class Bubble extends ex.Actor {
 
 	static readonly size = { w: 20, h: 20 };
+	static readonly sprite: ex.Sprite = resources.level2.bubble.asSprite();
 
 	// no influence on player if over a certain height -> depending on sky height and own size
-	static readonly MINCOLLISIONY: number = Bubble.size.h / 2 + 125 + 1;
+	static readonly MINCOLLISIONY: number = Bubble.size.h / 2 + 145 + 1;
 
 	static readonly speedY: number = -100;
 	static readonly speedX: number = 50;
@@ -15,7 +16,7 @@ export default class Bubble extends ex.Actor {
 
 	playerCollision: boolean = false;
 	playerTrapped: boolean = false;
-	collidedPlayer: Player | unset;
+	collidedPlayer: Level2Player | unset;
 	timer: number = -1;
 
 	constructor(x: number, y: number, speedX: number, speedY: number) {
@@ -23,13 +24,14 @@ export default class Bubble extends ex.Actor {
 
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center
+		Bubble.sprite.anchor.setTo(0.5, 0.5);
 
 		this.collisionArea.body.useBoxCollision();
 		this.collisionType = ex.CollisionType.Passive;
 
 		this.vel = new ex.Vector(speedX, speedY);
 
-		// On collision check if Player and trap if true
+		// On collision check if Level2Player and trap if true
 		this.on("precollision", this.onPrecollision);
 	}
 
@@ -38,7 +40,7 @@ export default class Bubble extends ex.Actor {
 		// console.log("precollision event raised");
 		// trap player if collided
 		// only if player not already in the sky
-		if (!this.playerCollision && ev.other.constructor.name === "Player" && !ev.other.trapped && this.y > Bubble.MINCOLLISIONY ) {
+		if (!this.playerCollision && ev.other.constructor.name === "Level2Player" && !ev.other.trapped && this.y > Bubble.MINCOLLISIONY ) {
 			console.log("1st-time PLAYER precollision event raised (Level2 - Bubble - onPrecollision())");
 			this.playerCollision = true;
 			this.playerTrapped = true;
@@ -57,7 +59,7 @@ export default class Bubble extends ex.Actor {
 
 				let that: Bubble = this;
 				this.timer = setTimeout(function () {
-					if (that.collidedPlayer /*&& !that.isKilled()*/) {that.collidedPlayer.vel = that.vel;}
+					if (that.collidedPlayer) {that.collidedPlayer.vel = that.vel;}
 					that.timer = -1;
 				}, Bubble.tImbibe * 1000);
 
@@ -70,25 +72,7 @@ export default class Bubble extends ex.Actor {
 	}
 
 	draw(ctx: any, delta: any) {
-		// Optionally call original 'base' method
-		// ex.Actor.prototype.draw.call(this, ctx, delta)
-		// super.draw(ctx, delta);
-
-		// Custom draw code
-		/*
-		ctx.fillStyle = this.color.toString();
-		ctx.beginPath();
-		ctx.arc(this.pos.x, this.pos.y, 35, 0, Math.PI * 2);
-		ctx.closePath();
-		ctx.fill();
-		*/
-
-		let sprite = resources.bubble.asSprite();
-		sprite.draw(ctx, this.getCenter().x - 32, this.getCenter().y - 35);
-	}
-
-	update(engine: ex.Engine, delta: number) {
-		super.update(engine, delta);
+		Bubble.sprite.draw(ctx, this.getCenter().x, this.getCenter().y);
 	}
 
 	kill() {

@@ -1,7 +1,8 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
+import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
-import {attachPlayerAnimations} from "./PlayerAnimations";
 import {IGameBootstrapState} from "../../GameBootstrap";
 import {IPlayerAnimations, selectedState} from "../../Components/Animations/MichelsonAnimation";
 import AnimationStateHandler from "../../Components/Animations/AnimationStateHandler";
@@ -14,12 +15,10 @@ export default class Level1Player extends BasePlayer {
 	onBranch: boolean = true;
 	levelLength: number;
 	onVine: boolean = false;
-	cameraStrategy: ex.LockCameraToActorAxisStrategy;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
-	constructor(x: number, y: number, state: IGameBootstrapState, levelLength: number) {
-		super(x, y, state);
-		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
+	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState) {
+		super(x, y, controlSet, state);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
 		const animation = attachPlayerAnimations(this);
@@ -31,7 +30,7 @@ export default class Level1Player extends BasePlayer {
 		super.update(engine, delta);
 		const { animationStateHandler: ash } = this;
 
-		if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+		if (engine.input.keyboard.wasPressed(this.controls.up)) {
 			this.jump();
 			ash.changeState("jump-right");
 		}
@@ -88,7 +87,7 @@ export default class Level1Player extends BasePlayer {
 
 	onPostcollision(e: any | ex.PostCollisionEvent) {
 		if (e.other.constructor.name === "Ground") {
-			this.emit("fell");
+			this.die("died by falling on the ground");
 		}
 	}
 

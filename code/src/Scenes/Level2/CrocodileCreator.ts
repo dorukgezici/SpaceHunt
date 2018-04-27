@@ -1,25 +1,26 @@
 import * as ex from "excalibur";
 import Crocodile from "./Crocodile";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import { GameBootstrap } from "../../GameBootstrap";
+import BaseLevel from "../../Components/BaseLevel";
 
-// class for cyclically creating new bubbles and adding them to the scene, in front of the player
+// class for cyclically creating new crocodiles and adding them to the scene, in front of the player
 export default class CrocodileCreator {
 
 	engine: ex.Engine;
 	scene: ex.Scene;
-	player: Player;
+	level: BaseLevel;
 	crocodiles: Crocodile[];
 	bounds: ex.BoundingBox;
 	bootstrap: GameBootstrap;
 
 	timer: number[] = [-1]; // to be passed by reference
 
-	constructor(bootstrap: GameBootstrap, scene: ex.Scene, bounds: ex.BoundingBox, player: Player, crocodiles: Crocodile[]) {
+	constructor(bootstrap: GameBootstrap, scene: ex.Scene, bounds: ex.BoundingBox, level: BaseLevel, crocodiles: Crocodile[]) {
 		this.engine = bootstrap.engine;
 		this.scene = scene;
 		this.bounds = bounds;
-		this.player = player;
+		this.level = level;
 		this.crocodiles = crocodiles;
 		this.bootstrap = bootstrap;
 	}
@@ -29,7 +30,7 @@ export default class CrocodileCreator {
 
 		// start timer scheduling new crocodile creations
 		this.timer[0] = setTimeout(() => {
-			this.createNewCrocodileRT(this.scene, this.bounds, this.player, this.crocodiles, this.timer);
+			this.createNewCrocodileRT(this.scene, this.bounds, this.level, this.crocodiles, this.timer);
 		}, 1500);
 	}
 
@@ -41,7 +42,7 @@ export default class CrocodileCreator {
 		}
 	}
 
-	createNewCrocodileRT(scene: ex.Scene, bounds: ex.BoundingBox, player: Player, crocodiles: Crocodile[], timer: number[]) {
+	createNewCrocodileRT(scene: ex.Scene, bounds: ex.BoundingBox, level: BaseLevel, crocodiles: Crocodile[], timer: number[]) {
 		console.log("creating new bubble... (Level2 - CrocodileCreator - createNewCrocodileRT()");
 
 		// determining speed of the next bubble
@@ -49,17 +50,17 @@ export default class CrocodileCreator {
 		let speedYB: number = this.randomIntFromInterval(0, 0);
 
 		// time until collision = y distance of bubble starting point (at the bottom) and player / y-speed of the bubble
-		let t = -1 * (bounds.bottom - player.y) / speedYB;
+		let t = -1 * (bounds.bottom - level.frontPlayer.y) / speedYB;
 		// console.log("t =    " + t);
 
 		// x of possible collision point = x position of player in t seconds
-		let xC = player.x + (t * player.vel.x);
+		let xC = level.frontPlayer.x + (t * level.frontPlayer.vel.x);
 
 		// starting x of the bubble = collision x - x distance travelled by the bubble until collision
 		let xBStart = xC - speedXB * t;
 
 		// create new bubble in front of the player
-		let x = player.x + 1000;
+		let x = level.frontPlayer.x + 1000;
 		// let x = xBStart;
 		let newCrocodileIndex = crocodiles.push(new Crocodile(this.bootstrap, x, this.randomIntFromInterval(120, bounds.bottom - 60), speedXB, speedYB)) - 1;
 		scene.add(crocodiles[newCrocodileIndex]);
@@ -68,7 +69,7 @@ export default class CrocodileCreator {
 		let nextCrocodileInMS = this.randomIntFromInterval(1500, 3000);
 		let that = this;
 		timer[0] = setTimeout(function () {
-			that.createNewCrocodileRT(scene, bounds, player, crocodiles, timer);
+			that.createNewCrocodileRT(scene, bounds, level, crocodiles, timer);
 		}, nextCrocodileInMS);
 	}
 

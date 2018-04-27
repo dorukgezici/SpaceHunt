@@ -7,29 +7,29 @@ export interface IResources {
 }
 
 const resources = {
-	crocodile: new Texture(require("./Scenes/Level2/crocodile-sprite.png")),
-	seaBed: new Texture(require("./Scenes/Level2/seabed.jpg")),
-	ground: new Texture(require("./Scenes/MovementTestLevel/brick.jpg")),
-	bubble: new Texture(require("./Scenes/Level2/bubble.png")),
-	vine: new Texture(require("./Scenes/Level1/Vine.png")),
-	smallRock: new Texture(require("./Scenes/Level3/smallRock.png")),
-	bigRock: new Texture(require("./Scenes/Level3/bigRock.png")),
-	riverTexture: new Texture(require("./Resources/Images/RiverTexture.png")),
 	level1: {
-		arrow: new Texture(require("./Scenes/Level1/Arrow.png")),
-		bg: new Texture(require("./Resources/Images/JungleBackground.png")),
-		ground: new Texture(require("./Resources/Images/Grass.png")),
-		tree: new Texture(require("./Resources/Images/Tree.png"))
+		bg: new Texture(require("./Resources/Images/Level1/JungleBackground.png")),
+		ground: new Texture(require("./Resources/Images/Level1/Grass.png")),
+		tree: new Texture(require("./Resources/Images/Level1/Tree.png")),
+		arrow: new Texture(require("./Resources/Images/Level1/Arrow.png")),
+		vine: new Texture(require("./Resources/Images/Level1/Vine.png"))
+	},
+	level2: {
+		crocodile: new Texture(require("./Resources/Images/Level2/crocodile-sprite.png")),
+		ground: new Texture(require("./Resources/Images/Level2/seabed.jpg")),
+		bg: new Texture(require("./Resources/Images/Level2/RiverTexture.png")),
+		bubble: new Texture(require("./Resources/Images/Level2/bubble.png"))
 	},
 	level3: {
-		bg: new Texture(require("./Resources/Images/level3Texture.png")),
-		ground: new Texture(require("./Resources/Images/ground.png"))
+		bg: new Texture(require("./Resources/Images/Level3/level3Texture.png")),
+		ground: new Texture(require("./Resources/Images/Level3/ground.png")),
+		smallRock: new Texture(require("./Resources/Images/Level3/smallRock.png")),
+		bigRock: new Texture(require("./Resources/Images/Level3/bigRock.png"))
 	},
 	level4: {
-		bg: new Texture(require("./Resources/Images/level4Texture.png")),
-		// bg: new Texture(require("./Resources/Images/lvl4background2.png")),
-		ground: new Texture(require("./Resources/Images/groundLvl4.png")),
-		pot: new Texture(require("./Scenes/Level4/pot.png")),
+		bg: new Texture(require("./Resources/Images/Level4/lvl4background2.png")),
+		ground: new Texture(require("./Resources/Images/Level4/groundLvl4.png")),
+		pot: new Texture(require("./Resources/Images/Level4/pot.png"))
 	},
 	fonts: {
 		fontO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy Outline.ttf"), "blob"),

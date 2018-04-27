@@ -14,10 +14,10 @@ export default class Vine extends ex.Actor {
 	prevPart: Vine | null = null;
 
 	static readonly sprites: ex.Sprite[] = [
-		new ex.Sprite(resources.vine, 0, 0, 10, 20),
-		new ex.Sprite(resources.vine, 10, 0, 10, 20),
-		new ex.Sprite(resources.vine, 20, 0, 10, 20),
-		new ex.Sprite(resources.vine, 30, 0, 10, 20),
+		new ex.Sprite(resources.level1.vine, 0, 0, 10, 20),
+		new ex.Sprite(resources.level1.vine, 10, 0, 10, 20),
+		new ex.Sprite(resources.level1.vine, 20, 0, 10, 20),
+		new ex.Sprite(resources.level1.vine, 30, 0, 10, 20),
 	];
 
 	sprite: ex.Sprite;

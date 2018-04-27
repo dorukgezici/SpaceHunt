@@ -69,6 +69,7 @@ export interface IGameBootstrapState {
 	lives: number; // [1, 2, 3, ...]
 	oxygen: number; // [0, 1]
 	showOxygen: boolean;
+	names: ReadonlyArray<string>;
 }
 
 const defaultGameBootstrapState: IGameBootstrapState = {
@@ -76,6 +77,7 @@ const defaultGameBootstrapState: IGameBootstrapState = {
 	lives: 5,
 	oxygen: 1,
 	showOxygen: false,
+	names: ["a" , "b"]
 };
 
 /**
@@ -159,12 +161,14 @@ export class GameBootstrap {
 
 		// create the game engine
 		this.engine = new Engine({
-			width: 800,
+			width: 1600,
 			height: 600,
 			canvasElementId: this.interface.canvas.id,
 			backgroundColor: Color.Black,
 			pointerScope: Input.PointerScope.Canvas
 		});
+
+		// this.engine.isDebug = true;
 
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());

@@ -1,7 +1,10 @@
 import * as ex from "excalibur";
-import BasePlayer from "../../Components/BasePlayer";
+import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
+import Level3 from "./Level3";
+import BaseLevel from "../../Components/BaseLevel";
+import Ground from "../../Components/Ground";
 import { IGameBootstrapState } from "../../GameBootstrap";
 
 const states = {
@@ -12,12 +15,9 @@ const states = {
 	duck: maStates.duckRight
 };
 
-export default class Player extends BasePlayer {
+export default class Level3Player extends BasePlayer {
 
-	cameraStrategy: ex.LockCameraToActorStrategy;
-	dead: boolean = false;
 	ducked: boolean = false;
-	engine: ex.Engine;
 	jumpFlag: boolean = false;
 	private animation?: DrawAnimation<IPlayerAnimations>;
 
@@ -35,26 +35,20 @@ export default class Player extends BasePlayer {
 	private maxX: number;
 
 
+
 	private animationState: IPlayerAnimations = states.default;
 
-	constructor(x: number, y: number, levelBounds: ex.BoundingBox, engine: ex.Engine, state: IGameBootstrapState) {
-		super(x, y, state);
+	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState) {
+		super(x, y, controlSet, state);
 
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
-		// this.y += this.getHeight();
 		this.collisionArea.body.useBoxCollision();
 
-		this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(this, ex.Axis.X);
-		// this.cameraStrategy = new ex.LockCameraToActorStrategy(this);
-		this.minX = levelBounds.left + Player.size.w / 2;
-		this.maxX = levelBounds.right - Player.size.w / 2;
+		this.minX = Level3.levelBounds.left + BasePlayer.size.w / 2;
+		this.maxX = Level3.levelBounds.right - BasePlayer.size.w / 2;
 		this.speed = this.speedNormal;
 
 		this.posYold = this.pos.y;
-
-		// touch pointer events
-		this.engine = engine;
-		engine.input.pointers.primary.on("down", this.pointerDown);
 	}
 
 	initAnimations() {
@@ -68,21 +62,22 @@ export default class Player extends BasePlayer {
 		super.update(engine, delta);
 
 		let stateChanged = false;
-		const updateState = (state: IPlayerAnimations) => {
+		const updateState = (animationState: IPlayerAnimations) => {
 			stateChanged = true;
-			this.animationState = state;
+			this.animationState = animationState;
 		};
 
 		// change movement if not currently in the air
 		if (this.isGround()) {
 
 			// just landed
-			if (this.animationState === states.jump && this.posYold < (600 - 65)) {
+			let groundLevel = this.scene.engine.getWorldBounds().bottom - Ground.height;
+			if (this.animationState === states.jump && this.posYold < (groundLevel - 5)) {
 				console.log("just landed");
 				updateState(states.default);
 			}
 
-			if (engine.input.keyboard.wasPressed(ex.Input.Keys.Space) && this.animationState !== states.jump) {
+			if (engine.input.keyboard.wasPressed(this.controls.up) && this.animationState !== states.jump) {
 				this.jump();
 				this.ducked = false;
 				updateState(states.jump);
@@ -90,12 +85,12 @@ export default class Player extends BasePlayer {
 
 			if (this.animationState !== states.jump) {
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Down)) {
+				if (engine.input.keyboard.isHeld(this.controls.down)) {
 					this.duck();
 					updateState(states.duck);
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Down)) {
+				if (engine.input.keyboard.wasReleased(this.controls.down)) {
 					this.unDuck();
 					updateState(states.default);
 				}
@@ -105,18 +100,18 @@ export default class Player extends BasePlayer {
 			if (this.animationState !== states.jump && this.animationState !== states.duck) {
 
 				// X movement
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Left)) {
+				if (engine.input.keyboard.isHeld(this.controls.left)) {
 					this.speed = this.speedDec;
 					updateState(states.slow);
 				}
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) { // if (engine.input.keyboard.wasPressed(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.isHeld(this.controls.right)) {
 					this.speed = this.speedAcc;
 					updateState(states.fast);
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
-					if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.wasReleased(this.controls.left)) {
+					if (engine.input.keyboard.isHeld(this.controls.right)) {
 						this.speed = this.speedAcc;
 						updateState(states.fast);
 					} else {
@@ -125,8 +120,8 @@ export default class Player extends BasePlayer {
 					}
 				}
 
-				if (engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
-					if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+				if (engine.input.keyboard.wasReleased(this.controls.right)) {
+					if (engine.input.keyboard.isHeld(this.controls.left)) {
 						this.speed = this.speedDec;
 						updateState(states.slow);
 					} else {
@@ -135,7 +130,7 @@ export default class Player extends BasePlayer {
 					}
 				}
 
-				if (engine.input.keyboard.isHeld(ex.Input.Keys.Left) && engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+				if (engine.input.keyboard.isHeld(this.controls.left) && engine.input.keyboard.isHeld(this.controls.right)) {
 					this.speed = this.speedNormal;
 					updateState(states.default);
 				}
@@ -151,7 +146,7 @@ export default class Player extends BasePlayer {
 		}
 
 		if (this.getWorldPos().x > 4950) {
-			this.emit("won");
+			this.win("won level3 by reaching the end");
 		}
 
 		this.posYold = this.pos.y;
@@ -179,53 +174,6 @@ export default class Player extends BasePlayer {
 		this.ducked = false;
 		this.setHeight(this.getHeight() * 2);
 		this.collisionArea.body.useBoxCollision();
-	}
-
-	public die(info: string) {
-		if (!this.dead) {
-			if (this.state.lives > 1) {
-				this.dead = true;
-				this.state.lives -= 1;
-				var fake_this = this;
-				setTimeout(function() { fake_this.dead = false; }, 1000);
-			} else {
-				// console.log("cam rot: "+this.scene.camera.rotation + "   (level3 - player - die)"); // proof that rotation is not influenced by anything else
-
-				this.dead = true;
-
-				// this.rotation = Math.PI / 2;
-				this.setHeight(this.getHeight() / 4);
-				this.collisionArea.body.useBoxCollision();
-
-				this.scene.camera.shake(50, 50, 500);
-
-				let player: Player = this;
-				setTimeout(() => {
-
-					player.kill();
-					this.emit("death");
-
-				}, 550);
-			}
-		}
-	}
-
-	pointerDown(pe: any) {
-		if (pe.pointerType === ex.Input.PointerType.Touch) {
-			// this alert works, jumping doesn't :'(
-			alert("touch pointer down");
-			this.jump();
-			this.jumpFlag = true;
-		}
-	}
-
-	private isGround(): boolean {
-		let groundLevel = this.scene.engine.getWorldBounds().bottom - 50;
-		if (groundLevel - this.getBottom() < 15) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

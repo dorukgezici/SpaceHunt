@@ -20,7 +20,6 @@ export type ITransformDrawPartProvider<T extends string> = () => TransformDrawPa
 
 export class TransformDrawSet<T extends string> implements IDrawableSet, IDrawSet<T> {
 
-	public readonly transformDrawPart: TransformDrawPart<T>;
 	private _selectedState: T;
 	private _enabled: boolean = false;
 	get selectedState() {
@@ -30,12 +29,11 @@ export class TransformDrawSet<T extends string> implements IDrawableSet, IDrawSe
 	constructor(
 		private readonly states: ITransformDrawStateCollection<T>,
 		selectedState: T,
-		transformDrawPartProvider: ITransformDrawPartProvider<T>
+		public readonly transformDrawPart: TransformDrawPart<T>
 	) {
 		this._selectedState = selectedState;
 		const state = states[selectedState];
 		this._enabled = state && state.enabled !== false;
-		this.transformDrawPart = transformDrawPartProvider();
 	}
 
 	changeState(state: T, delta: number): void {

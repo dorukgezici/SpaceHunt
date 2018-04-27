@@ -1,25 +1,26 @@
 import * as ex from "excalibur";
-import resources from "../Resources";
+// import resources from "../Resources";
 
 export default class Ground extends ex.Actor {
 
-	static readonly width: number = 5000;
-	private grassSprite: ex.Sprite;
-
-	constructor(x: number, y: number) {
-		super(x, y, Ground.width, 70, ex.Color.Gray);
+	sprite: ex.Sprite;
+	width: number;
+	static readonly height: number = 40;
+	
+	constructor(x: number, y: number, texture: ex.Texture, width: number) {
+		super(x, y, width, Ground.height, ex.Color.Gray);
 		this.collisionType = ex.CollisionType.Fixed;
-		this.grassSprite = resources.level1.ground.asSprite();
+		this.sprite = texture.asSprite();
+		this.sprite.anchor.setTo(0, 1);
+		this.width = width;
 	}
 
 	draw(ctx: CanvasRenderingContext2D, delta: number): void {
 		let offset = 0;
 
-		while (offset < Ground.width) {
-			this.grassSprite.draw(ctx, this.getLeft() + offset, this.getTop());
-			offset += 413;
+		while (offset < this.width) {
+			this.sprite.draw(ctx, this.getLeft() + offset, this.getBottom());
+			offset += this.sprite.width;
 		}
 	}
 }
-
-

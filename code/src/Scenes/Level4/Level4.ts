@@ -1,137 +1,102 @@
 import * as ex from "excalibur";
-import { Class } from "../../Class";
 import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents, IGameBootstrapState, GameElementDoneType } from "../../GameBootstrap";
-import Ground from "./Ground";
-import Player from "./Player";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
+import Level4Player from "./Level4Player";
 import Cannibal from "./Cannibal";
-import Background from "./Background";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";
 import { modelSize } from "../../Components/Animations/EslanParts";
+import { controlSets } from "../../Components/BasePlayer";
+import BaseLevel from "../../Components/BaseLevel";
+import Resources from "../../Resources";
+import Ground from "../../Components/Ground";
 
-export default class Level4 extends Class<IGameElementEvents> implements IGameElement {
-
+export default class Level4 extends BaseLevel {
 
 	readonly numCannibals: number = 3;
-	readonly sceneKey: string = "level4";
-	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
-	readonly sceneBackgroundColor: ex.Color = ex.Color.Gray;
+	
+	static readonly sceneKey: string = "level4";
+	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
+	static readonly groundTexture: ex.Texture = Resources.level4.ground;
 
-	engine: ex.Engine;
-	scene: ex.Scene;
-	bounds: ex.BoundingBox;
-
-	state: IGameBootstrapState;
-
-	// actors
-	ground: Ground;
-	player: Player;
 	cannibals: Cannibal[] = [];
-	background: Background;
 	vine: Vine;
 	princess: Princess;
 	pot: Pot;
 
-	/*
-	// bubbles
-	bubbles: Bubble[];
-    bubbleCreator: BubbleCreator;
-    */
-
-	loader: ex.Loader;
+	level4Players: Level4Player[];
 
 	constructor(bootstrap: GameBootstrap) {
-		super();
-
-		this.engine = bootstrap.engine;
-		this.scene = new ex.Scene(this.engine);
-		this.bounds = this.engine.getWorldBounds();
-		this.loader = bootstrap.loader;
-
-		this.state = bootstrap.state;
-
-		// Actor creation
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.player = new Player(100, 400, this.levelBounds, this.state);
-		this.player.on("death", () => this.lose());
-		this.player.on("won", () => this.win());
-		this.player.initAnimations();
+		super(
+			Level4.sceneKey,
+			bootstrap,
+			Level4.levelBounds,
+			(bootstrap.state.names.length === 2
+				? ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state), new Level4Player(30, 250, controlSets.controls2, bootstrap.state)]) // two players required
+				: ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state)])), // just one player required
+			Level4.groundTexture,
+			Resources.level4.bg.asSprite()
+		);
 
 		// vine + wife + pot
 		this.vine = new Vine(4800, 0, 28, 2, 0.05);
 		this.princess = new Princess(this.vine);
-		this.pot = new Pot(4800, 550, 5, 5);
-
-		this.background = new Background(0, 0, 400, 400, 5000, this.player);
+		this.pot = new Pot(4800, 550, 150, 150);
 
 		// cannibals
-
 		for (let i = 0; i < this.numCannibals; i++) {
 			const xStart = this.randomIntFromInterval(500, 4500);
 			const speedX = this.randomIntFromInterval(100, 200);
-			// let w = this.randomIntFromInterval(20, 30);
-			// let h = this.randomIntFromInterval(40, 60);
 			const { w, h } = modelSize;
-			this.cannibals.push(new Cannibal(xStart, 600 - 40 - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Ground.height - h / 2, w, h, speedX, 400, 4600));
 		}
 
-		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
-		ex.Physics.acc.setTo(0, 2000);
-		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
-		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+		// player handling - init level-specific animations
+		this.level4Players = this.players as Level4Player[];
+		for (let p of this.level4Players) {
+			p.initAnimations();
+		}
+
+		// add actors to scene
 		this.buildScene();
 	}
 
-	private buildScene = () => {
+	buildScene(): void {
+		super.buildScene();
 
-		// add actors
-		this.scene.add(this.ground);
-		this.scene.add(this.player);
-		this.scene.add(this.background);
-		this.background.z = -1;
+		// add scene specific actors
 		for (let vinePart of this.vine.getAllParts()) {
 			this.scene.add(vinePart);
 		}
 		this.scene.add(this.princess);
 		this.scene.add(this.pot);
-
-		let that = this;
-		this.cannibals.forEach(function (b) {
-			that.scene.add(b);
-		});
-
-		this.engine.addScene(this.sceneKey, this.scene);
-		this.engine.goToScene(this.sceneKey);
+		for (let b of this.cannibals) {
+			this.scene.add(b);
+		}
 	}
 
-	dispose(): void {
-		this.engine.removeScene(this.sceneKey);
-	}
 
-	randomIntFromInterval(min: number, max: number): number {
-		let t: number = Math.floor(Math.random() * (max - min + 1) + min);
-		return t;
+	// modify multiplayer winning / losing: it's sufficient if one player reaches the princess here
+	losers: number = 0;
+	lose = (): void => {
+		if (this.state.lives > 1) {
+			this.state.lives -= 1;
+		} else {
+			this.losers++;
+			if(this.losers >= this.players.length)
+			this.emit("done", {
+				target: this,
+				type: GameElementDoneType.Aborted
+			});
+		}
 	}
 
 	win = (): void => {
-		// alert("won - Level4-won()");
 		this.emit("done", {
 			target: this,
 			type: GameElementDoneType.Finished
 		});
 	}
-
-	lose = (): void => {
-		if (this.state.lives > 1) {
-			this.state.lives -= 1;
-		} else {
-			this.emit("done", {
-				target: this,
-				type: GameElementDoneType.Aborted
-			});	
-		}
-	}
-
+	
 }

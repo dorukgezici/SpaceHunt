@@ -39,7 +39,7 @@ export class DrawAnimation<T extends string> implements IStateSet<T> {
 	}
 
 	changeState(state: T, delta: number = this.delta) {
-		console.log("Animation state changed:", state);
+		// console.log("Animation state changed:", state);
 		this.drawSets.forEach(t => t.changeState(state, delta));
 	}
 

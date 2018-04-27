@@ -1,34 +1,27 @@
 import * as ex from "excalibur";
-import {Class} from "../../Class";
-import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
-import { GameBootstrap, IGameElement, IGameElementEvents, IGameBootstrapState, GameElementDoneType } from "../../GameBootstrap";
-import Ground from "./Ground";
+import { GameBootstrap, IGameElement, IGameElementEvents, GameElementDoneType } from "../../GameBootstrap";
 import Sky from "./Sky";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import Bubble from "./Bubble";
 import BubbleCreator from "./BubbleCreator";
 import Crocodile from "./Crocodile";
 import CrocodileCreator from "./CrocodileCreator";
-import Background from "./Background";
+import { controlSets } from "../../Components/BasePlayer";
+import BaseLevel from "../../Components/BaseLevel";
+import Resources from "../../Resources";
 
-export default class Level2 extends Class<IGameElementEvents> implements IGameElement {
+export default class Level2 extends BaseLevel {
 
-	readonly sceneKey: string = "level2";
-	readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
-	readonly sceneBackgroundColor: ex.Color = ex.Color.Azure;
+	static readonly sceneKey: string = "level2";
+	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 
-	engine: ex.Engine;
-	scene: ex.Scene;
-	bounds: ex.BoundingBox;
+	static readonly groundTexture: ex.Texture = Resources.level2.ground;
 
-	state: IGameBootstrapState;
+	// players
+	level2Players: Level2Player[];
 
-	// actors
-	ground: Ground;
+	// sky
 	sky: Sky;
-	player: Player;
-	oxygenMeter: ex.Label;
-	background: Background;
 
 	// bubbles
 	bubbles: Bubble[];
@@ -38,83 +31,71 @@ export default class Level2 extends Class<IGameElementEvents> implements IGameEl
 	crocodiles: Crocodile[];
 	crocodileCreator: CrocodileCreator;
 
-	loader: ex.Loader;
-
 	constructor(bootstrap: GameBootstrap) {
-		super();
+		super(
+			Level2.sceneKey,
+			bootstrap,
+			Level2.levelBounds,
+			// players[]
+			(bootstrap.state.names.length === 2
+				? ([new Level2Player(100, 400, controlSets.controls1,
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state
+				), new Level2Player(30, 250, controlSets.controls2,
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 530, Level2.levelBounds.top + 50), bootstrap.state
+				)]) // two players required
+				: ([new Level2Player(100, 400, controlSets.controls1,
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state
+				)])), // just one player required
+			Level2.groundTexture,
+			Resources.level2.bg.asSprite(),
+			0.001 // background y movement speed
+		);
 
-		this.engine = bootstrap.engine;
-		this.scene = new ex.Scene(this.engine);
-		this.bounds = this.engine.getWorldBounds();
-		this.loader = bootstrap.loader;
+		// reset physics
+		ex.Physics.acc.setTo(0, 0);
+
+		this.level2Players = this.players as Level2Player[];
+		for (let p of this.level2Players) {
+			// p.initAnimations();
+		}
+
 
 		this.state = bootstrap.state;
 
 		// Actor creation
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
-		this.sky = new Sky(this.bounds.left + 2500, this.bounds.top + 62);
-		this.oxygenMeter = new ex.Label("Oxygen Level: 100/100", this.bounds.left + 30, this.bounds.top + 50);
-		this.oxygenMeter.fontSize = 30;
-		this.player = new Player(0, this.bounds.bottom / 2, this.levelBounds, this.oxygenMeter, this.state);
-		this.player.on("win", this.win.bind(this));
-		this.player.on("death", this.lose.bind(this));
-		this.background = new Background(0, 0, 400, 400, 5000, this.player);
+		this.sky = new Sky(this.levelBounds.right / 2, this.levelBounds.top + 62, this.levelBounds.right, 124);
 		this.bubbles = [];
 		this.crocodiles = [];
 
 		// BubbleCreator for cyclic generation of new bubbles
-		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.player, this.bubbles);
+		this.bubbleCreator = new BubbleCreator(this.engine, this.scene, this.bounds, this.level2Players, this.bubbles);
 
 		// CrocodileCreator for generation of new crocodiles
-		this.crocodileCreator = new CrocodileCreator(bootstrap, this.scene, this.bounds, this.player, this.crocodiles);
+		this.crocodileCreator = new CrocodileCreator(bootstrap, this.scene, this.bounds, this, this.crocodiles);
 
-		this.engine.backgroundColor = this.sceneBackgroundColor; // set background color
-		ex.Physics.acc.setTo(0, 0);
-		this.scene.camera.addStrategy(new ex.LockCameraToActorAxisStrategy(this.player, ex.Axis.X));
-		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
 		this.buildScene();
 	}
 
-	private buildScene = () => {
-		// add actors
-		this.scene.add(this.ground);
-		this.scene.add(this.sky);
-		this.scene.add(this.player);
-		this.scene.add(this.background);
+	buildScene(): void {
+		super.buildScene();
 
-		this.background.z = -1;
-		this.scene.addUIActor(this.oxygenMeter);
+		// add actors
+		this.scene.add(this.sky);
+		for (let p of this.level2Players) {
+			this.scene.addUIActor(p.oxygenMeter);
+		}
+
+		this.ground.z = 1;
 
 		// start bubbleCreator and crocodileCreator
 		this.bubbleCreator.start();
 		this.crocodileCreator.start();
-
-		this.engine.addScene(this.sceneKey, this.scene);
-		this.engine.goToScene(this.sceneKey);
 	}
 
 	dispose(): void {
-		this.engine.removeScene(this.sceneKey);
 		this.bubbleCreator.stop();
 		this.crocodileCreator.stop();
-	}
-
-	win() {
-		this.emit("done", {
-			target: this,
-			type: GameElementDoneType.Finished
-		});
-	}
-
-	lose() {
-		if (this.state.lives > 1) {
-			this.state.lives -= 1;
-		} else {
-			this.emit("done", {
-				target: this,
-				type: GameElementDoneType.Aborted
-			});	
-		}
+		super.dispose();
 	}
 
 }

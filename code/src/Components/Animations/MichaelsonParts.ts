@@ -21,9 +21,13 @@ export interface IBodyPart {
 }
 
 export const image = require<string>("../../Resources/Images/Michaelsons1.png");
+export const imageBro = require<string>("../../Resources/Images/Michaelsons1.png");
 export const imageDuck = require<string>("../../Resources/Images/duckLegs.png");
+export const imageDuckBro = require<string>("../../Resources/Images/duckLegs.png");
 export const texture = new Texture(image);
+export const textureBro = new Texture(imageBro);
 export const textureDuck = new Texture(imageDuck);
+export const textureDuckBro = new Texture(imageDuckBro);
 
 export const modelSize = {
 	w: 45,
@@ -224,6 +228,20 @@ const legDuckLeft: IBodyPart = {
 
 export type IBodyParts = keyof typeof bodyParts;
 const _sprites: ObjectValueMap<typeof bodyParts, CustomSprite> = {} as any;
+const _spritesBro: ObjectValueMap<typeof bodyParts, CustomSprite> = {} as any;
+
+const texturesBro = {
+	armRight: textureBro,
+	armLeft: textureBro,
+	legRight: textureBro,
+	legLeft: textureBro,
+	legDuckRight: textureDuckBro,
+	legDuckLeft: textureDuckBro,
+	headRight: textureBro,
+	headLeft: textureBro,
+	torso: textureBro,
+};
+
 const _bodyParts = {
 	armRight,
 	armLeft,
@@ -271,9 +289,11 @@ const shiftRight = (part: IBodyPart) => {
 
 allParts.forEach(centerPart);
 rightParts.forEach(shiftRight);
-Object.entries(_bodyParts).forEach(([key, { texture, sourceLocation: loc }]) =>
-	_sprites[key as IBodyParts] = new CustomSprite(texture, loc.x, loc.y, loc.w, loc.h)
-);
+Object.entries(_bodyParts).forEach(([key, { texture, sourceLocation: loc }]) => {
+	_sprites[key as IBodyParts] = new CustomSprite(texture, loc.x, loc.y, loc.w, loc.h);
+	_spritesBro[key as IBodyParts] = new CustomSprite(texturesBro[key as keyof typeof _bodyParts], loc.x, loc.y, loc.w, loc.h);
+});
 
 export const bodyParts = _bodyParts;
 export const sprites = _sprites;
+export const spritesBro = _spritesBro;

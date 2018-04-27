@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import Player from "./Player";
+import Level2Player from "./Level2Player";
 import resources from "../../Resources";
 import { GameBootstrap } from "../../GameBootstrap";
 
@@ -23,11 +23,11 @@ export default class Crocodile extends ex.Actor {
 
 		this.vel = new ex.Vector(speedX, speedY);
 
-		// On collision check if Player and trapp if true
+		// On collision check if Level2Player and trapp if true
 		this.on("precollision", this.onPrecollision);
 
 		// Sprite drawings
-		const spriteSheet = new ex.SpriteSheet(resources.crocodile, 1, 8, Crocodile.size.w, Crocodile.size.h);
+		const spriteSheet = new ex.SpriteSheet(resources.level2.crocodile, 1, 8, Crocodile.size.w, Crocodile.size.h);
 		const animation = spriteSheet.getAnimationForAll(bootstrap.engine, 100);
 		this.addDrawing("idle", animation as any);
 	}
@@ -35,17 +35,10 @@ export default class Crocodile extends ex.Actor {
 	// raised every frame while colliding
 	onPrecollision(ev: any) {
 		// Trap player if collided
-		if (ev.other.constructor.name === "Player") {
-			let player: Player = ev.other;
+		if (ev.other.constructor.name === "Level2Player") {
+			let player: Level2Player = ev.other;
 			player.die("You got eaten by a crocodile!");
 		}
-	}
-
-	draw(ctx: CanvasRenderingContext2D, delta: number) {
-		super.draw(ctx, delta);
-		// Drawing asset
-		// let sprite = this.crocodileTexture.asSprite();
-		// sprite.draw(ctx, this.getRight(), this.getCenter().y);
 	}
 
 	update(engine: ex.Engine, delta: number) {

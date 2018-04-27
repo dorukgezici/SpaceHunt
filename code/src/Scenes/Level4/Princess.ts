@@ -2,6 +2,7 @@ import * as ex from "excalibur";
 import Vine from "../Level1/Vine";
 import { modelSize } from "../../Components/Animations/PrincessParts";
 import { princessAnimationFactory } from "../../Components/Animations/PrincessAnimation";
+import BasePlayer from "../../Components/BasePlayer";
 
 export default class Princess extends ex.Actor {
 
@@ -16,6 +17,7 @@ export default class Princess extends ex.Actor {
 		this.vLast = this.vine.getAllParts()[this.vine.getAllParts().length - 1];
 		this.collisionType = ex.CollisionType.Passive;
 		princessAnimationFactory.attachTo(this);
+		this.on("precollision", this.onPrecollision);
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -23,6 +25,13 @@ export default class Princess extends ex.Actor {
 		this.x = this.vLast.x;
 		this.y = this.vLast.y;
 		this.rotation = this.vLast.rotation;
+	}
+
+	onPrecollision(ev: any) {
+		if (ev.other instanceof BasePlayer) {
+			let player: BasePlayer = ev.other;
+			player.win("you won by saving the princess");
+		}
 	}
 
 }

@@ -3,7 +3,7 @@ import { cubicEasing, IDrawBase, IBeforeDraw, ITransformation } from "./Transfor
 import { IDrawSetProvider } from "./DrawAnimation";
 import { PlainDrawSet } from "./PlainDrawSet";
 import { Sprite, Vector } from "excalibur";
-import { bodyParts, IBodyPart, sprites, IBodyParts, IBounds } from "./MichaelsonParts";
+import { bodyParts, IBodyPart, sprites, spritesBro, IBodyParts, IBounds } from "./MichaelsonParts";
 import { ITransformDrawStateCollection } from "./TransformDrawSet";
 
 export const playerAnimationTypes = [
@@ -67,13 +67,18 @@ const _states = {
 
 export const states = _states as ObjectValueMap<typeof _states, IPlayerAnimations>;
 
+type ISprites = typeof sprites;
 type IPA = IPlayerAnimations;
 type ITData = ITransformDrawSetProviderData<IPA>;
-interface IRLData extends ITData {
+interface IRLData {
+	states: ITData["states"];
 	baseStates?: ITransformDrawStateCollection<IPABase>;
+	selectedState: ITData["selectedState"];
+	beforeDraw?: (sprites: ISprites) => IBeforeDraw<IPlayerAnimations>;
+	drawBase: (sprites: ISprites) => IDrawBase<IPlayerAnimations>;
 }
 
-const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IBeforeDraw<IPlayerAnimations> => {
+const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts) => (sprites: ISprites): IBeforeDraw<IPlayerAnimations> => {
 	const bpr = bodyParts[bodyPartRight];
 	const bpl = bodyParts[bodyPartLeft];
 
@@ -85,7 +90,7 @@ const beforeDrawFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts):
 	};
 };
 
-const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): IDrawBase<IPlayerAnimations> => {
+const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts) => (sprites: ISprites): IDrawBase<IPlayerAnimations> => {
 	const spr = sprites[bodyPartRight];
 	const spl = sprites[bodyPartLeft];
 	const bpr = bodyParts[bodyPartRight].anchor;
@@ -99,13 +104,20 @@ const drawBaseFactory = (bodyPartRight: IBodyParts, bodyPartLeft: IBodyParts): I
 	};
 };
 
-export const baseDataExtender = (irlData: IRLData) => {
+export const baseDataExtender = (irlData: IRLData, sprites: ISprites) => {
+	const { states, selectedState } = irlData;
+	const itData = {
+		states,
+		selectedState,
+		beforeDraw: irlData.beforeDraw && irlData.beforeDraw(sprites),
+		drawBase: irlData.drawBase(sprites)
+	};
 	if (irlData.baseStates)
 		Object.entries(irlData.baseStates).forEach(([key, state]) => {
-			irlData.states[key + "-right" as IPA] = state;
-			irlData.states[key + "-left" as IPA] = state;
+			itData.states[key + "-right" as IPA] = state;
+			itData.states[key + "-left" as IPA] = state;
 		});
-	return irlData as ITData;
+	return itData as ITData;
 };
 
 export const selectedState = "idle-right";
@@ -454,10 +466,10 @@ export const legDuckBack: IRLData = {
 
 export const torso: IRLData = {
 	selectedState,
-	beforeDraw: () => {
+	beforeDraw: () => () => {
 		return { translateX: bodyParts.torso.modelLocation.x, translateY: bodyParts.torso.modelLocation.y };
 	},
-	drawBase: (ctx) => {
+	drawBase: (sprites) => (ctx) => {
 		const { x, y } = bodyParts.torso.anchor;
 		sprites.torso.draw(ctx, -x, -y);
 	},
@@ -529,7 +541,7 @@ export const torso: IRLData = {
 
 export const head: IRLData = {
 	selectedState,
-	beforeDraw: (_, __, ___, state) => {
+	beforeDraw: () => (_, __, ___, state) => {
 		const { x: xr, y: yr } = bodyParts.headRight.modelLocation;
 		const { x: xl, y: yl } = bodyParts.headLeft.modelLocation;
 		if (state.includes("right"))
@@ -537,7 +549,7 @@ export const head: IRLData = {
 		else
 			return { translateX: xl, translateY: yl };
 	},
-	drawBase: (ctx, _, __, state) => {
+	drawBase: (sprites) => (ctx, _, __, state) => {
 		const { x: xr, y: yr } = bodyParts.headRight.anchor;
 		const { x: xl, y: yl } = bodyParts.headLeft.anchor;
 		if (state.includes("right"))
@@ -629,7 +641,11 @@ export const allData = [
 ];
 
 const animationProviders = allData
-	.map(baseDataExtender)
-	.map(createTransformDrawSetProvider);
+	.map(t => baseDataExtender(t, sprites))
+	.map(t => createTransformDrawSetProvider(t));
+const animationProvidersBro = allData
+	.map(t => baseDataExtender(t, spritesBro))
+	.map(t => createTransformDrawSetProvider(t));
 
 export const playerAnimationFactory = new TransformDrawAnimationFactory(animationProviders);
+export const brotherAnimationFactory = new TransformDrawAnimationFactory(animationProvidersBro);
