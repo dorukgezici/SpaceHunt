@@ -1,14 +1,16 @@
 import { TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../../Components/Animations/DrawAnimationFactory";
-import { modelSize } from "../../Components/Animations/MichaelsonParts";
+import { modelSize, spritesBro, sprites } from "../../Components/Animations/MichaelsonParts";
 import { allData } from "../../Components/Animations/MichelsonAnimation";
 import Level1Player from "./Level1Player";
 import { IBeforeDraw } from "../../Components/Animations/TransformDrawPart";
 import { IPlayerAnimations } from "../MovementTestLevel/PlayerAnimations";
 
-export function attachPlayerAnimations(player: Level1Player) {
+export function attachPlayerAnimations(player: Level1Player, isBrother: boolean = false) {
 
+	const sprs = isBrother ? spritesBro : sprites;
 	const data = allData.map(data => {
-		const bd = data.beforeDraw;
+		const { states, selectedState } = data;
+		const bd = data.beforeDraw && data.beforeDraw(sprs);
 		const beforeDraw: typeof bd = function (_, __, position) {
 			const t = bd && bd.apply(this, arguments);
 			let translateX: number = (t && t.translateX) || 0;
@@ -21,8 +23,10 @@ export function attachPlayerAnimations(player: Level1Player) {
 			return { translateX, translateY };
 		};
 		return {
-			...data,
-			beforeDraw
+			states,
+			selectedState,
+			beforeDraw,
+			drawBase: data.drawBase(sprs)
 		};
 	});
 
