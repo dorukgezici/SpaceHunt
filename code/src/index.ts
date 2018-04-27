@@ -1,20 +1,27 @@
-import { GameBootstrapType } from "./GameBootstrap";
-
-document.addEventListener("DOMContentLoaded", function () {
-
-	// check whether the user is using Internet Explorer
+function init() {
+	/**
+	 * Check whether the user is using Internet Explorer.
+	 */
 	if (navigator.userAgent.match(/MSIE|Trident/)) {
-		// criticise the user
+		/**
+		 * Criticise the user.
+		 */
 		(document.getElementById("init-message") as HTMLDivElement).innerText = "Internet Explorer is currently not supported.";
+	} else if (navigator.userAgent.indexOf("Edge") > -1) {
+		/**
+		 * Nope, even Edge can't handle our game.
+		 */
+		(document.getElementById("init-message") as HTMLDivElement).innerText = "Edge isn't good enough to be able to run our game. Sorry.";
 	} else {
-		// do not use ES6 imports as old browsers *khm* IE *khm* may not be able to handle loading of other modules without additional polyfill support.
-		const { GameBootstrap } = require("./GameBootstrap") as { GameBootstrap: GameBootstrapType };
-		// create new GameBootstrap object
-		const gb = new GameBootstrap();
-		// TODO: move to development environment only
-		(window as any).bootstrap = gb;
-		// start the game
-		gb.start();
+		/**
+		 * Do NOT import this method in the beginning of this file, as
+		 * some older browser *khm* IE *khm* may not throw syntax errors
+		 * that are thrown when imports are loaded. Instead, we want to
+		 * display the browser support message as shown above.
+		 */
+		const { default: gameInit } = require<{ default: Function }>("./bootstrap");
+		gameInit();
 	}
+}
 
-});
+document.addEventListener("DOMContentLoaded", init);

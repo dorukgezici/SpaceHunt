@@ -6,6 +6,16 @@ export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };
 }
 
+/**
+ * These resources are loaded before GameBootstrap is initialised.
+ */
+export const initialResources: string[] = [
+	michealsonTexture.src,
+	textureDuck.src,
+	require("./Resources/Images/BgSaturn-bg.png"),
+	require("./Resources/Images/BgSaturn-saturn.png")
+];
+
 const resources = {
 	level1: {
 		bg: new Texture(require("./Resources/Images/Level1/JungleBackground.png")),
@@ -35,9 +45,9 @@ const resources = {
 		fontO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy Outline.ttf"), "blob"),
 		fontAO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy AltOutline.ttf"), "blob"),
 	},
-	michealsonTexture,
+	michealsonTexture: michealsonTexture.exTexture(),
 	eslanTexture,
-	textureDuck
+	textureDuck: textureDuck.exTexture()
 };
 
 export default resources as IResources as typeof resources;

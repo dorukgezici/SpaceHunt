@@ -1,4 +1,4 @@
-import { Engine, GameEvent, Color, Input, Loader} from "excalibur";
+import { Engine, GameEvent, Color, Input, Loader } from "excalibur";
 import { IEvented } from "./Class";
 import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
 import Menu from "./Scenes/Menu/Menu";
@@ -66,8 +66,9 @@ export interface IGameElement<T = {}> extends IEvented<T & IGameElementEvents> {
  */
 export interface IGameBootstrapState {
 	title: string | null;
-	lives: number; // [1, 2, 3, ...]
-	oxygen: number; // [0, 1]
+	loaded: boolean;
+	lives: number;
+	oxygen: ReadonlyArray<number>; // array of numbers from interval [0, 1]
 	showOxygen: boolean;
 	names: ReadonlyArray<string>;
 }
@@ -75,9 +76,10 @@ export interface IGameBootstrapState {
 const defaultGameBootstrapState: IGameBootstrapState = {
 	title: null,
 	lives: 5,
-	oxygen: 1,
+	oxygen: [],
 	showOxygen: false,
-	names: ["a" , "b"]
+	names: ["Freddy", "Bro"],
+	loaded: false,
 };
 
 /**
@@ -110,20 +112,17 @@ export class GameBootstrap {
 	private sceneIndex = 0;
 	private currentGameElement: IGameElement | null = null;
 	private menuItems = [{
-		index: 3,
+		index: 2,
 		name: "Level 1"
 	}, {
-		index: 5,
+		index: 4,
 		name: "Level 2"
 	}, {
-		index: 7,
+		index: 6,
 		name: "Level 3"
 	}, {
-		index: 9,
+		index: 8,
 		name: "Level 4"
-	}, {
-		index: 1,
-		name: "StarWars Intro"
 	}, {
 		index: 0,
 		name: "Start the Game"
@@ -131,7 +130,6 @@ export class GameBootstrap {
 
 	private levels: (() => IGameElement)[] = [
 		() => new NameEnquiry(this),
-		() => new StarWarsIntro(),
 		() => new Intro(this, Stories.level1),
 		() => new Level1(this),
 		() => new Intro(this, Stories.level2),
@@ -224,7 +222,8 @@ export class GameBootstrap {
 					this.state.lives -= 1;
 					this.resetLevel();
 				} else {
-					this.showDeathStory();
+					this.showMenu();
+					// this.showDeathStory();
 				}
 			}
 		});
@@ -236,7 +235,14 @@ export class GameBootstrap {
 	 */
 	start() {
 		this.showMenu();
-		this.engine.start(this.loader);
+		this.loader.load().then(() => {
+			this.state.loaded = true;
+			/**
+			 * Do not start the engine with `this.loader` as this will try to load
+			 * resources twice, resulting in an error due to a bug in Excalibur.
+			 */
+			this.engine.start();
+		});
 	}
 
 }

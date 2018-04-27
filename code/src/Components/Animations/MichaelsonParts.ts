@@ -1,5 +1,5 @@
 import { Texture, Sprite } from "excalibur";
-import { CustomSprite } from "./AnimationHelpers";
+import { CustomSprite, CustomTexture } from "./AnimationHelpers";
 
 export interface IBounds {
 	x: number;
@@ -9,7 +9,7 @@ export interface IBounds {
 }
 
 export interface IBodyPart {
-	texture: Texture;
+	texture: Texture | CustomTexture;
 	// Part of the source image that represents the body part
 	sourceLocation: IBounds;
 	// Position of the body part in player model
@@ -24,10 +24,10 @@ export const image = require<string>("../../Resources/Images/Michaelsons1.png");
 export const imageBro = require<string>("../../Resources/Images/Michaelsons1.png");
 export const imageDuck = require<string>("../../Resources/Images/duckLegs.png");
 export const imageDuckBro = require<string>("../../Resources/Images/duckLegs.png");
-export const texture = new Texture(image);
-export const textureBro = new Texture(imageBro);
-export const textureDuck = new Texture(imageDuck);
-export const textureDuckBro = new Texture(imageDuckBro);
+export const texture = new CustomTexture(image);
+export const textureBro = new CustomTexture(imageBro);
+export const textureDuck = new CustomTexture(imageDuck);
+export const textureDuckBro = new CustomTexture(imageDuckBro);
 
 export const modelSize = {
 	w: 45,
@@ -36,7 +36,7 @@ export const modelSize = {
 
 export const modelDuckSize = {
 	w: 58,
-	h: 90
+	h: 100
 };
 
 export const modelSwimSize = {

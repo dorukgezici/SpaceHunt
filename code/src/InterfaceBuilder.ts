@@ -39,7 +39,7 @@ export abstract class Component<T extends JSX.AttrsType = JSX.DefaultAttrs, IEve
  */
 export interface IComponentClassDefault<T extends JSX.AttrsType, E extends JSX.ElementBase = JSX.ElementBase> {
 	new(): Component<T, E>;
-	new(attrs: JSX.AttrsValue<T>): Component<T, E>;
+	new(attrs: JSX.Attrs<T>): Component<T, E>;
 	prototype: Component<T, E>;
 	/**
 	 * Instance of the component for JSX engine to re-use instead of creating a new instance.
@@ -50,7 +50,7 @@ export interface IComponentClassDefault<T extends JSX.AttrsType, E extends JSX.E
 	/**
 	 * If implemented, used by the JSX engine to retrieve component instances. An existing or newly created instance may be returned. If no value is returned, the `instance` property is taken.
 	 */
-	instanceProvider?(attrs: JSX.AttrsValue<T>, children: JSX.Children): Component<T, E> | unset;
+	instanceProvider?(attrs: JSX.Attrs<T>, children: JSX.Children): Component<T, E> | unset;
 	/**
 	 * Called by the JSX engine to log newly created component instance, if implemented.
 	 */
@@ -71,7 +71,7 @@ export interface IComponentClassInstance<T extends JSX.AttrsType, E extends JSX.
 	/**
 	 * If implemented, used by the JSX engine to retrieve component instances. An existing or newly created instance may be returned. If no value is returned, the `instance` property is taken.
 	 */
-	instanceProvider?(attrs: JSX.AttrsValue<T>, children: JSX.Children): Component<T, E> | unset;
+	instanceProvider?(attrs: JSX.Attrs<T>, children: JSX.Children): Component<T, E> | unset;
 	/**
 	 * Called by the JSX engine to log newly created component instance, if implemented.
 	 */
@@ -92,7 +92,7 @@ export interface IComponentClassInstanceProvider<T extends JSX.AttrsType, E exte
 	/**
 	 * If implemented, used by the JSX engine to retrieve component instances. An existing or newly created instance may be returned. If no value is returned, the `instance` property is taken.
 	 */
-	instanceProvider(attrs: JSX.AttrsValue<T>, children: JSX.Children): Component<T, E> | unset;
+	instanceProvider(attrs: JSX.Attrs<T>, children: JSX.Children): Component<T, E> | unset;
 	/**
 	 * Called by the JSX engine to log newly created component instance, if implemented.
 	 */
@@ -261,7 +261,7 @@ export namespace InterfaceBuilder {
 		}
 	}
 
-	function assignAttributes<T>(attrs: JSX.AttrsValue<T>, element: HTMLElement): void {
+	function assignAttributes<T>(attrs: JSX.Attrs<T>, element: HTMLElement): void {
 		if (!attrs)
 			return;
 		for (let attr in attrs) {
@@ -283,7 +283,7 @@ export namespace InterfaceBuilder {
 	 * @param attrs Attributes to assign.
 	 * @param children Children to append.
 	 */
-	export function createIntrinsicElement<T extends JSX.AttrsType>(name: string, attrs: JSX.AttrsValue<T>, children: JSX.NodeCollection[]): JSX.Element {
+	export function createIntrinsicElement<T extends JSX.AttrsType>(name: string, attrs: JSX.Attrs<T>, children: JSX.NodeCollection[]): JSX.Element {
 		const elt = document.createElement(name);
 		assignAttributes(attrs, elt);
 
@@ -320,7 +320,7 @@ export namespace InterfaceBuilder {
 	 * @param attrs Attributes to assign.
 	 * @param children Children to append.
 	 */
-	export function createFunctionalElement<T extends JSX.AttrsType>(provider: JSX.Provider<T>, attrs: JSX.AttrsValue<T>, children: JSX.NodeCollection[]): JSX.ElementCollection {
+	export function createFunctionalElement<T extends JSX.AttrsType>(provider: JSX.Provider<T>, attrs: T, children: JSX.NodeCollection[]): JSX.ElementCollection {
 		return provider(attrs, flatten(children));
 	}
 
@@ -367,7 +367,7 @@ export namespace InterfaceBuilder {
 	 */
 	export function createElement<T extends JSX.AttrsType>(
 		name: string,
-		attrs: JSX.AttrsValue<T>,
+		attrs: JSX.Attrs<T>,
 		...children: JSX.NodeCollection[]
 	): JSX.Element;
 	/**
@@ -378,7 +378,7 @@ export namespace InterfaceBuilder {
 	 */
 	export function createElement<T extends JSX.AttrsType>(
 		provider: JSX.Provider<T>,
-		attrs: JSX.AttrsValue<T>,
+		attrs: JSX.Attrs<T>,
 		...children: JSX.NodeCollection[]
 	): JSX.ElementCollection;
 	/**
@@ -389,7 +389,7 @@ export namespace InterfaceBuilder {
 	 */
 	export function createElement<T extends JSX.AttrsType, C extends Component<T>>(
 		componentClass: IComponentClass<T>,
-		attrs: JSX.AttrsValue<T>,
+		attrs: JSX.Attrs<T>,
 		...children: JSX.NodeCollection[]
 	): JSX.ElementCollection;
 	export function createElement<T extends JSX.AttrsType>(
@@ -398,11 +398,11 @@ export namespace InterfaceBuilder {
 		...children: JSX.NodeCollection[]
 	): JSX.ElementCollection {
 		if (typeof factory === "string")
-			return createIntrinsicElement(factory, attrs, children);
+			return createIntrinsicElement(factory, attrs || {}, children);
 		else if (typeof factory.prototype.render === "function")
-			return createComponentClassElement(factory as any, attrs, children);
+			return createComponentClassElement(factory as any, attrs || {}, children);
 		else
-			return createFunctionalElement(factory as any, attrs, children);
+			return createFunctionalElement(factory as any, attrs || {}, children);
 	}
 
 	/**

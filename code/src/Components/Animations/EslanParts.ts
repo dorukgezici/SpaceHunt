@@ -7,7 +7,7 @@ export const texture = new Texture(image);
 
 export const modelSize = {
 	w: 38,
-	h: 143
+	h: 133
 };
 
 const armSize = {
@@ -188,7 +188,7 @@ const centerPart = (part: IBodyPart) => {
 	ml.x -= modelSize.w / 2;
 	ml.y -= modelSize.h / 2;
 	// ml.y -= modelSize.h;
-	ml.y += 20;
+	// ml.y += 16;
 	ml.x += part.anchor.x;
 	ml.y += part.anchor.y;
 };

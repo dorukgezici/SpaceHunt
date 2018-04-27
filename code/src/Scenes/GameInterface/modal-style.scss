@@ -1,0 +1,124 @@
+$modal-size: 400px;
+.modal-wrapper {
+	perspective: 600px;
+	overflow: hidden;
+	background-image: url("../../Resources/Images/stars.png");
+	background-position: center;
+	background-size: cover;
+	height: 100%;
+	>.modal-content {
+		transition: all 1s;
+	}
+	>.modal-overlay {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		display: none;
+	}
+	>.modal-dialog {
+		display: none;
+		width: $modal-size * 2;
+		height: $modal-size * 2;
+		transition: all 1s;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		right: - ($modal-size * 2 + 50px);
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.9);
+		overflow: hidden;
+		box-shadow: 0 0 96px #ffff;
+		>.container {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 50%;
+			>.content {
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+				right: 0;
+				color: rgba(0, 0, 0, 0.8);
+				>.modal-content-wrapper {
+					position: absolute;
+					right: 0;
+					left: 30%;
+					top: 30%;
+					bottom: 15%;
+					padding-right: 24px;
+					display: flex;
+					flex-direction: column;
+					justify-content: center;
+				}
+				h1,
+				h2,
+				h3,
+				h4,
+				h5,
+				h6 {
+					margin-top: 0;
+					color: #e0a723;
+					font-weight: 100;
+					text-shadow: 0 0 2px white, 0 0 4px white;
+				}
+				p,
+				li,
+				span {
+					text-shadow: 0 0 2px white, 0 0 4px white;
+				}
+			}
+		}
+		>.svg {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			pointer-events: none;
+			>svg {
+				position: absolute;
+				&.modal-dialog-box {
+					circle {
+						fill: none;
+						stroke: #e5b13a;
+						stroke-width: 64;
+						stroke-dasharray: 2;
+						animation: svg-modal-dialog-box .2s infinite normal forwards linear;
+					}
+					&.first circle {
+						transform: scale(1.2);
+					}
+					&.second circle {
+						transform: translateY(-20%) translateX(-14%) scale(1.2);
+					}
+				}
+			}
+		}
+	}
+	&.toggled {
+		>.modal-content {
+			transform: rotateY(22deg) scale(0.8) translateX(-10vw);
+			filter: grayscale(0.7) brightness(0.7);
+			pointer-events: none;
+		}
+		>.modal-overlay {
+			display: block;
+		}
+		>.modal-dialog {
+			right: -$modal-size;
+		}
+	}
+}
+
+@keyframes svg-modal-dialog-box {
+	from {
+		stroke-dashoffset: 4;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}

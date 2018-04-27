@@ -640,10 +640,10 @@ export const allData = [
 	armFront,
 ];
 
-const animationProviders = allData
+export const animationProviders = allData
 	.map(t => baseDataExtender(t, sprites))
 	.map(t => createTransformDrawSetProvider(t));
-const animationProvidersBro = allData
+export const animationProvidersBro = allData
 	.map(t => baseDataExtender(t, spritesBro))
 	.map(t => createTransformDrawSetProvider(t));
 

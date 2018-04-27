@@ -1,24 +1,32 @@
 import { Class } from "../Class";
 
 interface IEvents {
-	done: AnimationSequence;
+	done: {
+		cancelled: boolean;
+		target: AnimationSequence;
+	};
+	cancelled: AnimationSequence; // whether the animation has been cancelled
+	finished: AnimationSequence; // whether the animation has been cancelled
 }
 
 interface IAnimation {
 	from: number;
 	to: number;
 	duration: number;
+	easing?: (path: number) => number;
 	callback: (value: number) => void;
 }
 
-type IPart = IAnimation | AnimationSequence | (() => void);
-type ISequence = (IPart | IPart[] | number)[];
+type IAsyncPart = IAnimation | AnimationSequence | (() => void);
+type IPart = IAsyncPart | IAsyncPart[] | number | Promise<any> | null | undefined | boolean;
+type ISequence = IPart[];
 
 export class AnimationSequence extends Class<IEvents> {
 
 	private index: number = -1; // not running if less than 0
 	private awaiting = 0;
 	private animationFrames: { [key: string]: number } = {};
+	private subSequences: AnimationSequence[] = [];
 	private timeoutId = NaN;
 	private timestamp = 0;
 
@@ -41,10 +49,14 @@ export class AnimationSequence extends Class<IEvents> {
 			this.done();
 			return;
 		}
-		let step = this.states[this.index] as IPart | IPart[] | number;
+		let step = this.states[this.index] as IPart;
 		this.awaiting = 0;
-		if (typeof step === "number") {
+		if (!step || step === true) {
+			this.performStep();
+		} else if (typeof step === "number") {
 			this.doDelay(step);
+		} else if (step instanceof Promise) {
+			this.awaitPromise(step);
 		} else {
 			for (let item of Array.isArray(step) ? step : [step]) {
 				if (typeof item === "function") {
@@ -57,8 +69,17 @@ export class AnimationSequence extends Class<IEvents> {
 					});
 				} else if (item instanceof AnimationSequence) {
 					this.awaiting++;
+					this.subSequences.push(item);
 					item.start();
-					item.once("done", () => this.checkProgress());
+					item.once("done", ({ cancelled }) => {
+						const index = this.subSequences.indexOf(item as AnimationSequence);
+						this.subSequences.splice(index, 1);
+						if (cancelled) {
+							this.cancel();
+						} else {
+							this.checkProgress();
+						}
+					});
 				} else {
 					this.doAnimation(item);
 				}
@@ -72,7 +93,7 @@ export class AnimationSequence extends Class<IEvents> {
 		const start = this.timestamp = performance.now();
 		const end = start + animation.duration;
 		const duration = end - start;
-		const { from, to, callback } = animation;
+		const { from, to, callback, easing } = animation;
 		const diff = to - from;
 		const render = (delta: number) => {
 			if (delta > end) {
@@ -80,7 +101,9 @@ export class AnimationSequence extends Class<IEvents> {
 				this.checkProgress();
 				delete this.animationFrames[id];
 			} else {
-				const path = (delta - start) / duration;
+				let path = (delta - start) / duration;
+				if (easing)
+					path = easing(path);
 				const value = path * diff + from;
 				callback(value);
 				this.animationFrames[id] = requestAnimationFrame(render);
@@ -94,6 +117,12 @@ export class AnimationSequence extends Class<IEvents> {
 			this.performStep();
 	}
 
+	private awaitPromise(promise: Promise<any>) {
+		promise
+			.then(() => this.performStep())
+			.catch(() => this.cancel());
+	}
+
 	private doDelay(delay: number) {
 		this.timeoutId = setTimeout(() => {
 			this.timeoutId = NaN;
@@ -101,20 +130,29 @@ export class AnimationSequence extends Class<IEvents> {
 		}, delay);
 	}
 
-	private done() {
+	private done(cancelled = false) {
 		this.index = -1;
-		this.emit("done", this);
+		if (cancelled)
+			this.emit("cancelled", this);
+		else
+			this.emit("finished", this);
+		this.emit("done", {
+			target: this,
+			cancelled
+		});
 	}
 
 	cancel() {
-		if (!Number.isNaN(this.timeoutId)) {
+		if (!Number.isNaN(this.timeoutId))
 			clearTimeout(this.timeoutId);
-			this.timeoutId = NaN;
-		}
-		for (let symbol in Object.getOwnPropertySymbols(this.animationFrames))
+		for (let symbol of Object.getOwnPropertySymbols(this.animationFrames))
 			cancelAnimationFrame(this.animationFrames[symbol]);
+		for (let subSequence of this.subSequences)
+			subSequence.cancel();
+		this.subSequences = [];
 		this.animationFrames = {};
-		this.done();
+		this.timeoutId = NaN;
+		this.done(true);
 	}
 
 }

@@ -7,9 +7,13 @@
     "url": "https://course-gitlab.tut.fi/sweng_2018/g10---thegroup.git"
   },
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.4",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "core-js": "^2.5.3",
     "excalibur": "0.14.0",
-    "npm": "^6.0.0"
+    "particles.js": "^2.0.0"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.6",

@@ -6,6 +6,7 @@ import Level3 from "./Level3";
 import BaseLevel from "../../Components/BaseLevel";
 import Ground from "../../Components/Ground";
 import { IGameBootstrapState } from "../../GameBootstrap";
+import { modelDuckSize, modelSize } from "../../Components/Animations/MichaelsonParts";
 
 const states = {
 	default: maStates.walkRight,
@@ -145,10 +146,8 @@ export default class Level3Player extends BasePlayer {
 
 		this.posYold = this.pos.y;
 
-		if (stateChanged) {
-			debugger;
+		if (stateChanged) 
 			this.animation.changeState(this.animationState);
-		}
 
 	}
 
@@ -160,7 +159,7 @@ export default class Level3Player extends BasePlayer {
 		if (this.ducked)
 			return; // already ducked
 		this.ducked = true;
-		this.setHeight(this.getHeight() / 2);
+		this.setHeight(modelDuckSize.h);
 		this.collisionArea.body.useBoxCollision();
 	}
 
@@ -168,7 +167,7 @@ export default class Level3Player extends BasePlayer {
 		if (!this.ducked)
 			return; // already unducked
 		this.ducked = false;
-		this.setHeight(this.getHeight() * 2);
+		this.setHeight(modelSize.h);
 		this.collisionArea.body.useBoxCollision();
 	}
 
