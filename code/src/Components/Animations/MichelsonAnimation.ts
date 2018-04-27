@@ -378,19 +378,19 @@ export const legBack: IRLData = {
 		"swim-right": {
 			duration: 500,
 			start: { rotate: deg90 + 0.3, ...baseLegTransform },
-			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 - 0.3, ...baseLegTransform },
 			transitionDuration: 200
 		},
 		"swim-right-fast": {
 			duration: 300,
 			start: { rotate: deg90 + 0.3, ...baseLegTransform },
-			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 - 0.3, ...baseLegTransform },
 			transitionDuration: 200
 		},
 		"swim-right-slow": {
 			duration: 700,
 			start: { rotate: deg90 + 0.3, ...baseLegTransform },
-			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 - 0.3, ...baseLegTransform },
 			transitionDuration: 200
 		},
 	},

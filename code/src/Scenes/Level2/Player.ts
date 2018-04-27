@@ -1,13 +1,10 @@
 import * as ex from "excalibur";
-import Sky from "./Sky";
-import Level2 from "./Level2";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { modelSwimSize } from "../../Components/Animations/MichaelsonParts";
+import { IPlayerAnimations, playerAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
 import { IGameBootstrapState } from "../../GameBootstrap";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
 
 export default class Player extends ex.Actor {
-
-	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
 
 	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
@@ -33,11 +30,11 @@ export default class Player extends ex.Actor {
 	private animation: DrawAnimation<IPlayerAnimations>;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, state: IGameBootstrapState) {
-		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
-		this.minX = levelBounds.left + Player.size.w / 2;
-		this.maxX = levelBounds.right - Player.size.w / 2;
-		this.minY = levelBounds.top + Player.size.h / 2;
-		this.maxY = levelBounds.bottom - Player.size.h / 2;
+		super(x, y, modelSwimSize.w, modelSwimSize.h, ex.Color.DarkGray);
+		this.minX = levelBounds.left + modelSwimSize.w / 2;
+		this.maxX = levelBounds.right - modelSwimSize.w / 2;
+		this.minY = levelBounds.top + modelSwimSize.h / 2;
+		this.maxY = levelBounds.bottom - modelSwimSize.h / 2;
 
 		this.state = state;
 
@@ -151,7 +148,7 @@ export default class Player extends ex.Actor {
 				this.dead = true;
 				this.state.lives -= 1;
 				var fake_this = this;
-				setTimeout(function() { fake_this.dead = false; }, 1000);
+				setTimeout(function () { fake_this.dead = false; }, 1000);
 			} else {
 				this.dead = true;
 				this.kill();

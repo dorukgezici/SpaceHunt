@@ -35,6 +35,11 @@ export const modelDuckSize = {
 	h: 90
 };
 
+export const modelSwimSize = {
+	w: 128,
+	h: 42
+};
+
 const dh = modelSize.h - modelDuckSize.h;
 
 const armSize = {
