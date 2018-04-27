@@ -56,17 +56,19 @@ export interface ITransformDrawSetProviderData<T extends string> {
 export function createTransformDrawSetProvider<T extends string>(data: ITransformDrawSetProviderData<T>, anchor?: Vector): IDrawSetProvider<T> {
 	const { states, selectedState, drawBase, beforeDraw } = data;
 
-	const state = states[selectedState];
-	const part = new TransformDrawPart<T>(
-		state && state.start || {},
-		state && state.end || {},
-		state && state.duration || 0,
-		state && state.easing,
-		anchor
-	);
-	part.drawBase = drawBase;
-	if (beforeDraw)
-		part.beforeDraw = beforeDraw;
+	return () => {
+		const state = states[selectedState];
+		const part = new TransformDrawPart<T>(
+			state && state.start || {},
+			state && state.end || {},
+			state && state.duration || 0,
+			state && state.easing,
+			anchor
+		);
+		part.drawBase = drawBase;
+		if (beforeDraw)
+			part.beforeDraw = beforeDraw;
 
-	return () => new TransformDrawSet<T>(states, selectedState, part);
+		return new TransformDrawSet<T>(states, selectedState, part);
+	};
 }
