@@ -1,6 +1,5 @@
 import * as ex from "excalibur";
-import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import BasePlayer, { IControlSet } from "../../Components/BasePlayer";
 import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
 import {IGameBootstrapState} from "../../GameBootstrap";
@@ -80,7 +79,6 @@ export default class Level1Player extends BasePlayer {
 
 	onPrecollision(e: any | ex.PreCollisionEvent) {
 		if (e.other.constructor.name === "Vine" && !this.onVine) {
-			this.inJump = false;
 			this.attachToVine(e.other as Vine);
 		}
 	}
@@ -92,13 +90,16 @@ export default class Level1Player extends BasePlayer {
 	}
 
 	attachToVine(vine: Vine) {
-		this.scene.remove(this);
-		vine.add(this);
 		let vineRoot = vine.getRoot();
 
-		for (let v of vineRoot.getAllParts()) {
-			v.collisionType = ex.CollisionType.PreventCollision;
+		if(vineRoot.alreadyCollidedWith.indexOf(this) !== -1) {
+			return;
 		}
+
+		this.inJump = false;
+		vineRoot.alreadyCollidedWith.push(this);
+		this.scene.remove(this);
+		vine.add(this);
 
 		this.onVine = true;
 		this.pos.y = 20 + Level1Player.size.h / 2;

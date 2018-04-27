@@ -9,6 +9,7 @@ export default class Vine extends ex.Actor {
 	speed: number;
 	maxRotation: number;
 	time: number = 0;
+	alreadyCollidedWith: ex.Actor[] = [];
 
 	nextPart: Vine | null = null;
 	prevPart: Vine | null = null;
