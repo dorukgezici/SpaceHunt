@@ -1,4 +1,4 @@
-import { AnimationSequence } from "../../Components/AnimationSequence";
+import { AnimationSequence } from "../../Components/Animations/AnimationSequence";
 import ParticlesJS from "../../Components/ParticlesJS";
 import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";

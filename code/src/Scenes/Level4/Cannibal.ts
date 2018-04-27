@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
 import BasePlayer from "../../Components/BasePlayer";
 import resources from "../../Resources";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { IEslanAnimations, eslanAnimationFactory } from "../../Components/Animations/EslanAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { IEslanAnimations, eslanAnimationFactory } from "../../Components/Animations/Models/EslanAnimation";
 
 export default class Cannibal extends ex.Actor {
 

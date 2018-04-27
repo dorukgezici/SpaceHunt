@@ -1,5 +1,5 @@
 import * as ex from "excalibur";
-import { modelSize } from "./Animations/MichaelsonParts";
+import { modelSize } from "./Animations/Models/MikelsonParts";
 import { IGameBootstrapState } from "../GameBootstrap";
 import BaseLevel from "./BaseLevel";
 import Ground from "./Ground";

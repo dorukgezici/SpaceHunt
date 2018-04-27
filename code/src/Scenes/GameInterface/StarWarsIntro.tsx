@@ -1,4 +1,4 @@
-import { AnimationSequence } from "../../Components/AnimationSequence";
+import { AnimationSequence } from "../../Components/Animations/AnimationSequence";
 import { preloadAudio } from "../../Components/Preloader";
 import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";

@@ -1,4 +1,4 @@
-import { AnimationSequence } from "../../Components/AnimationSequence";
+import { AnimationSequence } from "../../Components/Animations/AnimationSequence";
 import Color from "../../Components/NoiseAbstraction/Color";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import CanvasAbstraction, { A } from "./CanvasAbstraction";

@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { modelSwimSize } from "../../Components/Animations/MichaelsonParts";
-import { IPlayerAnimations, playerAnimationFactory, brotherAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { modelSwimSize } from "../../Components/Animations/Models/MikelsonParts";
+import { IPlayerAnimations, playerAnimationFactory, brotherAnimationFactory } from "../../Components/Animations/Models/MikelsonAnimation";
 import BasePlayer, { IControlSet } from "../../Components/BasePlayer";
 import { IGameBootstrapState } from "../../GameBootstrap";
 import Level2 from "./Level2";

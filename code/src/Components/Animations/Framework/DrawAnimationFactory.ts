@@ -1,8 +1,8 @@
-import { ITransformDrawStateCollection, TransformDrawSet, ITransformDrawPartProvider } from "./TransformDrawSet";
-import { Class } from "../../Class";
-import { DrawAnimation, IDrawSet, IDrawSetProvider } from "./DrawAnimation";
 import { Actor, Vector } from "excalibur";
-import { IDrawBase, TransformDrawPart, IBeforeDraw } from "./TransformDrawPart";
+import { Class } from "../../../Class";
+import { DrawAnimation, IDrawSetProvider } from "./DrawAnimation";
+import { IBeforeDraw, IDrawBase, TransformDrawPart } from "./TransformDrawPart";
+import { ITransformDrawStateCollection, TransformDrawSet } from "./TransformDrawSet";
 
 interface IActorClass<T extends Actor = Actor> {
 	prototype: T;

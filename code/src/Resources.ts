@@ -1,6 +1,6 @@
 import { ILoadable, Resource, Texture } from "excalibur";
-import { texture as michealsonTexture, textureDuck, textureBro, textureDuckBro } from "./Components/Animations/MichaelsonParts";
-import { texture as eslanTexture, texture } from "./Components/Animations/EslanParts";
+import { texture as michealsonTexture, textureDuck, textureBro, textureDuckBro } from "./Components/Animations/Models/MikelsonParts";
+import { texture as eslanTexture, texture } from "./Components/Animations/Models/EslanParts";
 
 export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };

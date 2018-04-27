@@ -1,5 +1,5 @@
 import { Vector } from "excalibur";
-import { IPlayerAnimations, animationProviders, animationProvidersBro } from "../../Components/Animations/MichelsonAnimation";
+import { IPlayerAnimations, animationProviders, animationProvidersBro } from "../../Components/Animations/Models/MikelsonAnimation";
 import { IControlSet } from "../../Components/BasePlayer";
 import PlayerAnimationCanvas from "./PlayerAnimationCanvas";
 

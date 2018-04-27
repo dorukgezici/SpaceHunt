@@ -1,11 +1,11 @@
 import * as ex from "excalibur";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
 import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
 import { IGameBootstrapState } from "../../GameBootstrap";
-import { IPlayerAnimations, selectedState } from "../../Components/Animations/MichelsonAnimation";
-import AnimationStateHandler from "../../Components/Animations/AnimationStateHandler";
+import { IPlayerAnimations, selectedState } from "../../Components/Animations/Models/MikelsonAnimation";
+import AnimationStateHandler from "../../Components/Animations/Framework/AnimationStateHandler";
 
 export default class Level1Player extends BasePlayer {
 	static readonly MOVEMENT_SPEED = 8;

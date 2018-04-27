@@ -1,120 +1,108 @@
-import { Texture, Sprite } from "excalibur";
-import { CustomSprite } from "./AnimationHelpers";
-import { IBodyPart } from "./MichaelsonParts";
-
-export const image = require<string>("../../Resources/Images/eslan.png");
-export const texture = new Texture(image);
+import { CustomSprite } from "../Framework/AnimationHelpers";
+import { IBodyPart, texture } from "./MikelsonParts";
 
 export const modelSize = {
-	w: 38,
-	h: 133
+	w: 43,
+	h: 119
 };
 
 const armSize = {
-	w: 11,
-	h: 57,
-};
-
-const armAnchor = {
-	x: 6,
-	y: 6
+	w: 16,
+	h: 59,
 };
 
 const legSize = {
-	w: 26,
-	h: 56
-};
-
-const legAnchor = {
-	x: 20,
-	y: 7
+	w: 13,
+	h: 47
 };
 
 const headSize = {
-	w: 36,
-	h: 49
-};
-
-const headAnchor = {
-	x: 36 / 2,
-	y: 49 / 2
+	w: 43,
+	h: 42
 };
 
 const torsoSize = {
-	w: 28,
-	h: 57
-};
-
-const torsoAnchor = {
-	x: 14,
-	y: 57 / 2
+	w: 30,
+	h: 59
 };
 
 const armRight: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 128,
-		y: 86,
+		x: 167,
+		y: 110,
 		...armSize
 	},
 	modelLocation: {
-		x: 17,
-		y: 47,
+		x: 24,
+		y: 38,
 		...armSize
 	},
-	anchor: { ...armAnchor }
+	anchor: {
+		x: 5,
+		y: 5
+	}
 };
 
 const armLeft: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 103,
-		y: 85,
+		x: 142,
+		y: 110,
 		...armSize
 	},
 	modelLocation: {
-		x: 17,
-		y: 47,
+		x: 6,
+		y: 38,
 		...armSize
 	},
-	anchor: { ...armAnchor }
+	anchor: {
+		x: 9,
+		y: 5
+	}
 };
 
 const legRight: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 177,
-		y: 19,
+		x: 216,
+		y: 121,
 		...legSize
 	},
 	modelLocation: {
-		x: 4,
-		y: 76,
+		x: 24,
+		y: 72,
 		...legSize
 	},
-	anchor: { ...legAnchor }
+	anchor: {
+		x: legSize.w / 2,
+		y: 5
+	}
 };
 
 const legLeft: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 139,
-		y: 19,
+		x: 199,
+		y: 121,
 		...legSize
 	},
 	modelLocation: {
-		x: 4,
-		y: 76,
+		x: 7,
+		y: 72,
 		...legSize
 	},
-	anchor: { ...legAnchor }
+	anchor: {
+		x: legSize.w / 2,
+		y: 5
+	}
 };
 
-const headRight: IBodyPart = {
+const head: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 76,
-		y: 14,
+		x: 22,
+		y: 120,
 		...headSize
 	},
 	modelLocation: {
@@ -122,37 +110,28 @@ const headRight: IBodyPart = {
 		y: 0,
 		...headSize
 	},
-	anchor: { ...headAnchor }
-};
-
-const headLeft: IBodyPart = {
-	texture,
-	sourceLocation: {
-		x: 24,
-		y: 15,
-		...headSize
-	},
-	modelLocation: {
-		x: 0,
-		y: 0,
-		...headSize
-	},
-	anchor: { ...headAnchor }
+	anchor: {
+		x: 23,
+		y: 43
+	}
 };
 
 const torso: IBodyPart = {
 	texture,
 	sourceLocation: {
-		x: 27,
-		y: 84,
+		x: 86,
+		y: 111,
 		...torsoSize
 	},
 	modelLocation: {
-		x: 8,
-		y: 39,
+		x: 7,
+		y: 30,
 		...torsoSize
 	},
-	anchor: { ...torsoAnchor }
+	anchor: {
+		x: torsoSize.w / 2,
+		y: torsoSize.h / 2
+	}
 };
 
 export type IBodyParts = keyof typeof bodyParts;
@@ -162,8 +141,7 @@ const _bodyParts = {
 	armLeft,
 	legRight,
 	legLeft,
-	headRight,
-	headLeft,
+	head,
 	torso
 };
 
@@ -172,15 +150,8 @@ const allParts = [
 	armLeft,
 	legRight,
 	legLeft,
-	headRight,
-	headLeft,
+	head,
 	torso
-];
-
-const rightParts = [
-	armRight,
-	legRight,
-	headRight
 ];
 
 const centerPart = (part: IBodyPart) => {
@@ -188,18 +159,11 @@ const centerPart = (part: IBodyPart) => {
 	ml.x -= modelSize.w / 2;
 	ml.y -= modelSize.h / 2;
 	// ml.y -= modelSize.h;
-	// ml.y += 16;
 	ml.x += part.anchor.x;
 	ml.y += part.anchor.y;
 };
 
-const shiftRight = (part: IBodyPart) => {
-	part.modelLocation.x = -part.modelLocation.x;
-	part.anchor.x = part.modelLocation.w - part.anchor.x;
-};
-
 allParts.forEach(centerPart);
-rightParts.forEach(shiftRight);
 Object.entries(_bodyParts).forEach(([key, { texture, sourceLocation: loc }]) =>
 	_sprites[key as IBodyParts] = new CustomSprite(texture, loc.x, loc.y, loc.w, loc.h)
 );

@@ -1,5 +1,5 @@
-import { AnimationSequence } from "../../Components/AnimationSequence";
-import { texture, textureBro, textureDuck, textureDuckBro } from "../../Components/Animations/MichaelsonParts";
+import { AnimationSequence } from "../../Components/Animations/AnimationSequence";
+import { texture, textureBro, textureDuck, textureDuckBro } from "../../Components/Animations/Models/MikelsonParts";
 import { IControlSet, controlSets } from "../../Components/BasePlayer";
 import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";

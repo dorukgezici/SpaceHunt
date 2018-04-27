@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import Vine from "../Level1/Vine";
-import { modelSize } from "../../Components/Animations/PrincessParts";
-import { princessAnimationFactory } from "../../Components/Animations/PrincessAnimation";
+import { modelSize } from "../../Components/Animations/Models/PrincessParts";
+import { princessAnimationFactory } from "../../Components/Animations/Models/PrincessAnimation";
 import BasePlayer from "../../Components/BasePlayer";
 
 export default class Princess extends ex.Actor {

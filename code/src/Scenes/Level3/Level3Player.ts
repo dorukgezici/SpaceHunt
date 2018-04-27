@@ -1,12 +1,12 @@
 import * as ex from "excalibur";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations, states as maStates, brotherAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { playerAnimationFactory, IPlayerAnimations, states as maStates, brotherAnimationFactory } from "../../Components/Animations/Models/MikelsonAnimation";
 import Level3 from "./Level3";
 import BaseLevel from "../../Components/BaseLevel";
 import Ground from "../../Components/Ground";
 import { IGameBootstrapState } from "../../GameBootstrap";
-import { modelDuckSize, modelSize } from "../../Components/Animations/MichaelsonParts";
+import { modelDuckSize, modelSize } from "../../Components/Animations/Models/MikelsonParts";
 
 const states = {
 	default: maStates.walkRight,

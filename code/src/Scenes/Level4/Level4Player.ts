@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import Level4 from "./Level4";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations, states, brotherAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { playerAnimationFactory, IPlayerAnimations, states, brotherAnimationFactory } from "../../Components/Animations/Models/MikelsonAnimation";
 import BaseLevel from "../../Components/BaseLevel";
 import Ground from "../../Components/Ground";
 import { IGameBootstrapState } from "../../GameBootstrap";

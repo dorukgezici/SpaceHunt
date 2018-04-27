@@ -6,7 +6,7 @@ import Cannibal from "./Cannibal";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";
-import { modelSize } from "../../Components/Animations/EslanParts";
+import { modelSize } from "../../Components/Animations/Models/EslanParts";
 import { controlSets } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
 import Resources from "../../Resources";

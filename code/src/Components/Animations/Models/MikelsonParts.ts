@@ -1,5 +1,5 @@
-import { Texture, Sprite } from "excalibur";
-import { CustomSprite, CustomTexture } from "./AnimationHelpers";
+import { Texture } from "excalibur";
+import { CustomSprite, CustomTexture } from "../Framework/AnimationHelpers";
 
 export interface IBounds {
 	x: number;
@@ -20,10 +20,10 @@ export interface IBodyPart {
 	};
 }
 
-export const image = require<string>("../../Resources/Images/Michaelsons1.png");
-export const imageBro = require<string>("../../Resources/Images/brother.png");
-export const imageDuck = require<string>("../../Resources/Images/duckLegs.png");
-export const imageDuckBro = require<string>("../../Resources/Images/duckBro.png");
+export const image = require<string>("../../../Resources/Images/Michaelsons1.png");
+export const imageBro = require<string>("../../../Resources/Images/brother.png");
+export const imageDuck = require<string>("../../../Resources/Images/duckLegs.png");
+export const imageDuckBro = require<string>("../../../Resources/Images/duckBro.png");
 export const texture = new CustomTexture(image);
 export const textureBro = new CustomTexture(imageBro);
 export const textureDuck = new CustomTexture(imageDuck);

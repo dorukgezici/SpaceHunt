@@ -1,6 +1,6 @@
-import { IDrawableSet, IDrawSet } from "./DrawAnimation";
-import { ITransformation, IEasing, TransformDrawPart } from "./TransformDrawPart";
 import { Vector } from "Index";
+import { IDrawSet, IDrawableSet } from "./DrawAnimation";
+import { IEasing, ITransformation, TransformDrawPart } from "./TransformDrawPart";
 
 export interface ITransformDrawState {
 	enabled?: boolean;
