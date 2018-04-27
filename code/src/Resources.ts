@@ -43,10 +43,13 @@ const resources = {
 export default resources as IResources as typeof resources;
 
 export function getLoadableResources() {
-	const arr = Object.values(resources);
-	let i = -1;
-	while ((i = arr.findIndex(t => !(t instanceof Resource))) > 0) {
-		arr.splice(i, 1, ...(Object.values(arr[i]) as any[]));
-	}
-	return arr as Resource<any>[];
+	const arr = Object.values(resources).filter(t => (t instanceof Texture) || (t instanceof Resource));
+	const objs = Object.values(resources)
+		.filter( t => !((t instanceof Texture) || (t instanceof Resource)))
+		.map(t => Object.values(t));
+	const ret = [
+		...arr,
+		...[].concat(...objs as any[])
+	];
+	return ret as Resource<any>[];
 }

@@ -19,7 +19,7 @@ export default class Level3Player extends BasePlayer {
 
 	ducked: boolean = false;
 	jumpFlag: boolean = false;
-	private animation?: DrawAnimation<IPlayerAnimations>;
+	private animation: DrawAnimation<IPlayerAnimations>;
 
 	private posYold: number;
 
@@ -33,13 +33,11 @@ export default class Level3Player extends BasePlayer {
 
 	private minX: number;
 	private maxX: number;
-
-
-
 	private animationState: IPlayerAnimations = states.default;
 
 	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState) {
 		super(x, y, controlSet, state);
+		(this as any).$a = controlSet === controlSets.controls1 ? "first p" : "second p";
 
 		this.anchor.setTo(0.5, 1); // set anchor to the center of the bottom edge
 		this.collisionArea.body.useBoxCollision();
@@ -49,13 +47,9 @@ export default class Level3Player extends BasePlayer {
 		this.speed = this.speedNormal;
 
 		this.posYold = this.pos.y;
-	}
 
-	initAnimations() {
-		if (!this.animation) {
-			this.animation = playerAnimationFactory.attachTo(this);
-			this.animation.changeState("walk-right");
-		}
+		this.animation = playerAnimationFactory.attachTo(this);
+		this.animation.changeState("walk-right");
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -151,8 +145,10 @@ export default class Level3Player extends BasePlayer {
 
 		this.posYold = this.pos.y;
 
-		if (stateChanged && this.animation)
+		if (stateChanged) {
+			debugger;
 			this.animation.changeState(this.animationState);
+		}
 
 	}
 

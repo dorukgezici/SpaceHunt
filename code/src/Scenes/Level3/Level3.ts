@@ -18,8 +18,6 @@ export default class Level3 extends BaseLevel {
 	rocks: Rock[] = [];
 	rockCreator: RockCreator;
 
-	level3Players: Level3Player[];
-
 	constructor(bootstrap: GameBootstrap) {
 		super(
 			Level3.sceneKey,
@@ -34,12 +32,6 @@ export default class Level3 extends BaseLevel {
 		);
 
 		this.state = bootstrap.state;
-
-		// player handling - init level-specific animations
-		this.level3Players = this.players as Level3Player[];
-		for (let p of this.level3Players) {
-			p.initAnimations();
-		}
 
 		// RockCreator for cyclic generation of new rocks
 		this.rockCreator = new RockCreator(this.engine, this.scene, this.bounds, this, this.rocks);

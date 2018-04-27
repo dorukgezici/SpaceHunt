@@ -35,20 +35,20 @@ export default class Level1Player extends BasePlayer {
 			ash.changeState("jump-right");
 		}
 
-		if (!this.onVine && engine.input.keyboard.wasReleased(ex.Input.Keys.Left)) {
+		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.left)) {
 			ash.changeState("idle-left");
 		}
 
-		if (!this.onVine && engine.input.keyboard.wasReleased(ex.Input.Keys.Right)) {
+		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.right)) {
 			ash.changeState("idle-right");
 		}
 
-		if (engine.input.keyboard.isHeld(ex.Input.Keys.Left)) {
+		if (engine.input.keyboard.isHeld(this.controls.left)) {
 			this.moveLeft();
 			ash.changeState("walk-left");
 		}
 
-		if (engine.input.keyboard.isHeld(ex.Input.Keys.Right)) {
+		if (engine.input.keyboard.isHeld(this.controls.right)) {
 			this.moveRight();
 			ash.changeState("walk-right");
 		}
