@@ -1,9 +1,10 @@
 import { Input } from "excalibur";
+import { IControlSet } from "../../Components/BasePlayer";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
-import { IKeyInterface, IKeyNames } from "./NameEnquiry";
+import { IKeyNames } from "./NameEnquiry";
 
 interface IAttrs {
-	keys: IKeyInterface;
+	keys: IControlSet;
 	keyNames?: IKeyNames;
 	ref?: (pc: PlayerControls) => void;
 }
@@ -29,14 +30,14 @@ export default class PlayerControls extends Component<IAttrs> {
 		const { controls } = this;
 		const { keys, keyNames, ref } = attrs;
 
-		const getKey = (s: keyof IKeyInterface) => {
+		const getKey = (s: keyof IControlSet) => {
 			if (keyNames && s in keyNames)
 				return keyNames[s];
 			else
 				return Input.Keys[keys[s]];
 		};
 
-		const Control = ({ key }: { key: keyof IKeyInterface }) => (
+		const Control = ({ key }: { key: keyof IControlSet }) => (
 			<button
 				className="control"
 				ref={e => controls[key] = e}
@@ -70,7 +71,7 @@ export default class PlayerControls extends Component<IAttrs> {
 
 		const a = Object.entries(keys).find(t => t[1] === keyCode);
 		if (!a) return;
-		const key = a[0] as keyof IKeyInterface;
+		const key = a[0] as keyof IControlSet;
 		if (toggled)
 			controls[key].classList.add("toggled");
 		else

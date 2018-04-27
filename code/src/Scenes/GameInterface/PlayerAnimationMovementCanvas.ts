@@ -1,6 +1,6 @@
 import { Vector } from "excalibur";
-import { IPlayerAnimations, animationProviders } from "../../Components/Animations/MichelsonAnimation";
-import { IKeyInterface } from "./NameEnquiry";
+import { IPlayerAnimations, animationProviders, animationProvidersBro } from "../../Components/Animations/MichelsonAnimation";
+import { IControlSet } from "../../Components/BasePlayer";
 import PlayerAnimationCanvas from "./PlayerAnimationCanvas";
 
 type IPlayerState = "idle" | "jump" | "walk" | "duck";
@@ -21,11 +21,15 @@ export default class PlayerAnimationMovementCanvas extends PlayerAnimationCanvas
 
 	constructor(
 		public readonly canvas: HTMLCanvasElement,
-		public keys: IKeyInterface,
+		public readonly keys: IControlSet,
+		isBro: boolean,
 		public location?: Vector
 	) {
 		super(canvas, location);
-		this.drawSets = animationProviders.map(t => t());
+		if (isBro)
+			this.drawSets = animationProvidersBro.map(t => t());
+		else
+			this.drawSets = animationProviders.map(t => t());
 		this.context = canvas.getContext("2d") as CanvasRenderingContext2D;
 	}
 
@@ -41,7 +45,7 @@ export default class PlayerAnimationMovementCanvas extends PlayerAnimationCanvas
 		const { keyStates } = this;
 		const key = Object.entries(this.keys).find(t => t[1] === k);
 		if (!key) return;
-		const keyName = key[0] as keyof IKeyInterface;
+		const keyName = key[0] as keyof IControlSet;
 		keyStates[keyName] = pressed;
 
 		let state: IPlayerState = this.state;

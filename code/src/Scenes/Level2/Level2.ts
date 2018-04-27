@@ -39,12 +39,12 @@ export default class Level2 extends BaseLevel {
 			// players[]
 			(bootstrap.state.names.length === 2
 				? ([new Level2Player(100, 400, controlSets.controls1,
-					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state, true
 				), new Level2Player(30, 250, controlSets.controls2,
-					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 530, Level2.levelBounds.top + 50), bootstrap.state
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 530, Level2.levelBounds.top + 50), bootstrap.state, false
 				)]) // two players required
 				: ([new Level2Player(100, 400, controlSets.controls1,
-					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state
+					new ex.Label("Oxygen Level: 100/100", Level2.levelBounds.left + 30, Level2.levelBounds.top + 50), bootstrap.state, true
 				)])), // just one player required
 			Level2.groundTexture,
 			Resources.level2.bg.asSprite(),

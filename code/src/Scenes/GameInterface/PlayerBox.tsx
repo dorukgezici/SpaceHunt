@@ -1,14 +1,16 @@
 import { Vector } from "excalibur";
+import { IControlSet } from "../../Components/BasePlayer";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import CanvasAbstraction from "./CanvasAbstraction";
-import { IKeyInterface, IKeyNames } from "./NameEnquiry";
+import { IKeyNames } from "./NameEnquiry";
 import PlayerAnimationMovementCanvas from "./PlayerAnimationMovementCanvas";
 import PlayerControls from "./PlayerControls";
 
 interface IAttrs {
-	keys: IKeyInterface;
+	keys: IControlSet;
 	keyNames?: IKeyNames;
 	position: "right" | "left";
+	isBro: boolean;
 	hidden?: boolean;
 	value?: string;
 	ref?: (pb: PlayerBox) => void;
@@ -82,7 +84,7 @@ export default class PlayerBox extends Component<IAttrs> {
 								width="110"
 								height="150"
 								ref={e => {
-									const pamc = new PlayerAnimationMovementCanvas(e, attrs.keys, new Vector(e.width / 2, e.height - 10));
+									const pamc = new PlayerAnimationMovementCanvas(e, attrs.keys, attrs.isBro, new Vector(e.width / 2, e.height - 10));
 									if (attrs.refPAMC)
 										attrs.refPAMC(pamc);
 								}}

@@ -1,6 +1,6 @@
-import {ILoadable, Resource, Texture} from "excalibur";
-import {texture as michealsonTexture, textureDuck} from "./Components/Animations/MichaelsonParts";
-import {texture as eslanTexture} from "./Components/Animations/EslanParts";
+import { ILoadable, Resource, Texture } from "excalibur";
+import { texture as michealsonTexture, textureDuck, textureBro, textureDuckBro } from "./Components/Animations/MichaelsonParts";
+import { texture as eslanTexture, texture } from "./Components/Animations/EslanParts";
 
 export interface IResources {
 	[key: string]: ILoadable | { [key: string]: ILoadable };
@@ -12,6 +12,8 @@ export interface IResources {
 export const initialResources: string[] = [
 	michealsonTexture.src,
 	textureDuck.src,
+	textureBro.src,
+	textureDuckBro.src,
 	require("./Resources/Images/BgSaturn-bg.png"),
 	require("./Resources/Images/BgSaturn-saturn.png")
 ];
@@ -46,9 +48,13 @@ const resources = {
 		fontAO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy AltOutline.ttf"), "blob"),
 		fontTS: new Resource(require("./Resources/Fonts/TimesSquare/TIMES_SQ.TTF"), "blob")
 	},
-	michealsonTexture: michealsonTexture.exTexture(),
-	eslanTexture,
-	textureDuck: textureDuck.exTexture()
+	textures: {
+		michealsonTexture: michealsonTexture.exTexture(),
+		textureDuck: textureDuck.exTexture(),
+		textureBro: textureBro.exTexture(),
+		textureDuckBro: textureDuckBro.exTexture(),
+		eslanTexture
+	}
 };
 
 export default resources as IResources as typeof resources;
@@ -56,11 +62,11 @@ export default resources as IResources as typeof resources;
 export function getLoadableResources() {
 	const arr = Object.values(resources).filter(t => (t instanceof Texture) || (t instanceof Resource));
 	const objs = Object.values(resources)
-		.filter( t => !((t instanceof Texture) || (t instanceof Resource)))
+		.filter(t => !((t instanceof Texture) || (t instanceof Resource)))
 		.map(t => Object.values(t));
 	const ret = [
 		...arr,
 		...[].concat(...objs as any[])
 	];
-	return ret as Resource<any>[];
+	return ret as any as Resource<any>[];
 }

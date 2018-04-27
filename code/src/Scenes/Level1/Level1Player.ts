@@ -3,8 +3,8 @@ import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlaye
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
-import {IGameBootstrapState} from "../../GameBootstrap";
-import {IPlayerAnimations, selectedState} from "../../Components/Animations/MichelsonAnimation";
+import { IGameBootstrapState } from "../../GameBootstrap";
+import { IPlayerAnimations, selectedState } from "../../Components/Animations/MichelsonAnimation";
 import AnimationStateHandler from "../../Components/Animations/AnimationStateHandler";
 
 export default class Level1Player extends BasePlayer {
@@ -17,11 +17,11 @@ export default class Level1Player extends BasePlayer {
 	onVine: boolean = false;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
-	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState) {
+	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
-		const animation = attachPlayerAnimations(this);
+		const animation = attachPlayerAnimations(this, !isFirst);
 		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
 		this.levelLength = levelLength;
 	}

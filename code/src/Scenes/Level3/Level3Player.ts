@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations, states as maStates } from "../../Components/Animations/MichelsonAnimation";
+import { playerAnimationFactory, IPlayerAnimations, states as maStates, brotherAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
 import Level3 from "./Level3";
 import BaseLevel from "../../Components/BaseLevel";
 import Ground from "../../Components/Ground";
@@ -36,7 +36,7 @@ export default class Level3Player extends BasePlayer {
 	private maxX: number;
 	private animationState: IPlayerAnimations = states.default;
 
-	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState) {
+	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		(this as any).$a = controlSet === controlSets.controls1 ? "first p" : "second p";
 
@@ -49,7 +49,10 @@ export default class Level3Player extends BasePlayer {
 
 		this.posYold = this.pos.y;
 
-		this.animation = playerAnimationFactory.attachTo(this);
+		if (isFirst)
+			this.animation = playerAnimationFactory.attachTo(this);
+		else
+			this.animation = brotherAnimationFactory.attachTo(this);
 		this.animation.changeState("walk-right");
 	}
 
@@ -146,7 +149,7 @@ export default class Level3Player extends BasePlayer {
 
 		this.posYold = this.pos.y;
 
-		if (stateChanged) 
+		if (stateChanged)
 			this.animation.changeState(this.animationState);
 
 	}
