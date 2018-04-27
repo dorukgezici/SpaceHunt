@@ -11,6 +11,7 @@ internal/
 
 # OS related
 .DS_Store
+*.icloud
 
 # Logs
 logs/
