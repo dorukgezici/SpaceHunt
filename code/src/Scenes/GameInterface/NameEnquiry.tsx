@@ -1,10 +1,10 @@
 import { Input } from "excalibur";
 import { AnimationSequence } from "../../Components/AnimationSequence";
 import { texture, textureDuck } from "../../Components/Animations/MichaelsonParts";
+import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import CanvasAbstraction from "./CanvasAbstraction";
 import PlayerBox from "./PlayerBox";
-import { GameBootstrap } from "../../GameBootstrap";
 require("./name-enquiry.scss");
 
 export interface IKeyInterface {

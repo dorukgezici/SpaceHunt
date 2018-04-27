@@ -1,9 +1,7 @@
-import { InterfaceBuilder } from "../../InterfaceBuilder";
-import { GameBootstrap } from "../../GameBootstrap";
-import { Class } from "../../Class";
-import Rerenderer from "../../Components/JSX/Rerenderer";
 import RerendererComponent from "../../Components/JSX/RerendererComponent";
-require("./style.scss");
+import { GameBootstrap } from "../../GameBootstrap";
+import { InterfaceBuilder } from "../../InterfaceBuilder";
+require("./game-bar.scss");
 
 function range(n: number) {
 	const arr = new Array<number>(n);

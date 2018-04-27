@@ -12,6 +12,7 @@ internal/
 # OS related
 .DS_Store
 *.icloud
+Thumbs.db
 
 # Logs
 logs/

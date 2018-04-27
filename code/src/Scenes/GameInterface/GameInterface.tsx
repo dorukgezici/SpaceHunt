@@ -2,24 +2,29 @@ import { AnimationSequence } from "../../Components/AnimationSequence";
 import ParticlesJS from "../../Components/ParticlesJS";
 import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
-import GameBar from "../GameBar/GameBar";
-import StarWarsIntro from "../StarWarsIntro/StarWarsIntro";
+import GameBar from "./GameBar";
 import Modal, { ModalContentWrapper } from "./Modal";
 import NameEnquiry from "./NameEnquiry";
+import StarWarsIntro from "./StarWarsIntro";
 require("./game-interface.scss");
-const particlesJSConfig = require("./ParticlesJSConfig.json");
+const particlesJSConfig = require<{}>("./ParticlesJSConfig.json");
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
 
-interface IEvents { }
+interface IEvents {
+	moveDown: undefined;
+	movedDown: undefined;
+	moveUp: undefined;
+	movedUp: undefined;
+	playClicked: string[];
+	levelSelected: { level: number, players: number };
+}
+
 interface IAttrs {
 	bootstrap: GameBootstrap;
 	ref?: (gameInterface: GameInterface) => void;
 }
 
-(window as any).hideMenu = () => {
-	const app = document.getElementById("app") as HTMLElement;
-	app.style.top = "100vh";
-};
+type IContentType = "menu" | "game";
 
 const transitionDuration = 2000;
 const homeParticlesID = "home-particles";
@@ -28,7 +33,9 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 
 	canvas = <canvas id="canvas" height="600" width="800" /> as HTMLCanvasElement;
 	// @ts-ignore
-	public app: HTMLDivElement;
+	public menu: HTMLDivElement;
+	// @ts-ignore
+	public canvasHolder: HTMLDivElement;
 	// @ts-ignore
 	private viewportWrapper: HTMLDivElement;
 	// @ts-ignore
@@ -44,6 +51,7 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 	private particles: ParticlesJS | null = null;
 	private introAudio = new Audio(audioURL);
 	private isUp = false;
+	private type: IContentType = "menu";
 
 	constructor(attrs: IAttrs) {
 		super(attrs);
@@ -102,11 +110,25 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		});
 	}
 
+	setContentType(type: IContentType) {
+		if (type === this.type)
+			return;
+		this.type = type;
+		if (type === "menu") {
+			this.menu.style.display = "block";
+			this.canvasHolder.style.display = "none";
+		} else {
+			this.menu.style.display = "none";
+			this.canvasHolder.style.display = "flex";
+		}
+	}
+
 	private displayBelowHidden() {
 		if (this.particles) {
 			this.particles.destroy();
 			this.particles = null;
 		}
+		this.emit("movedUp", void (0));
 	}
 
 	private displayBelowShown() {
@@ -115,26 +137,33 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		requestAnimationFrame(() =>
 			this.particles = new ParticlesJS(homeParticlesID, particlesJSConfig)
 		);
+		this.emit("moveDown", void (0));
 	}
 
-	private displayAboveHidden() { /* */ }
+	private displayAboveHidden() {
+		this.emit("movedDown", void (0));
+	}
 
-	private displayAboveShown() { /* */ }
+	private displayAboveShown() {
+		this.emit("moveUp", void (0));
+	}
 
 	private start(name1: string, name2?: string) {
-		const { state } = this.attrs.bootstrap;
-		state.names = name2 ? [name1, name2] : [name1];
-		state.title = state.names.join(" & ");
-		this.showIntro();
+		const names = name2 ? [name1, name2] : [name1];
+		this.emit("playClicked", names);
 	}
 
 	private showModal() {
 		this.modal.show();
 	}
 
+	private menuClick(level: number, players: number) {
+		this.emit("levelSelected", { level, players });
+	}
+
 	render(attrs: IAttrs) {
 		const { bootstrap, ref } = attrs;
-		const { canvas, app } = this;
+		const { canvas } = this;
 
 		const ret = (
 			<div id="viewport-wrapper" ref={e => this.viewportWrapper = e}>
@@ -152,18 +181,27 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 								<div className="bg" />
 							</div>
 
-							<div id="canvas-holder" style={{ zIndex: 10 }}>
+							<div id="canvas-holder" ref={e => this.canvasHolder = e} style={{ display: "none" }}>
 								<div id="canvas-wrapper">
 									<GameBar bootstrap={bootstrap} />
 									{canvas}
 								</div>
 							</div>
 
-							<div id="name-enquiry-wrapper" style={{ opacity: 0 }}>
+							<div id="name-enquiry-wrapper" ref={e => this.menu = e}>
 								<NameEnquiry bootstrap={bootstrap} info={this.showModal.bind(this)} start={this.start.bind(this)} />
+								{window.ENV === "dev" && (
+									<div id="menu">
+										{[1, 2, 3, 4].map((t, i) => (
+											<div className="menu-item">
+												<span>Level {t}</span>
+												<button className="control small" onclick={() => this.menuClick(i, 1)}>1p</button>
+												<button className="control small" onclick={() => this.menuClick(i, 2)}>2p</button>
+											</div>
+										))}
+									</div>
+								)}
 							</div>
-
-							<div id="app" ref={app => this.app = app}></div>
 						</div>
 
 						<ModalContentWrapper>

@@ -3,7 +3,7 @@ import { preloadAudio } from "../../Components/Preloader";
 import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 const audioURL = require<string>("../../Resources/Audio/intro.mp3");
-require("./style.scss");
+require("./star-wars-intro.scss");
 
 const preludeText = "Let me tell you a story from our distant future...";
 const episodeText = "Episode 1";
@@ -13,16 +13,17 @@ const storyText = ({ state: { names } }: GameBootstrap) => [
 	"During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband " + (names[1]
 		? `and his brother, ${names[0]} and ${names[1]} Mikelson.`
 		: `${names[0]} Mikelson.`
-	)
+	),
+	"After a long intergalactic flight, Freddy finally finds himself on the planet Eslan, which, besides the absence of animals, does not any differ from Earth. The landing was not smooth and his first task is to get away from the crown of huge tree in the jungle."
 ];
 
 const timing = {
 	beforePrelude: 6500,
 	prelude: 12300,
 	afterPrelude: 6150,
-	logoFlow: 18000,
+	logoFlow: 17000,
 	crawlDelay: 3000,
-	crawlDuration: 67300,
+	crawlDuration: 68300,
 	after: 1000
 };
 
@@ -33,8 +34,8 @@ function createCrawlHandler(crawl: HTMLElement, endCallback: () => void) {
 			() => crawl.style.opacity = "1",
 			{
 				from: 100,
-				to: 50,
-				duration: 10000,
+				to: 0,
+				duration: 20000,
 				callback: e => crawl.style.transform = `rotateX(50deg) translateY(${e}vh) translateZ(20vh)`
 			},
 			new AnimationSequence([
@@ -57,8 +58,8 @@ function createHandlers(prelude: HTMLElement, logo: SVGElement, crawl: HTMLEleme
 			() => crawl.style.display = "flex",
 			() => crawl.style.opacity = "1",
 			{
-				from: 110,
-				to: -10,
+				from: 100,
+				to: -30,
 				duration: timing.crawlDuration,
 				callback: e => crawl.style.transform = `rotateX(50deg) translateY(${e}vh) translateZ(20vh)`
 			},
@@ -302,7 +303,6 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 	dispose() {
 		this.cancel();
 		this.end();
-		InterfaceBuilder.clearDefault();
 	}
 
 	private fillSvg(elt: HTMLElement) {

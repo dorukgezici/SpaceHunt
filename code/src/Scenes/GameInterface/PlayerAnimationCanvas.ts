@@ -1,6 +1,6 @@
-import { IPlayerAnimations, animationProviders } from "../../Components/Animations/MichelsonAnimation";
-import { IDrawSet } from "../../Components/Animations/DrawAnimation";
 import { Vector } from "excalibur";
+import { IDrawSet } from "../../Components/Animations/DrawAnimation";
+import { IPlayerAnimations, animationProviders } from "../../Components/Animations/MichelsonAnimation";
 
 export default class PlayerAnimationCanvas {
 

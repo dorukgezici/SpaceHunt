@@ -23,6 +23,13 @@ export default async function initGame() {
 	const resources = initialResources.map(preloadImage);
 	await Promise.all(resources.map(t => t.promise));
 	const gb = new GameBootstrap();
-	(window as any).bootstrap = gb;
+	initEnv(window.ENV, gb);
 	gb.start();
+}
+
+function initEnv(env: ENVType, gb: GameBootstrap) {
+	if (env === "dev") {
+		(window as any).bootstrap = gb;
+		(window as any).debug = () => gb.engine.isDebug = !gb.engine.isDebug;
+	}
 }
