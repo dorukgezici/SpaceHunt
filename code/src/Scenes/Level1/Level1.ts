@@ -41,14 +41,13 @@ export default class Level1 extends Class<IGameElementEvents> implements IGameEl
 		this.scene = new ex.Scene(this.engine);
 		this.bounds = this.engine.getWorldBounds();
 		this.loader = bootstrap.loader;
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 35);
+		this.ground = new Ground(2500, this.bounds.bottom - 35);
 		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
 		this.treeBranch = new TreeBranch(
 			this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
-		this.ground = new Ground(this.bounds.left + 2500, this.bounds.bottom - 25);
 		this.player = new Level1Player(this.levelBounds.left + 100, this.levelBounds.top + 199, this.state, 5000);
-		this.background = new Background(resources.level1.bg.asSprite(), this.player, 0, 0, 400, 400, 5000);
+		this.background = new Background(resources.level1.bg.asSprite(), this.player, 0, 0, 500, 500, 5000);
 		this.player.on("fell", this.lose);
 		this.player.on("won", this.win);
 		ex.Physics.acc.setTo(0, 2000);

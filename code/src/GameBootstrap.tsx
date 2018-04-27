@@ -100,7 +100,7 @@ export class GameBootstrap {
 	/**
 	 * The key of the root (blank) scene.
 	 */
-	readonly rootSceneKey = "root";
+
 	// @ts-ignore
 	readonly interface: GameInterface;
 	readonly loader: Loader;

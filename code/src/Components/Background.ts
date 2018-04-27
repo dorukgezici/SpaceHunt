@@ -20,7 +20,7 @@ export default class Background extends ex.Actor {
 		super(x, y, Background.bgWidth, Background.bgHeight);
 
 		this.anchor.setTo(0, 0);
-		this.bgToLvlRatio = (Background.bgWidth - minLeft - minRight) / (lvlLen - minRight);
+		this.bgToLvlRatio = (Background.bgWidth - minLeft - minRight) / (lvlLen - minLeft - minRight);
 		this.image = image;
 		this.lvlLength = lvlLen;
 		this.minLeft = minLeft;
@@ -29,8 +29,8 @@ export default class Background extends ex.Actor {
 
 	update(engine: ex.Engine, delta: number) {
 		this.time += delta;
-		let bgToPlayerPos = this.bgToLvlRatio * this.player.getWorldPos().x;
-		this.x = this.player.getWorldPos().x - bgToPlayerPos - this.minLeft;
+		let bgToPlayerPos = - this.bgToLvlRatio * (this.player.getWorldPos().x - 400);
+		this.x = this.player.getWorldPos().x + bgToPlayerPos - this.minLeft;
 		this.x = this.x < 0 ? 0 : this.x;
 		this.x = this.x + Background.bgWidth > this.lvlLength ? this.lvlLength - Background.bgWidth : this.x;
 	}
