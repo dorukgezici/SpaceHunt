@@ -97,7 +97,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 						<div className="live"></div>
 					))}
 				</div>
-				<div className="score" ref={e => this.scoreElement = e}>
+				<div className="score" ref={e => this.scoreElement = e} style={{ display: (score === null || score === undefined ? "none" : "block") }}>
 					{score}
 				</div>
 				<div className="title">
