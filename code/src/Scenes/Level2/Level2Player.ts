@@ -1,17 +1,14 @@
 import * as ex from "excalibur";
-import Sky from "./Sky";
-import Level2 from "./Level2";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
-import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
-import BaseLevel from "../../Components/BaseLevel";
+import { modelSwimSize } from "../../Components/Animations/MichaelsonParts";
+import { IPlayerAnimations, playerAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
+import BasePlayer, { IControlSet } from "../../Components/BasePlayer";
 import { IGameBootstrapState } from "../../GameBootstrap";
+import Level2 from "./Level2";
 
 export default class Level2Player extends BasePlayer {
 
-	static readonly size = { w: 100, h: 50 }; // changed for swimming movement
-
-	// to be changed for normal/slower/faster swimming movement
+	// static speed: number = 8; //to be changed for normal/slower/faster swimming movement
 	static readonly speedY: number = 2;
 	static readonly speedAcc: number = 200;
 	static readonly speedNormal: number = 100;
@@ -34,16 +31,16 @@ export default class Level2Player extends BasePlayer {
 
 	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label, state: IGameBootstrapState) {
 		super(x, y, controlSet, state);
-		this.minX = Level2.levelBounds.left + Level2Player.size.w / 2;
-		this.maxX = Level2.levelBounds.right - Level2Player.size.w / 2;
-		this.minY = Level2.levelBounds.top + Level2Player.size.h / 2;
-		this.maxY = Level2.levelBounds.bottom - Level2Player.size.h / 2;
+		this.minX = Level2.levelBounds.left + modelSwimSize.w / 2;
+		this.maxX = Level2.levelBounds.right - modelSwimSize.w / 2;
+		this.minY = Level2.levelBounds.top + modelSwimSize.h / 2;
+		this.maxY = Level2.levelBounds.bottom - modelSwimSize.h / 2;
 
 		this.oxygenMeter = oxygenMeter;
 		this.oxygenMeter.fontSize = 30;
 
-		this.setWidth(Level2Player.size.w);
-		this.setHeight(Level2Player.size.h);
+		this.setWidth(modelSwimSize.w);
+		this.setHeight(modelSwimSize.h);
 
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center
@@ -144,7 +141,7 @@ export default class Level2Player extends BasePlayer {
 				this.dead = true;
 				this.state.lives -= 1;
 				var fake_this = this;
-				setTimeout(function() { fake_this.dead = false; }, 1000);
+				setTimeout(function () { fake_this.dead = false; }, 1000);
 			} else {
 				this.dead = true;
 				this.kill();
