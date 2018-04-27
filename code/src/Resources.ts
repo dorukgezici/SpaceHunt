@@ -44,6 +44,7 @@ const resources = {
 	fonts: {
 		fontO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy Outline.ttf"), "blob"),
 		fontAO: new Resource(require("./Resources/Fonts/SF Distant Galaxy/SF Distant Galaxy AltOutline.ttf"), "blob"),
+		fontTS: new Resource(require("./Resources/Fonts/TimesSquare/TIMES_SQ.TTF"), "blob")
 	},
 	michealsonTexture: michealsonTexture.exTexture(),
 	eslanTexture,

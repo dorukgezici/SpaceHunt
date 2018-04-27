@@ -22,6 +22,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 
 	protected livesElement: HTMLElement | null = null;
 	protected oxygenElements: HTMLElement[] = [];
+	protected scoreElement: HTMLElement | null = null;
 
 	constructor(attrs: IAttrs) {
 		super(
@@ -31,6 +32,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 		const { stateListener } = attrs.bootstrap;
 		stateListener.on("lives", this.livesChanged);
 		stateListener.on("oxygen", this.oxygenChanged);
+		stateListener.on("score", this.scoreChanged);
 		stateListener.on("showOxygen", this.rerender);
 		stateListener.on("title", this.rerender);
 	}
@@ -39,6 +41,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 		const { stateListener } = this.attrs.bootstrap;
 		stateListener.off("lives", this.livesChanged);
 		stateListener.off("oxygen", this.oxygenChanged);
+		stateListener.off("score", this.scoreChanged);
 		stateListener.off("showOxygen", this.rerender);
 		stateListener.off("title", this.rerender);
 		this.emit("dispose", this);
@@ -69,9 +72,22 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 			});
 	}
 
+	private scoreChanged = () => {
+		const { scoreElement } = this;
+		const { score } = this.attrs.bootstrap.state;
+		if (!this.scoreElement) return;
+
+		if (score === undefined || score === null)
+			this.scoreElement.style.display = "none";
+		else {
+			this.scoreElement.style.display = "block";
+			this.scoreElement.innerText = score.toString();
+		}
+	}
+
 	render(): JSX.ElementCollection {
 		const { stateListener, state } = this.attrs.bootstrap;
-		const { lives, oxygen, title, showOxygen } = state;
+		const { lives, oxygen, title, showOxygen, score } = state;
 		this.oxygenElements = [];
 
 		return (
@@ -81,6 +97,9 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 						<div className="live"></div>
 					))}
 				</div>
+				<div className="score" ref={e => this.scoreElement = e}>
+					{score}
+				</div>
 				<div className="title">
 					{title}
 				</div>
@@ -89,7 +108,7 @@ export default class GameBar extends RerendererComponent<IAttrs, IEvents> {
 						{(this.oxygenElements = oxygen.map(t => (
 							<div className="oxygen-level" style={{ left: `-${(1 - t) * 100}%` }} />
 						) as HTMLDivElement)).map(t => (
-							<div className="oxygen-holder">	{t}</div>
+							<div className="oxygen-holder">{t}</div>
 						))}
 					</div>
 				)}

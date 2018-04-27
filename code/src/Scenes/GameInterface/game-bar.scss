@@ -1,3 +1,10 @@
+$timesSquare: "Times Square";
+
+@font-face {
+	font-family: $timesSquare;
+	src: url("../../Resources/Fonts//TimesSquare/TIMES_SQ.TTF")
+}
+
 #game-bar-holder {
 	min-width: 100%;
 }
@@ -24,6 +31,12 @@
 		}
 	}
 
+	.score, .title {
+		font-size: 48px;
+		font-family: $timesSquare;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
 	.oxygen-holder, .oxygen-level {
 		width: 128px;
 		height: 48px;
@@ -42,12 +55,6 @@
 	.oxygen-level {
 		background: darkcyan;
 		position: absolute;
-	}
-
-	.title {
-		font-size: 24px;
-		color: #3664af;
-		text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
 	}
 
 }
