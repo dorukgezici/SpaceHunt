@@ -1,9 +1,9 @@
 import * as ex from "excalibur";
 import Sky from "./Sky";
 import Level2 from "./Level2";
-import { playerSwimAnimationFactory, IPlayerSwimAnimations } from "./PlayerSwimAnimation";
 import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
 import { IGameBootstrapState } from "../../GameBootstrap";
+import { playerAnimationFactory, IPlayerAnimations } from "../../Components/Animations/MichelsonAnimation";
 
 export default class Player extends ex.Actor {
 
@@ -30,7 +30,7 @@ export default class Player extends ex.Actor {
 
 	public state: IGameBootstrapState;
 
-	private animation: DrawAnimation<IPlayerSwimAnimations>;
+	private animation: DrawAnimation<IPlayerAnimations>;
 
 	constructor(x: number, y: number, levelBounds: ex.BoundingBox, oxygenMeter: ex.Label, state: IGameBootstrapState) {
 		super(x, y, Player.size.w, Player.size.h, ex.Color.DarkGray);
@@ -51,7 +51,8 @@ export default class Player extends ex.Actor {
 		this.collisionType = ex.CollisionType.Active;
 		this.on("precollision", this.onPrecollision);
 
-		this.animation = playerSwimAnimationFactory.attachTo(this);
+		this.animation = playerAnimationFactory.attachTo(this);
+		this.animation.changeState("swim-right");
 	}
 
 	onPrecollision(ev: any) {
@@ -131,11 +132,11 @@ export default class Player extends ex.Actor {
 
 		if (this.speedX !== oldSpeedX) {
 			if (this.speedX === Player.speedNormal)
-				this.animation.changeState("normal");
+				this.animation.changeState("swim-right");
 			else if (this.speedX === Player.speedAcc)
-				this.animation.changeState("fast");
+				this.animation.changeState("swim-right-fast");
 			else if (this.speedX === Player.speedDec)
-				this.animation.changeState("slow");
+				this.animation.changeState("swim-right-slow");
 		}
 
 		if (this.getWorldPos().x > 4950) {

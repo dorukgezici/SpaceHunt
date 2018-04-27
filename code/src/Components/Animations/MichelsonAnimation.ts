@@ -19,7 +19,10 @@ export const playerAnimationTypes = [
 	"walk-fast-left",
 	"walk-slow-right",
 	"walk-slow-left",
-	"grab-right"
+	"grab-right",
+	"swim-right",
+	"swim-right-fast",
+	"swim-right-slow",
 ];
 
 export type IPlayerAnimations =
@@ -35,7 +38,10 @@ export type IPlayerAnimations =
 	| "walk-fast-left"
 	| "walk-slow-right"
 	| "walk-slow-left"
-	| "grab-right";
+	| "grab-right"
+	| "swim-right"
+	| "swim-right-fast"
+	| "swim-right-slow";
 
 type IPABase =
 	| "idle"
@@ -103,6 +109,27 @@ export const baseDataExtender = (irlData: IRLData) => {
 };
 
 export const selectedState = "idle-right";
+const deg90 = Math.PI / 2;
+
+const baseArmTransform = {
+	translateX: 20,
+	translateY: 82,
+};
+
+const baseLegTransform = {
+	translateX: -7,
+	translateY: 46,
+};
+
+const baseTorsoTransform = {
+	rotate: deg90,
+	translateY: 68
+};
+
+const baseHeadTransform = {
+	translateX: 45,
+	translateY: 114,
+};
 
 export const armFront: IRLData = {
 	selectedState,
@@ -126,7 +153,25 @@ export const armFront: IRLData = {
 			start: { rotate: -3 - .03, translateX: -5 },
 			end: { rotate: -3 + .03, translateX: -5 },
 			transitionDuration: 100
-		}
+		},
+		"swim-right": {
+			duration: 500,
+			start: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
+		"swim-right-fast": {
+			duration: 300,
+			start: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
+		"swim-right-slow": {
+			duration: 700,
+			start: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
 	},
 	baseStates: {
 		idle: {
@@ -184,7 +229,25 @@ export const armBack: IRLData = {
 			start: { rotate: -3 + .03, translateX: -5 },
 			end: { rotate: -3 - .03, translateX: -5 },
 			transitionDuration: 100
-		}
+		},
+		"swim-right": {
+			duration: 500,
+			start: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
+		"swim-right-fast": {
+			duration: 300,
+			start: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
+		"swim-right-slow": {
+			duration: 700,
+			start: { rotate: -deg90 + 0.5, ...baseArmTransform },
+			end: { rotate: -deg90 + -0.5, ...baseArmTransform },
+			transitionDuration: 200
+		},
 	},
 	baseStates: {
 		idle: {
@@ -219,7 +282,6 @@ export const armBack: IRLData = {
 		}
 	}
 };
-
 export const legFront: IRLData = {
 	selectedState,
 	drawBase: drawBaseFactory("legRight", "legLeft"),
@@ -241,6 +303,24 @@ export const legFront: IRLData = {
 			duration: 500,
 			start: { rotate: 0.15 },
 			end: { rotate: -0.15 },
+			transitionDuration: 200
+		},
+		"swim-right": {
+			duration: 500,
+			start: { rotate: deg90 - 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			transitionDuration: 200
+		},
+		"swim-right-fast": {
+			duration: 300,
+			start: { rotate: deg90 - 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			transitionDuration: 200
+		},
+		"swim-right-slow": {
+			duration: 700,
+			start: { rotate: deg90 - 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
 			transitionDuration: 200
 		},
 	},
@@ -294,7 +374,25 @@ export const legBack: IRLData = {
 			start: { rotate: -0.15 },
 			end: { rotate: 0.15 },
 			transitionDuration: 200
-		}
+		},
+		"swim-right": {
+			duration: 500,
+			start: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			transitionDuration: 200
+		},
+		"swim-right-fast": {
+			duration: 300,
+			start: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			transitionDuration: 200
+		},
+		"swim-right-slow": {
+			duration: 700,
+			start: { rotate: deg90 + 0.3, ...baseLegTransform },
+			end: { rotate: deg90 + 0.3, ...baseLegTransform },
+			transitionDuration: 200
+		},
 	},
 	baseStates: {
 		idle: {
@@ -381,6 +479,18 @@ export const torso: IRLData = {
 			start: {},
 			end: {},
 			transitionDuration: 200
+		},
+		"swim-right": {
+			start: { ...baseTorsoTransform },
+			end: { ...baseTorsoTransform },
+		},
+		"swim-right-fast": {
+			start: { ...baseTorsoTransform },
+			end: { ...baseTorsoTransform },
+		},
+		"swim-right-slow": {
+			start: { ...baseTorsoTransform },
+			end: { ...baseTorsoTransform },
 		}
 	},
 	baseStates: {
@@ -453,7 +563,25 @@ export const head: IRLData = {
 			start: { rotate: -0.1 },
 			end: { rotate: 0.1 },
 			transitionDuration: 200
-		}
+		},
+		"swim-right": {
+			duration: 500,
+			start: { rotate: deg90 + 0.2, ...baseHeadTransform },
+			end: { rotate: deg90 - 0.2, ...baseHeadTransform },
+			transitionDuration: 200
+		},
+		"swim-right-fast": {
+			duration: 300,
+			start: { rotate: deg90 + 0.2, ...baseHeadTransform },
+			end: { rotate: deg90 - 0.2, ...baseHeadTransform },
+			transitionDuration: 200
+		},
+		"swim-right-slow": {
+			duration: 700,
+			start: { rotate: deg90 + 0.2, ...baseHeadTransform },
+			end: { rotate: deg90 - 0.2, ...baseHeadTransform },
+			transitionDuration: 200
+		},
 	},
 	baseStates: {
 		idle: {
