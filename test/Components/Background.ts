@@ -48,7 +48,7 @@ describe("Background Movement", () => {
 		expect(background.x).toEqual(2100);
 	});
 
-	it("Should nto move in the end", () => {
+	it("Should not move in the end", () => {
 		let player = new ex.Actor(0, 0);
 		let background = new Background(IMG, player, START_X, START_Y, MIN_LEFT, MIN_RIGHT, LVL_LENGTH);
 
@@ -59,7 +59,6 @@ describe("Background Movement", () => {
 		player.x = 3800;
 		background.update(engine, 0);
 		expect(background.x).toEqual(2400);
-
 
 		player.x = 4000;
 		background.update(engine, 0);

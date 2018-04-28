@@ -11,3 +11,4 @@ import "../code/env.test";
 import "./test";
 import "./Components/Background";
 import "./Level1/VineCreator";
+import "./Level1/PlayerVine";
