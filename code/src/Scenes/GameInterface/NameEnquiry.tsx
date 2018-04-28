@@ -52,6 +52,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 	private pb2: PlayerBox;
 	private secondPlayer = false;
 	private animationSequence?: AnimationSequence | unset;
+	private inited = false;
 
 	private async start() {
 		this.ca1.canvas.style.opacity = "0.4";
@@ -67,6 +68,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 		await p2;
 		await p3;
 		await p4;
+		this.inited = true;
 		this.pamc1.startListening();
 		this.pamc1.start();
 	}
@@ -124,12 +126,27 @@ export default class NameEnquiry extends Component<IAttrs> {
 		this.ca2.renderer.start();
 	}
 
+	private p1AddedHandler() {
+		this.pc1.startListening();
+		this.pamc1.start();
+		this.pamc1.startListening();
+		this.ca1.renderer.start();
+	}
+
 	private p2RemovedHandler() {
 		this.pc2.stopListening();
 		this.pamc2.stop();
 		this.pamc2.stopListening();
 		this.ca2.renderer.clear();
 		this.ca2.renderer.stop();
+	}
+
+	private p1RemovedHandler() {
+		this.pc1.stopListening();
+		this.pamc1.stop();
+		this.pamc1.stopListening();
+		this.ca1.renderer.clear();
+		this.ca1.renderer.stop();
 	}
 
 	private secondPlayerClick() {
@@ -144,10 +161,24 @@ export default class NameEnquiry extends Component<IAttrs> {
 		}
 	}
 
+	stopListening() {
+		if (!this.inited) return;
+		this.p1RemovedHandler();
+		if (this.secondPlayer)
+			this.p2RemovedHandler();
+	}
+
+	startListening() {
+		if (!this.inited) return;
+		this.p1AddedHandler();
+		if (this.secondPlayer)
+			this.p2AddedHandler();
+	}
+
 	render(attrs: IAttrs) {
 		setTimeout(this.start.bind(this));
 
-		return (
+		const ret = (
 			<div id="name-enquiry">
 				<div className="container">
 
@@ -216,6 +247,11 @@ export default class NameEnquiry extends Component<IAttrs> {
 				</div>
 			</div>
 		);
+
+		if (attrs.ref)
+			attrs.ref(this);
+
+		return ret;
 	}
 
 	private blinkError() {

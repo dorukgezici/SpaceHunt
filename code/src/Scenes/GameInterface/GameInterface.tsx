@@ -46,6 +46,8 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 	private starWarsIntro: StarWarsIntro;
 	// @ts-ignore
 	private modal: Modal;
+	// @ts-ignore
+	private nameEnquiry: NameEnquiry;
 	private upAnimation: AnimationSequence;
 	private downAnimation: AnimationSequence;
 	private particles: ParticlesJS | null = null;
@@ -117,26 +119,23 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		if (type === "menu") {
 			this.menu.style.display = "block";
 			this.canvasHolder.style.display = "none";
+			this.startAnimations();
 		} else {
+			if (!this.isUp)
+				this.stopAnimations();
 			this.menu.style.display = "none";
 			this.canvasHolder.style.display = "flex";
 		}
 	}
 
 	private displayBelowHidden() {
-		if (this.particles) {
-			this.particles.destroy();
-			this.particles = null;
-		}
+		this.stopAnimations();
 		this.emit("movedUp", void (0));
 	}
 
 	private displayBelowShown() {
-		if (this.particles)
-			this.particles.destroy();
-		requestAnimationFrame(() =>
-			this.particles = new ParticlesJS(homeParticlesID, particlesJSConfig)
-		);
+		if (this.type === "menu")
+			this.startAnimations();
 		this.emit("moveDown", void (0));
 	}
 
@@ -148,7 +147,23 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 		this.emit("moveUp", void (0));
 	}
 
-	private start(name1: string, name2?: string) {
+	private stopAnimations() {
+		this.nameEnquiry.stopListening();
+		if (this.particles) {
+			this.particles.destroy();
+			this.particles = null;
+		}
+	}
+
+	private startAnimations() {
+		this.nameEnquiry.startListening();
+		if (this.particles)
+			this.particles.destroy();
+		else
+			this.particles = new ParticlesJS(homeParticlesID, particlesJSConfig);
+	}
+
+	private onStart(name1: string, name2?: string) {
 		const names = name2 ? [name1, name2] : [name1];
 		this.emit("playClicked", names);
 	}
@@ -189,7 +204,7 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 							</div>
 
 							<div id="name-enquiry-wrapper" ref={e => this.menu = e}>
-								<NameEnquiry bootstrap={bootstrap} info={this.showModal.bind(this)} start={this.start.bind(this)} />
+								<NameEnquiry ref={ne => this.nameEnquiry = ne} bootstrap={bootstrap} info={this.showModal.bind(this)} start={this.onStart.bind(this)} />
 								{window.ENV === "dev" && (
 									<div id="menu">
 										{[1, 2, 3, 4].map((t, i) => (
