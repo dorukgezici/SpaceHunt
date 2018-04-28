@@ -24,8 +24,8 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 	// players
 	protected players: BasePlayer[];
+	followedPlayer: BasePlayer;
 	frontPlayer: BasePlayer;
-
 
 	constructor(sceneKey: string, bootstrap: GameBootstrap, levelBounds: ex.BoundingBox, players: BasePlayer[], groundTexture: ex.Texture, background: ex.Sprite, backgroundYSpeed?: number) {
 		super();
@@ -40,22 +40,34 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 		this.players = players;
 
-		// extend update method of the scene to let the camera focus the player in front -> extra function to be called after construction (and after players have been added to the array)
+		this.followedPlayer = this.players[0];
 		this.frontPlayer = this.players[0];
+
 		const baseUpdateMethod = this.scene.update;
 		const scene = this.scene;
-		const level = this;
-		this.scene.update = function () {
-			for (let p of level.players) {
-				if (p.x > level.frontPlayer.x) {
-					scene.camera.removeStrategy(level.frontPlayer.cameraStrategy);
-					level.frontPlayer = p;
-					scene.camera.addStrategy(level.frontPlayer.cameraStrategy);
-					scene.camera.addStrategy(new LockLevelCameraStrategy(level.bounds, level.levelBounds));
-					level.background.player = level.frontPlayer;
+		this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+
+		this.scene.update = (engine: ex.Engine, delta: number) => {
+			for(let p of this.players) {
+				if(p.getWorldPos().x > this.frontPlayer.getWorldPos().x) {
+					this.frontPlayer = p;
 				}
 			}
-			baseUpdateMethod.apply(scene, arguments);
+
+			if(engine.input.keyboard.wasPressed(ex.Input.Keys.Space)) {
+				for(let p of this.players) {
+					if(p !== this.followedPlayer) {
+						scene.camera.removeStrategy(this.followedPlayer.cameraStrategy);
+						scene.camera.addStrategy(p.cameraStrategy);
+						this.followedPlayer = p;
+						this.background.player = this.followedPlayer;
+						this.scene.camera.addStrategy(new LockLevelCameraStrategy(this.bounds, this.levelBounds));
+						break;
+					}
+				}
+			}
+
+			baseUpdateMethod.apply(scene, [engine, delta]);
 		};
 		// end of extended update method
 
