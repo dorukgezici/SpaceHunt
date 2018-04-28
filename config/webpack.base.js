@@ -3,6 +3,7 @@ const CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 const path = require("path");
 const {
 	paths,
@@ -106,6 +107,9 @@ module.exports = config => ({
 			filename: "index.html",
 			inject: "head",
 			favicon: paths.code.favicon
+		}),
+		new ScriptExtHtmlWebpackPlugin({
+			defaultAttribute: "async"
 		}),
 		new CommonsChunkPlugin({
 			name: "polyfills",
