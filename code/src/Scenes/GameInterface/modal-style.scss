@@ -101,7 +101,7 @@ $modal-size: 400px;
 	}
 	&.toggled {
 		>.modal-content {
-			transform: rotateY(22deg) scale(0.8) translateX(-10vw);
+			transform: rotateY(20deg) scale(0.8) translateX(-10vw);
 			filter: grayscale(0.7) brightness(0.7);
 			pointer-events: none;
 		}

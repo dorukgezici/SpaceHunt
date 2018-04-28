@@ -14,16 +14,16 @@ const storyText = ({ state: { names } }: GameBootstrap) => [
 		? `and his brother, ${names[0]} and ${names[1]} Mikelson.`
 		: `${names[0]} Mikelson.`
 	),
-	"After a long intergalactic flight, Freddy finally finds himself on the planet Eslan, which, besides the absence of animals, does not any differ from Earth. The landing was not smooth and his first task is to get away from the crown of huge tree in the jungle."
+	`After a long intergalactic flight, ${names[1] ? `${names[0]} and ${names[1]} finally find themselves` : `${names[0]} finally finds himself`} on the planet Eslan, which, except for the absence of animals, does not differ from Earth. The landing was not smooth and ${names[1] ? "their" : "his"} first task is to get away from the crowns of huge trees in the jungle.`
 ];
 
 const timing = {
 	beforePrelude: 6500,
 	prelude: 12300,
 	afterPrelude: 6150,
-	logoFlow: 17000,
+	logoFlow: 16000,
 	crawlDelay: 3000,
-	crawlDuration: 68300,
+	crawlDuration: 67200,
 	after: 1000
 };
 
