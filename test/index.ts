@@ -12,3 +12,4 @@ import "./test";
 import "./Components/Background";
 import "./Level1/VineCreator";
 import "./Level1/PlayerVine";
+import "./Animations/TransformDraw";
