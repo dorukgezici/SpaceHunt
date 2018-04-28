@@ -215,7 +215,7 @@ export class GameBootstrap {
 
 		// @ts-ignore
 		this.engine = new Engine({
-			width: 1600,
+			width: 1000,
 			height: 600,
 			canvasElementId: this.interface.canvas.id,
 			backgroundColor: Color.Black,

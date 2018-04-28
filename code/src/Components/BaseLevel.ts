@@ -61,7 +61,7 @@ export default abstract class BaseLevel extends Class<IGameElementEvents> implem
 
 		// ground & background
 		this.ground = new Ground(this.levelBounds.right / 2, this.bounds.bottom - Ground.height / 2, groundTexture, levelBounds.getWidth());
-		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2, this.engine.drawWidth / 2, 5000, backgroundYSpeed);
+		this.background = new Background(background, this.players[0], 0, 0, this.engine.drawWidth / 2 + 100, this.engine.drawWidth / 2 + 100, 5000, backgroundYSpeed);
 
 		// further scene properties
 		ex.Physics.acc.setTo(0, 2000);

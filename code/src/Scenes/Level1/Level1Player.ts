@@ -35,21 +35,31 @@ export default class Level1Player extends BasePlayer {
 		}
 
 		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.left)) {
-			ash.changeState("idle-left");
+			if(this.onBranch) {
+				ash.changeState("idle-left");
+			}
 		}
 
 		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.right)) {
-			ash.changeState("idle-right");
+			if(this.onBranch) {
+				ash.changeState("idle-right");
+			}
 		}
 
 		if (engine.input.keyboard.isHeld(this.controls.left)) {
 			this.moveLeft();
-			ash.changeState("walk-left");
+
+			if(this.onBranch) {
+				ash.changeState("walk-left");
+			}
 		}
 
 		if (engine.input.keyboard.isHeld(this.controls.right)) {
 			this.moveRight();
-			ash.changeState("walk-right");
+
+			if(this.onBranch) {
+				ash.changeState("walk-right");
+			}
 		}
 
 		if (this.getWorldPos().x > this.levelLength + 10) {
