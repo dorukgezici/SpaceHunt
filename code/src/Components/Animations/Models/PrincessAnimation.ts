@@ -1,11 +1,6 @@
-import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "./DrawAnimationFactory";
-import { cubicEasing, IDrawBase, IBeforeDraw } from "./TransformDrawPart";
-import { IDrawSetProvider } from "./DrawAnimation";
-import { PlainDrawSet } from "./PlainDrawSet";
-import { Sprite } from "excalibur";
-import { bodyParts, sprites, IBodyParts } from "./PrincessParts";
-import { ITransformDrawStateCollection } from "./TransformDrawSet";
-import { IBodyPart } from "./MichaelsonParts";
+import { ITransformDrawSetProviderData, TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../Framework/DrawAnimationFactory";
+import { IDrawBase } from "../Framework/TransformDrawPart";
+import { IBodyParts, bodyParts, sprites } from "../Models/PrincessParts";
 
 export type IPrincessAnimationState = "idle";
 type IPAS = IPrincessAnimationState;

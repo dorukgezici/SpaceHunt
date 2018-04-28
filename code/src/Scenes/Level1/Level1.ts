@@ -31,9 +31,9 @@ export default class Level1 extends BaseLevel {
 			Level1.levelBounds,
 			// players[]
 			(bootstrap.state.names.length === 2
-				? ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state),
-				new Level1Player(30, 0, Level1.levelBounds.right, controlSets.controls2, bootstrap.state)]) // two players required
-				: ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state)])), // just one player required
+				? ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state, true),
+				new Level1Player(30, 0, Level1.levelBounds.right, controlSets.controls2, bootstrap.state, false)]) // two players required
+				: ([new Level1Player(100, 0, Level1.levelBounds.right, controlSets.controls1, bootstrap.state, true)])), // just one player required
 			Level1.groundTexture,
 			resources.level1.bg.asSprite()
 		);

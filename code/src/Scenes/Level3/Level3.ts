@@ -25,8 +25,8 @@ export default class Level3 extends BaseLevel {
 			Level3.levelBounds,
 			// players[]
 			(bootstrap.state.names.length === 2
-				? ([new Level3Player(100, 400, controlSets.controls1, bootstrap.state), new Level3Player(30, 250, controlSets.controls2, bootstrap.state)]) // two players required
-				: ([new Level3Player(100, 400, controlSets.controls1, bootstrap.state)])), // just one player required
+				? ([new Level3Player(100, 400, controlSets.controls1, bootstrap.state, true), new Level3Player(30, 250, controlSets.controls2, bootstrap.state, false)]) // two players required
+				: ([new Level3Player(100, 400, controlSets.controls1, bootstrap.state, true)])), // just one player required
 			Level3.groundTexture,
 			Resources.level3.bg.asSprite()
 		);

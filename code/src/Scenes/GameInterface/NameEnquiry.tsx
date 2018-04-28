@@ -1,35 +1,14 @@
-import { Input } from "excalibur";
-import { AnimationSequence } from "../../Components/AnimationSequence";
-import { texture, textureDuck } from "../../Components/Animations/MichaelsonParts";
+import { AnimationSequence } from "../../Components/Animations/AnimationSequence";
+import { texture, textureBro, textureDuck, textureDuckBro } from "../../Components/Animations/Models/MikelsonParts";
+import { IControlSet, controlSets } from "../../Components/BasePlayer";
+import { GameBootstrap } from "../../GameBootstrap";
 import { Component, InterfaceBuilder } from "../../InterfaceBuilder";
 import CanvasAbstraction from "./CanvasAbstraction";
 import PlayerBox from "./PlayerBox";
-import { GameBootstrap } from "../../GameBootstrap";
 require("./name-enquiry.scss");
 
-export interface IKeyInterface {
-	up: Input.Keys;
-	down: Input.Keys;
-	left: Input.Keys;
-	right: Input.Keys;
-}
-
 export type IKeyNames = {
-	[T in keyof IKeyInterface]?: string;
-};
-
-const keys1: IKeyInterface = {
-	up: Input.Keys.W,
-	down: Input.Keys.S,
-	left: Input.Keys.A,
-	right: Input.Keys.D,
-};
-
-const keys2: IKeyInterface = {
-	up: Input.Keys.Up,
-	down: Input.Keys.Down,
-	left: Input.Keys.Left,
-	right: Input.Keys.Right,
+	[T in keyof IControlSet]?: string;
 };
 
 interface IAttrs {
@@ -82,8 +61,12 @@ export default class NameEnquiry extends Component<IAttrs> {
 
 		const p1 = texture.load();
 		const p2 = textureDuck.load();
+		const p3 = textureBro.load();
+		const p4 = textureDuckBro.load();
 		await p1;
 		await p2;
+		await p3;
+		await p4;
 		this.pamc1.startListening();
 		this.pamc1.start();
 	}
@@ -170,7 +153,9 @@ export default class NameEnquiry extends Component<IAttrs> {
 
 					<PlayerBox
 						position="left"
-						keys={keys1}
+						isBro={false}
+						keys={controlSets.controls1}
+						keyNames={{ left: "⬅", right: "⮕", up: "⬆", down: "⬇" }}
 						value={attrs.bootstrap.state.names[0]}
 						ref={pb => this.pb1 = pb}
 						refCA={ca => this.ca1 = ca}
@@ -211,9 +196,9 @@ export default class NameEnquiry extends Component<IAttrs> {
 						<div className="player-box-wrapper" ref={e => this.secondPlayerWrapper = e}>
 							<PlayerBox
 								position="right"
-								keys={keys2}
+								isBro={true}
+								keys={controlSets.controls2}
 								value={attrs.bootstrap.state.names[1]}
-								keyNames={{ left: "⬅", right: "⮕", up: "⬆", down: "⬇" }}
 								hidden={true}
 								ref={pb => this.pb2 = pb}
 								refCA={ca => this.ca2 = ca}

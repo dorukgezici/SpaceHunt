@@ -1,10 +1,7 @@
-import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "./DrawAnimationFactory";
-import { cubicEasing, IDrawBase, IBeforeDraw, ITransformation } from "./TransformDrawPart";
-import { IDrawSetProvider } from "./DrawAnimation";
-import { PlainDrawSet } from "./PlainDrawSet";
-import { Sprite, Vector } from "excalibur";
-import { bodyParts, IBodyPart, sprites, spritesBro, IBodyParts, IBounds } from "./MichaelsonParts";
-import { ITransformDrawStateCollection } from "./TransformDrawSet";
+import { ITransformDrawSetProviderData, TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../Framework/DrawAnimationFactory";
+import { IBeforeDraw, IDrawBase } from "../Framework/TransformDrawPart";
+import { ITransformDrawStateCollection } from "../Framework/TransformDrawSet";
+import { IBodyParts, bodyParts, sprites, spritesBro } from "../Models/MikelsonParts";
 
 export const playerAnimationTypes = [
 	"idle-right",

@@ -1,5 +1,5 @@
-import { IDrawableSet, IDrawSet } from "./DrawAnimation";
 import { Vector } from "Index";
+import { IDrawSet, IDrawableSet } from "./DrawAnimation";
 
 export type IDrawHandler<T extends string> = (
 	this: PlainDrawSet<T>,

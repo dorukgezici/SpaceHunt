@@ -1,8 +1,8 @@
 import * as ex from "excalibur";
 import BasePlayer, { controlSets, IControlSet } from "../../Components/BasePlayer";
 import Level4 from "./Level4";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { playerAnimationFactory, IPlayerAnimations, states } from "../../Components/Animations/MichelsonAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { playerAnimationFactory, IPlayerAnimations, states, brotherAnimationFactory } from "../../Components/Animations/Models/MikelsonAnimation";
 import BaseLevel from "../../Components/BaseLevel";
 import Ground from "../../Components/Ground";
 import { IGameBootstrapState } from "../../GameBootstrap";
@@ -17,7 +17,7 @@ export default class Level4Player extends BasePlayer {
 	private minX: number;
 	private maxX: number;
 	private moveDir: number = 0;
-	private animation?: DrawAnimation<IPlayerAnimations>;
+	private animation: DrawAnimation<IPlayerAnimations>;
 
 	private posYold: number;
 	private stateX: IStateX = "right";
@@ -25,7 +25,7 @@ export default class Level4Player extends BasePlayer {
 
 	private isJumping: boolean = false;
 
-	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState) {
+	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.minX = Level4.levelBounds.left + Level4Player.size.w / 2;
 		this.maxX = Level4.levelBounds.right - Level4Player.size.w / 2;
@@ -33,11 +33,10 @@ export default class Level4Player extends BasePlayer {
 		this.body.useBoxCollision();
 		this.y += this.getHeight() / 2;
 		this.posYold = this.pos.y;
-	}
-
-	initAnimations() {
-		if (!this.animation)
+		if (isFirst)
 			this.animation = playerAnimationFactory.attachTo(this);
+		else
+			this.animation = brotherAnimationFactory.attachTo(this);
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -150,8 +149,7 @@ export default class Level4Player extends BasePlayer {
 	changeAnimationState(stateX: string = this.stateX, stateY: string = this.stateY) {
 		const state = stateY + "-" + stateX as IPlayerAnimations;
 		// console.log(state);
-		if (this.animation)
-			this.animation.changeState(state);
+		this.animation.changeState(state);
 	}
 
 }

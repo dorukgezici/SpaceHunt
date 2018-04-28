@@ -1,10 +1,7 @@
-import { ITransformDrawSetProviderData, createTransformDrawSetProvider, TransformDrawAnimationFactory } from "./DrawAnimationFactory";
-import { cubicEasing, IDrawBase, IBeforeDraw } from "./TransformDrawPart";
-import { IDrawSetProvider } from "./DrawAnimation";
-import { PlainDrawSet } from "./PlainDrawSet";
-import { Sprite } from "excalibur";
-import { bodyParts, sprites, IBodyParts } from "./EslanParts";
-import { ITransformDrawStateCollection } from "./TransformDrawSet";
+import { ITransformDrawSetProviderData, TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../Framework/DrawAnimationFactory";
+import { IBeforeDraw, IDrawBase } from "../Framework/TransformDrawPart";
+import { ITransformDrawStateCollection } from "../Framework/TransformDrawSet";
+import { IBodyParts, bodyParts, sprites } from "../Models/EslanParts";
 
 export const eslanAnimationTypes = [
 	"idle-right",

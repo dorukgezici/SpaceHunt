@@ -163,31 +163,6 @@ export class InvalidChildElement extends Error {
  */
 export namespace InterfaceBuilder {
 
-	export const canvasId = "canvas";
-	export const appId = "app";
-	export const canvasHolderId = "canvas-holder";
-
-	/**
-	 * Gets the `#canvas-holder` DOM element.
-	 */
-	export function getCanvasHolder() {
-		return document.getElementById(canvasHolderId) as HTMLDivElement;
-	}
-
-	/**
-	 * Gets the `#canvas` DOM element.
-	 */
-	export function getCanvas() {
-		return document.getElementById(canvasId) as HTMLCanvasElement;
-	}
-
-	/**
-	 * Gets the `#app` DOM element.
-	 */
-	export function getApp() {
-		return document.getElementById(appId) as HTMLDivElement;
-	}
-
 	/**
 	 * Checks if given value is a candidate to be appended to DOM.
 	 * @param value The value to test.
@@ -466,58 +441,6 @@ export namespace InterfaceBuilder {
 
 	function internalShowElement(element: HTMLElement) {
 		element.classList.remove("hide");
-	}
-
-	/**
-	 * Hides an HTML element by setting its display CSS property to "none".
-	 * @param element Element to hide.
-	 */
-	export function _hideElement(element: HTMLElement) {
-		element.style.display = "none";
-	}
-
-	/**
-	 * 	Unhides an HTML element by setting its display CSS property to something other than "none".
-	 * @param element Element to unhide.
-	 * @param displayStyle Display CSS property, if other than "block";
-	 */
-	export function _showElement(element: HTMLElement, displayStyle: string = "block") {
-		element.style.display = displayStyle;
-	}
-
-	/**
-	 * Display given elements in the default interface container (the `#app` element) and hides the default canvas (the `#canvas` element).
-	 * @param elementCollection Elements to display.
-	 */
-	export function displayDefault(elementCollection: JSX.ElementCollection) {
-		const app = getApp();
-		const ch = getCanvasHolder();
-		if (app && ch) {
-			replaceContent(getApp(), elementCollection);
-			internalHideElement(ch);
-			internalShowElement(app);
-		} else throw new DOMContentNotLoaded(); // throw if not loaded
-	}
-
-	/**
-	 * Clears and hides application's default interface container (the `#app` element) and shows the default canvas (the `#canvas` element).
-	 */
-	export function clearDefault() {
-		const app = getApp();
-		const ch = getCanvasHolder();
-		if (app && ch) {
-			clearContent(app);
-			internalHideElement(app);
-			internalShowElement(ch);
-		} else throw new DOMContentNotLoaded(); // throw if not loaded
-	}
-
-	/**
-	 * Subscribes a listener to DOMContentLoaded event.
-	 * @param callback Listener to subscribe.
-	 */
-	export function onDOMContentLoaded(callback: EventListenerOrEventListenerObject) {
-		document.addEventListener("DOMContentLoaded", callback);
 	}
 
 }

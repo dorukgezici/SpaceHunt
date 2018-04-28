@@ -1,6 +1,4 @@
-import { Actor, IDrawable, Vector } from "excalibur";
-import { Class } from "../../Class";
-import { IGameEventValue } from "../../GameBootstrap";
+import { Vector } from "excalibur";
 
 export interface IDrawableSet {
 	/**

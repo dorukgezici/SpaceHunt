@@ -365,4 +365,7 @@
 	cursor: pointer;
 	transition: all .1s;
 	user-select: none;
+	&.small {
+		font-size: 16px;
+	}
 }

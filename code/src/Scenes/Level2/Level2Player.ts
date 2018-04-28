@@ -1,7 +1,7 @@
 import * as ex from "excalibur";
-import { DrawAnimation } from "../../Components/Animations/DrawAnimation";
-import { modelSwimSize } from "../../Components/Animations/MichaelsonParts";
-import { IPlayerAnimations, playerAnimationFactory } from "../../Components/Animations/MichelsonAnimation";
+import { DrawAnimation } from "../../Components/Animations/Framework/DrawAnimation";
+import { modelSwimSize } from "../../Components/Animations/Models/MikelsonParts";
+import { IPlayerAnimations, playerAnimationFactory, brotherAnimationFactory } from "../../Components/Animations/Models/MikelsonAnimation";
 import BasePlayer, { IControlSet } from "../../Components/BasePlayer";
 import { IGameBootstrapState } from "../../GameBootstrap";
 import Level2 from "./Level2";
@@ -29,7 +29,7 @@ export default class Level2Player extends BasePlayer {
 	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
-	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label, state: IGameBootstrapState) {
+	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.minX = Level2.levelBounds.left + modelSwimSize.w / 2;
 		this.maxX = Level2.levelBounds.right - modelSwimSize.w / 2;
@@ -49,7 +49,10 @@ export default class Level2Player extends BasePlayer {
 		this.collisionType = ex.CollisionType.Active;
 		this.on("precollision", this.onPrecollision);
 
-		this.animation = playerAnimationFactory.attachTo(this);
+		if (isFirst)
+			this.animation = playerAnimationFactory.attachTo(this);
+		else
+			this.animation = brotherAnimationFactory.attachTo(this);
 		this.animation.changeState("swim-right");
 	}
 

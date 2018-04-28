@@ -1,0 +1,78 @@
+$timesSquare: "Times Square";
+
+@font-face {
+	font-family: $timesSquare;
+	src: url("../../Resources/Fonts//TimesSquare/TIMES_SQ.TTF")
+}
+
+#game-bar-holder {
+	min-width: 100%;
+}
+
+#game-bar {
+	height: 64px;
+	width: 100%;
+	box-sizing: border-box;
+	padding: 0 12px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+
+	.lives {
+		display: flex;
+		flex-direction: row;
+	}
+
+	.live {
+		height: 44px;
+		width: 45px;
+		background-image: url("../../Resources/Images/StatusBar.png");
+		background-position: -18px -64px;
+		+.live {
+			margin-left: 12px;
+		}
+	}
+
+	.score, .title {
+		font-size: 48px;
+		font-family: $timesSquare;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.oxygen-holder, .oxygen-level {
+		width: 101px;
+		height: 35px;
+	}
+
+	.oxygen-wrapper {
+		display: flex;
+	}
+	
+	.oxygen-holder {
+		overflow: hidden;
+		position: relative;
+		margin-left: 12px;
+		border: 4px solid #0a015a;
+		outline: 1px solid black;
+		box-sizing: content-box;
+
+		&::after {
+			position: absolute;
+			content: '';
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			border: 1px solid black;
+		}
+	}
+
+	.oxygen-level {
+		position: absolute;
+		box-sizing: border-box;
+		background: #46caf0;
+		border-right: 1px solid black; 
+	}
+
+}

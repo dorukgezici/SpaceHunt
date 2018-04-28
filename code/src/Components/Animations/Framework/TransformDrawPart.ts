@@ -1,4 +1,4 @@
-import { Vector, IDrawable } from "excalibur";
+import { Vector } from "excalibur";
 
 export interface ITransformation {
 	rotate?: number;

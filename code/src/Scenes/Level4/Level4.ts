@@ -6,7 +6,7 @@ import Cannibal from "./Cannibal";
 import Vine from "../Level1/Vine";
 import Princess from "./Princess";
 import Pot from "./Pot";
-import { modelSize } from "../../Components/Animations/EslanParts";
+import { modelSize } from "../../Components/Animations/Models/EslanParts";
 import { controlSets } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
 import Resources from "../../Resources";
@@ -33,8 +33,8 @@ export default class Level4 extends BaseLevel {
 			bootstrap,
 			Level4.levelBounds,
 			(bootstrap.state.names.length === 2
-				? ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state), new Level4Player(30, 250, controlSets.controls2, bootstrap.state)]) // two players required
-				: ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state)])), // just one player required
+				? ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state, true), new Level4Player(30, 250, controlSets.controls2, bootstrap.state, false)]) // two players required
+				: ([new Level4Player(100, 400, controlSets.controls1, bootstrap.state, true)])), // just one player required
 			Level4.groundTexture,
 			Resources.level4.bg.asSprite()
 		);
@@ -54,9 +54,6 @@ export default class Level4 extends BaseLevel {
 
 		// player handling - init level-specific animations
 		this.level4Players = this.players as Level4Player[];
-		for (let p of this.level4Players) {
-			p.initAnimations();
-		}
 
 		// add actors to scene
 		this.buildScene();

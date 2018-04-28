@@ -1,18 +1,14 @@
-import { Engine, GameEvent, Color, Input, Loader } from "excalibur";
+import { Color, Engine, GameEvent, Input, Loader } from "excalibur";
 import { IEvented } from "./Class";
-import { NameEnquiry } from "./Scenes/NameEnquiry/NameEnquiry";
-import Menu from "./Scenes/Menu/Menu";
-import Intro from "./Scenes/Intro/Intro";
 import StateListener from "./Components/StateListener";
+import { InterfaceBuilder } from "./InterfaceBuilder";
+import { getLoadableResources } from "./Resources";
+import GameInterface from "./Scenes/GameInterface/GameInterface";
+import * as stories from "./Scenes/GameInterface/Story";
 import Level1 from "./Scenes/Level1/Level1";
 import Level2 from "./Scenes/Level2/Level2";
 import Level3 from "./Scenes/Level3/Level3";
 import Level4 from "./Scenes/Level4/Level4";
-import { getLoadableResources } from "./Resources";
-import * as Stories from "./Scenes/Intro/Story";
-import StarWarsIntro from "./Scenes/StarWarsIntro/StarWarsIntro";
-import GameInterface from "./Scenes/GameInterface/GameInterface";
-import { InterfaceBuilder } from "./InterfaceBuilder";
 
 /**
  * A game event that contains a related event value.
@@ -68,6 +64,7 @@ export interface IGameBootstrapState {
 	title: string | null;
 	loaded: boolean;
 	lives: number;
+	score: string | number | unset;
 	oxygen: ReadonlyArray<number>; // array of numbers from interval [0, 1]
 	showOxygen: boolean;
 	names: ReadonlyArray<string>;
@@ -76,11 +73,16 @@ export interface IGameBootstrapState {
 const defaultGameBootstrapState: IGameBootstrapState = {
 	title: null,
 	lives: 5,
+	score: null,
 	oxygen: [],
 	showOxygen: false,
 	names: ["Freddy", "Bro"],
 	loaded: false,
 };
+
+const INITIAL_LEVEL_INDEX = -1;
+const levels = [Level1, Level2, Level3, Level4];
+const transitionStories = [stories.level1, stories.level2, stories.level3, stories.level4];
 
 /**
  * Game bootstrap object.
@@ -100,53 +102,102 @@ export class GameBootstrap {
 	/**
 	 * Excaliburjs' game engine.
 	 */
-	readonly engine: Engine;
-	/**
-	 * The key of the root (blank) scene.
-	 */
-
 	// @ts-ignore
-	readonly interface: GameInterface;
+	readonly engine: Engine = null;
+	/**
+	 * UI Interface.
+	 */
+	// @ts-ignore
+	readonly interface: GameInterface = null;
 	readonly loader: Loader;
-
-	private sceneIndex = 0;
+	private levelIndex = INITIAL_LEVEL_INDEX;
 	private currentGameElement: IGameElement | null = null;
-	private menuItems = [{
-		index: 2,
-		name: "Level 1"
-	}, {
-		index: 4,
-		name: "Level 2"
-	}, {
-		index: 6,
-		name: "Level 3"
-	}, {
-		index: 8,
-		name: "Level 4"
-	}, {
-		index: 0,
-		name: "Start the Game"
-	}];
-
-	private levels: (() => IGameElement)[] = [
-		() => new NameEnquiry(this),
-		() => new Intro(this, Stories.level1),
-		() => new Level1(this),
-		() => new Intro(this, Stories.level2),
-		() => new Level2(this),
-		() => new Intro(this, Stories.level3),
-		() => new Level3(this),
-		() => new Intro(this, Stories.level4),
-		() => new Level4(this),
-		() => new Intro(this, Stories.end)
-	];
 
 	constructor() {
 		this.stateListener = new StateListener<IGameBootstrapState>(defaultGameBootstrapState);
 		this.state = this.stateListener.createListenableObject();
+		this.loader = new Loader();
+		this.loader.addResources(getLoadableResources());
+	}
 
-		// @ts-ignore
-		this.interface = null;
+	private onLevelSelected({ level, players }: { level: number, players: number }) {
+		this.levelIndex = level;
+		const names = this.state.names;
+		if (names.length !== players) {
+			if (players === 2)
+				this.state.names = [names[0], "Bro"];
+			else
+				this.state.names = [names[0]];
+			this.state.title = this.state.names.join(" & ");
+		}
+		this.onShowContent();
+	}
+
+	private onPlayClicked(names: string[]) {
+		this.levelIndex = 0;
+		this.state.names = names;
+		this.state.title = names.join(" & ");
+		this.interface.showIntro();
+	}
+
+	private onShowContent() {
+		if (this.levelIndex === INITIAL_LEVEL_INDEX) {
+			this.interface.setContentType("menu");
+			return;
+		} else {
+			this.interface.setContentType("game");
+			this.startScene();
+		}
+	}
+
+	private onHideContent() {
+		this.stopCurrentElement();
+	}
+
+	private stopCurrentElement() {
+		const { engine, currentGameElement } = this;
+
+		if (currentGameElement) {
+			if (currentGameElement.dispose)
+				currentGameElement.dispose();
+			this.currentGameElement = null;
+		}
+		engine.removeScene(engine.currentScene);
+		engine.stop();
+	}
+
+	private startScene() {
+		this.engine.start();
+		const LevelClass = levels[this.levelIndex];
+		const level = new LevelClass(this);
+		this.currentGameElement = level;
+		level.once("done", ({ type }) => {
+			if (type === GameElementDoneType.Finished)
+				this.levelFinished();
+			else
+				this.levelAborted();
+		});
+	}
+
+	private levelFinished() {
+		const transition = transitionStories[this.levelIndex];
+		this.levelIndex++;
+		if (this.levelIndex >= levels.length)
+			this.levelIndex = INITIAL_LEVEL_INDEX;
+		this.interface.showTransition(transition);
+	}
+
+	private levelAborted() {
+		this.levelIndex = INITIAL_LEVEL_INDEX;
+		this.interface.showTransition(stories.death);
+	}
+
+	/**
+	 * Starts the game.
+	 */
+	async start() {
+		await this.loader.load();
+
 		InterfaceBuilder.replaceContent(document.body, (
 			<GameInterface
 				bootstrap={this}
@@ -157,7 +208,12 @@ export class GameBootstrap {
 			/>
 		));
 
-		// create the game engine
+		this.interface.on("levelSelected", this.onLevelSelected.bind(this));
+		this.interface.on("playClicked", this.onPlayClicked.bind(this));
+		this.interface.on("moveDown", this.onShowContent.bind(this)); // move
+		this.interface.on("movedUp", this.onHideContent.bind(this)); // moveD // note the D
+
+		// @ts-ignore
 		this.engine = new Engine({
 			width: 1600,
 			height: 600,
@@ -166,83 +222,7 @@ export class GameBootstrap {
 			pointerScope: Input.PointerScope.Canvas
 		});
 
-		// this.engine.isDebug = true;
-
-		this.loader = new Loader();
-		this.loader.addResources(getLoadableResources());
-	}
-
-	private showMenu() {
-		const menu = new Menu(this.menuItems.map(t => t.name));
-		this.currentGameElement = menu;
-		menu.once("click", ({ id }) => {
-			this.sceneIndex = this.menuItems[id].index;
-			this.showScene();
-		});
-	}
-
-	private resetLevel() {
-		this.showScene();
-	}
-
-	private resetGame() {
-		if (this.currentGameElement && this.currentGameElement.dispose)
-			this.currentGameElement.dispose();
-		this.sceneIndex = 0;
-		this.showScene();
-	}
-
-	private showDeathStory() {
-		this.sceneIndex = 0;
-		if (this.currentGameElement && this.currentGameElement.dispose)
-			this.currentGameElement.dispose();
-		this.currentGameElement = new Intro(this, Stories.death);
-		this.currentGameElement.once("done", () => this.resetGame());
-	}
-
-	private showScene() {
-		if (this.sceneIndex >= this.levels.length || this.sceneIndex < 0) {
-			this.resetGame();
-			return;
-		}
-
-		if (this.currentGameElement && this.currentGameElement.dispose)
-			this.currentGameElement.dispose();
-		this.currentGameElement = this.levels[this.sceneIndex]();
-
-		// Trigger to show lives
-		this.state.lives = this.state.lives;
-
-		this.currentGameElement.once("done", ({ type }) => {
-			if (type === GameElementDoneType.Finished) {
-				this.sceneIndex++;
-				this.showScene();
-			} else {
-				if (this.state.lives > 1) {
-					this.state.lives -= 1;
-					this.resetLevel();
-				} else {
-					this.showMenu();
-					// this.showDeathStory();
-				}
-			}
-		});
-
-	}
-
-	/**
-	 * Starts the game.
-	 */
-	start() {
-		this.showMenu();
-		this.loader.load().then(() => {
-			this.state.loaded = true;
-			/**
-			 * Do not start the engine with `this.loader` as this will try to load
-			 * resources twice, resulting in an error due to a bug in Excalibur.
-			 */
-			this.engine.start();
-		});
+		this.state.loaded = true;
 	}
 
 }

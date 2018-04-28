@@ -2,9 +2,9 @@ import * as ex from "excalibur";
 import BasePlayer, { IControlSet } from "../../Components/BasePlayer";
 import { attachPlayerAnimations } from "./PlayerAnimations";
 import Vine from "./Vine";
-import {IGameBootstrapState} from "../../GameBootstrap";
-import {IPlayerAnimations, selectedState} from "../../Components/Animations/MichelsonAnimation";
-import AnimationStateHandler from "../../Components/Animations/AnimationStateHandler";
+import { IGameBootstrapState } from "../../GameBootstrap";
+import { IPlayerAnimations, selectedState } from "../../Components/Animations/Models/MikelsonAnimation";
+import AnimationStateHandler from "../../Components/Animations/Framework/AnimationStateHandler";
 
 export default class Level1Player extends BasePlayer {
 	static readonly MOVEMENT_SPEED = 8;
@@ -16,11 +16,11 @@ export default class Level1Player extends BasePlayer {
 	onVine: boolean = false;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
-	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState) {
+	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.on("precollision", this.onPrecollision);
 		this.on("postcollision", this.onPostcollision);
-		const animation = attachPlayerAnimations(this);
+		const animation = attachPlayerAnimations(this, !isFirst);
 		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
 		this.levelLength = levelLength;
 	}

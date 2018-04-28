@@ -1,4 +1,4 @@
-import { Class } from "../Class";
+import { Class } from "../../Class";
 
 interface IEvents {
 	done: {

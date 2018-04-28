@@ -1,8 +1,8 @@
-import { TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../../Components/Animations/DrawAnimationFactory";
-import { modelSize, spritesBro, sprites } from "../../Components/Animations/MichaelsonParts";
-import { allData } from "../../Components/Animations/MichelsonAnimation";
+import { TransformDrawAnimationFactory, createTransformDrawSetProvider } from "../../Components/Animations/Framework/DrawAnimationFactory";
+import { modelSize, spritesBro, sprites } from "../../Components/Animations/Models/MikelsonParts";
+import { allData } from "../../Components/Animations/Models/MikelsonAnimation";
 import Level1Player from "./Level1Player";
-import { IBeforeDraw } from "../../Components/Animations/TransformDrawPart";
+import { IBeforeDraw } from "../../Components/Animations/Framework/TransformDrawPart";
 
 export function attachPlayerAnimations(player: Level1Player, isBrother: boolean = false) {
 

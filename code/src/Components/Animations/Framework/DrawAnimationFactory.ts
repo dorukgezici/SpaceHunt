@@ -1,8 +1,8 @@
-import { ITransformDrawStateCollection, TransformDrawSet, ITransformDrawPartProvider } from "./TransformDrawSet";
-import { Class } from "../../Class";
-import { DrawAnimation, IDrawSet, IDrawSetProvider } from "./DrawAnimation";
 import { Actor, Vector } from "excalibur";
-import { IDrawBase, TransformDrawPart, IBeforeDraw } from "./TransformDrawPart";
+import { Class } from "../../../Class";
+import { DrawAnimation, IDrawSetProvider } from "./DrawAnimation";
+import { IBeforeDraw, IDrawBase, TransformDrawPart } from "./TransformDrawPart";
+import { ITransformDrawStateCollection, TransformDrawSet } from "./TransformDrawSet";
 
 interface IActorClass<T extends Actor = Actor> {
 	prototype: T;
@@ -56,17 +56,19 @@ export interface ITransformDrawSetProviderData<T extends string> {
 export function createTransformDrawSetProvider<T extends string>(data: ITransformDrawSetProviderData<T>, anchor?: Vector): IDrawSetProvider<T> {
 	const { states, selectedState, drawBase, beforeDraw } = data;
 
-	const state = states[selectedState];
-	const part = new TransformDrawPart<T>(
-		state && state.start || {},
-		state && state.end || {},
-		state && state.duration || 0,
-		state && state.easing,
-		anchor
-	);
-	part.drawBase = drawBase;
-	if (beforeDraw)
-		part.beforeDraw = beforeDraw;
+	return () => {
+		const state = states[selectedState];
+		const part = new TransformDrawPart<T>(
+			state && state.start || {},
+			state && state.end || {},
+			state && state.duration || 0,
+			state && state.easing,
+			anchor
+		);
+		part.drawBase = drawBase;
+		if (beforeDraw)
+			part.beforeDraw = beforeDraw;
 
-	return () => new TransformDrawSet<T>(states, selectedState, part);
+		return new TransformDrawSet<T>(states, selectedState, part);
+	};
 }

@@ -1,4 +1,4 @@
-import { Texture, Sprite } from "excalibur";
+import { Texture } from "excalibur";
 
 export class CustomTexture {
 
