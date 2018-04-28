@@ -173,10 +173,19 @@ export class GameBootstrap {
 		this.currentGameElement = level;
 		level.once("done", ({ type }) => {
 			if (type === GameElementDoneType.Finished)
-				this.levelFinished();
+				if (this.levelIndex == 0 && this.state.lives > 0)
+					this.resetLevel();
+				else
+					this.levelFinished();
 			else
 				this.levelAborted();
 		});
+	}
+
+	// Doesn't work?
+	private resetLevel() {
+		this.stopCurrentElement();
+		this.startScene();
 	}
 
 	private levelFinished() {

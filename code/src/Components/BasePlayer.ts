@@ -28,7 +28,12 @@ export default abstract class BasePlayer extends ex.Actor {
 		if (!this.dead) {
 			if (this.state.lives > 1) {
 				this.state.lives -= 1;
+				this.dead = true;
+				this.scene.camera.shake(10, 10, 100);
+				var fake_this = this;
+				setTimeout(function() { fake_this.dead = false; }, 800);
 			} else {
+				this.state.lives = 0;
 				this.dead = true;
 				this.scene.camera.shake(50, 50, 500);
 				this.kill();

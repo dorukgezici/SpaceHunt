@@ -133,4 +133,5 @@ export default class Level1Player extends BasePlayer {
 			this.pos.x += Level1Player.MOVEMENT_SPEED;
 		}
 	}
+
 }
