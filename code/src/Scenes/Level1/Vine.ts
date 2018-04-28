@@ -63,11 +63,11 @@ export default class Vine extends ex.Actor {
 
 	getAllParts(): Vine[] {
 		let root: Vine = this;
-		let vineParts: Vine[] = [];
+		let vineParts: Vine[] = [root];
 
 		while(root.nextPart) {
-			vineParts.push(root);
 			root = root.nextPart;
+			vineParts.push(root);
 		}
 
 		return vineParts;

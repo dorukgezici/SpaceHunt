@@ -10,3 +10,4 @@ import "../code/env.test";
 // list your tests here
 import "./test";
 import "./Components/Background";
+import "./Level1/VineCreator";

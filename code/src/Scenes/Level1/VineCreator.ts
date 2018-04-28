@@ -1,4 +1,3 @@
-import * as ex from "excalibur";
 import Vine from "./Vine";
 
 
@@ -6,7 +5,7 @@ export default class VineCreator {
 	static readonly distRange = {min: 330, max: 370};
 	static readonly lenRange = {min: 14, max: 18};
 	static readonly speedRange = {min: 0.8, max: 1.8};
-	static readonly rotRange = {min: 0.5, max: 0.9};
+	static readonly rotRange = {min: 0.6, max: 1};
 
 	start: number;
 	end: number;
