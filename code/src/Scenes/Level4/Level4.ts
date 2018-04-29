@@ -14,7 +14,7 @@ import Ground from "../../Components/Ground";
 
 export default class Level4 extends BaseLevel {
 
-	readonly numCannibals: number = 3;
+	readonly numCannibals: number = 5;
 	
 	static readonly sceneKey: string = "level4";
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
