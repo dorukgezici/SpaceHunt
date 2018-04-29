@@ -153,22 +153,11 @@ export default class Level1Player extends BasePlayer {
 	}
 
 	die(info: string) {
-		if (!this.dead) {
-			if (this.state.lives > 1) {
-				this.state.lives -= 1;
-				this.dead = true;
-				this.scene.camera.shake(10, 10, 100);
-				this.reset();
-				setTimeout(() => { this.dead = false; }, 800);
-			} else {
-				this.state.lives = 0;
-				this.dead = true;
-				this.scene.camera.shake(50, 50, 500);
-				this.kill();
-				this.x = -1000;
-				this.emit("death");
-			}
+		if(!this.dead && this.state.lives > 1) {
+			this.reset();
 		}
+
+		super.die(info);
 	}
 
 	private reset() {
