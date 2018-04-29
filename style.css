@@ -205,8 +205,8 @@ canvas {
           -webkit-transform: translateY(-20%) translateX(-14%) scale(1.2);
           transform: translateY(-20%) translateX(-14%) scale(1.2); }
   .modal-wrapper.toggled > .modal-content {
-    -webkit-transform: rotateY(22deg) scale(0.8) translateX(-10vw);
-    transform: rotateY(22deg) scale(0.8) translateX(-10vw);
+    -webkit-transform: rotateY(20deg) scale(0.8) translateX(-10vw);
+    transform: rotateY(20deg) scale(0.8) translateX(-10vw);
     -webkit-filter: grayscale(0.7) brightness(0.7);
     filter: grayscale(0.7) brightness(0.7);
     pointer-events: none; }
