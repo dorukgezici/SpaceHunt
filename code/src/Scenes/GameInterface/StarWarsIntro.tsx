@@ -10,11 +10,11 @@ const episodeText = "Episode 1";
 const titleText = "Unexpected kidnap";
 const storyText = ({ state: { names } }: GameBootstrap) => [
 	"The year 3020 is written, and travel between planets and galaxies is finally becoming common, but this fact carries some pitfalls. The technological war between the Earth and the planet Eslan from a nearby galaxy broke out.",
-	"During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband " + (names[1]
-		? `and his brother, ${names[0]} and ${names[1]} Mikelson.`
-		: `${names[0]} Mikelson.`
+	"During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of " + (names[1]
+		? `${names[0]} and ${names[1]}.`
+		: `${names[0]}.`
 	),
-	`After a long intergalactic flight, ${names[1] ? `${names[0]} and ${names[1]} finally find themselves` : `${names[0]} finally finds himself`} on the planet Eslan, which, except for the absence of animals, does not differ from Earth. The landing was not smooth and ${names[1] ? "their" : "his"} first task is to get away from the crowns of huge trees in the jungle.`
+	`After a long intergalactic flight, ${names[1] ? `${names[0]} and ${names[1]} finally arrive` : `${names[0]} finally arrives`} to the planet Eslan, which, except for the absence of animals, does not differ from Earth. The landing was not smooth and the first task is to get away from the crowns of huge trees in the jungle.`
 ];
 
 const timing = {

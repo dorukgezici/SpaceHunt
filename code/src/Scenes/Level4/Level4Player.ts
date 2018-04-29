@@ -25,7 +25,7 @@ export default class Level4Player extends BasePlayer {
 
 	private isJumping: boolean = false;
 
-	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
+	constructor(x: number, y: number, controlSet: IControlSet, state: IGameBootstrapState, private isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.minX = Level4.levelBounds.left + Level4Player.size.w / 2;
 		this.maxX = Level4.levelBounds.right - Level4Player.size.w / 2;
@@ -144,8 +144,11 @@ export default class Level4Player extends BasePlayer {
 		this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
 	}
 
+	declareWinner() {
+		this.state.winner = this.isFirst ? this.state.names[0] : this.state.names[1];
+	}
 
-	// convert seperated states to animation state
+	// convert separated states to animation state
 	changeAnimationState(stateX: string = this.stateX, stateY: string = this.stateY) {
 		const state = stateY + "-" + stateX as IPlayerAnimations;
 		// console.log(state);
