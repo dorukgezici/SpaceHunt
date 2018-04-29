@@ -31,6 +31,7 @@ export default class Princess extends ex.Actor {
 		if (ev.other instanceof BasePlayer) {
 			let player: BasePlayer = ev.other;
 			player.state.score += 200;
+			player.state.score += player.state.lives * 100;
 			player.win("you won by saving the princess");
 		}
 	}

@@ -114,7 +114,7 @@ export class GameBootstrap {
 	private currentGameElement: IGameElement | null = null;
 
 	constructor() {
-		this.stateListener = new StateListener<IGameBootstrapState>(defaultGameBootstrapState);
+		this.stateListener = new StateListener<IGameBootstrapState>({...defaultGameBootstrapState});
 		this.state = this.stateListener.createListenableObject();
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());
@@ -137,6 +137,10 @@ export class GameBootstrap {
 		this.levelIndex = 0;
 		this.state.names = names;
 		this.state.title = names.join(" & ");
+		this.state.lives = defaultGameBootstrapState.lives;
+		this.state.score = defaultGameBootstrapState.score;
+		this.state.oxygen = defaultGameBootstrapState.oxygen;
+		this.state.showOxygen = defaultGameBootstrapState.showOxygen;
 		this.interface.showIntro();
 	}
 
@@ -205,10 +209,6 @@ export class GameBootstrap {
 
 	private levelAborted() {
 		this.levelIndex = INITIAL_LEVEL_INDEX;
-		this.state.lives = defaultGameBootstrapState.lives;
-		this.state.score = defaultGameBootstrapState.score;
-		this.state.oxygen = defaultGameBootstrapState.oxygen;
-		this.state.showOxygen = defaultGameBootstrapState.showOxygen;
 		this.interface.showTransition(stories.death);
 	}
 
