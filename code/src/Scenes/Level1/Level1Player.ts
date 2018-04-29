@@ -17,6 +17,7 @@ export default class Level1Player extends BasePlayer {
 	timeOnVine: number = 500;
 	timer: any;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
+	private originalPosition: ex.IAbsolutePosition;
 
 	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
@@ -25,6 +26,7 @@ export default class Level1Player extends BasePlayer {
 		const animation = attachPlayerAnimations(this, !isFirst);
 		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
 		this.levelLength = levelLength;
+		this.originalPosition = {left: x, top: y};
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -150,4 +152,32 @@ export default class Level1Player extends BasePlayer {
 		console.log(this.timeOnVine);
 	}
 
+	die(info: string) {
+		if (!this.dead) {
+			if (this.state.lives > 1) {
+				this.state.lives -= 1;
+				this.dead = true;
+				this.scene.camera.shake(10, 10, 100);
+				this.reset();
+				setTimeout(() => { this.dead = false; }, 800);
+			} else {
+				this.state.lives = 0;
+				this.dead = true;
+				this.scene.camera.shake(50, 50, 500);
+				this.kill();
+				this.x = -1000;
+				this.emit("death");
+			}
+		}
+	}
+
+	private reset() {
+		this.inJump = false;
+		this.onVine = false;
+		this.onBranch = true;
+		this.x = this.originalPosition.left as number;
+		this.y = this.originalPosition.top as number;
+		this.vel.setTo(0, 0);
+		this.animationStateHandler.changeState("idle-right");
+	}
 }

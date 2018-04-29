@@ -1,7 +1,6 @@
 import * as ex from "excalibur";
 import { modelSize } from "./Animations/Models/MikelsonParts";
 import { IGameBootstrapState } from "../GameBootstrap";
-import BaseLevel from "./BaseLevel";
 import Ground from "./Ground";
 
 export default abstract class BasePlayer extends ex.Actor {
@@ -30,8 +29,7 @@ export default abstract class BasePlayer extends ex.Actor {
 				this.state.lives -= 1;
 				this.dead = true;
 				this.scene.camera.shake(10, 10, 100);
-				var fake_this = this;
-				setTimeout(function() { fake_this.dead = false; }, 800);
+				setTimeout(() => { this.dead = false; }, 800);
 			} else {
 				this.state.lives = 0;
 				this.dead = true;
@@ -53,11 +51,7 @@ export default abstract class BasePlayer extends ex.Actor {
 	// check if the player is at ground level
 	isGround(): boolean {
 		let groundLevel = this.scene.engine.getWorldBounds().bottom - Ground.height;
-		if (groundLevel - this.getBottom() <= 5) {
-			return true;
-		} else {
-			return false;
-		}
+		return groundLevel - this.getBottom() <= 5;
 	}
 
 }
