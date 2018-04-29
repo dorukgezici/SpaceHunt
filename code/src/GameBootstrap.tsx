@@ -64,7 +64,7 @@ export interface IGameBootstrapState {
 	title: string | null;
 	loaded: boolean;
 	lives: number;
-	score: string | number | unset;
+	score: number;
 	oxygen: ReadonlyArray<number>; // array of numbers from interval [0, 1]
 	showOxygen: boolean;
 	names: ReadonlyArray<string>;
@@ -73,7 +73,7 @@ export interface IGameBootstrapState {
 const defaultGameBootstrapState: IGameBootstrapState = {
 	title: null,
 	lives: 5,
-	score: null,
+	score: 0,
 	oxygen: [],
 	showOxygen: false,
 	names: ["Freddy", "Bro"],

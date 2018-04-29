@@ -14,6 +14,8 @@ export default class Level1Player extends BasePlayer {
 	onBranch: boolean = true;
 	levelLength: number;
 	onVine: boolean = false;
+	timeOnVine: number = 500;
+	timer: any;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 
 	constructor(x: number, y: number, levelLength: number, controlSet: IControlSet, state: IGameBootstrapState, isFirst: boolean) {
@@ -106,6 +108,13 @@ export default class Level1Player extends BasePlayer {
 			return;
 		}
 
+		this.state.score += Math.round(50000 / this.timeOnVine); // Max 100, min 10 points
+		console.log(this.timeOnVine);
+		this.timeOnVine = 500;
+		if (this.timer)
+			clearInterval(this.timer);
+		this.timer = setInterval(this.addTimeOnVine.bind(this), 500);
+
 		this.inJump = false;
 		vineRoot.alreadyCollidedWith.push(this);
 		this.scene.remove(this);
@@ -132,6 +141,13 @@ export default class Level1Player extends BasePlayer {
 		if (this.onBranch) {
 			this.pos.x += Level1Player.MOVEMENT_SPEED;
 		}
+	}
+
+	addTimeOnVine() {
+		this.timeOnVine += 150;
+		if (this.timeOnVine > 5000)
+			this.timeOnVine = 5000;
+		console.log(this.timeOnVine);
 	}
 
 }
