@@ -68,5 +68,7 @@ export default class Level1 extends BaseLevel {
 				vine.alreadyCollidedWith.splice(indexInCollidedList, 1);
 			}
 		}
+
+		this.state.score = Math.round(this.state.score / 2);
 	}
 }
