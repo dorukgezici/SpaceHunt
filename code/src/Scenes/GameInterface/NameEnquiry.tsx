@@ -186,7 +186,7 @@ export default class NameEnquiry extends Component<IAttrs> {
 						position="left"
 						isBro={false}
 						keys={controlSets.controls1}
-						keyNames={{ left: "⬅", right: "⮕", up: "⬆", down: "⬇" }}
+						keyNames={{ left: "⬅", right: "➡", up: "⬆", down: "⬇" }}
 						value={attrs.bootstrap.state.names[0]}
 						ref={pb => this.pb1 = pb}
 						refCA={ca => this.ca1 = ca}

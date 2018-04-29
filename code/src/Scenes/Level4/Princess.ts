@@ -30,6 +30,7 @@ export default class Princess extends ex.Actor {
 	onPrecollision(ev: any) {
 		if (ev.other instanceof BasePlayer) {
 			let player: BasePlayer = ev.other;
+			player.state.score += 200;
 			player.win("you won by saving the princess");
 		}
 	}
