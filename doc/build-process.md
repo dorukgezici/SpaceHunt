@@ -44,7 +44,7 @@ The project uses [webpack](https://webpack.js.org/) tool for building the applic
 
 For more information about dependency management used by Webpack, please refer to the [Dependency Management and Imports](dependency-management.md) document.
 
-Webpack configuration is located in the `config/` directory. It includes configurations for development and production builds, `config/webpack.dev.js` and `config/webpack.prod.js`. File `config/webpack.base.js` contains base configuration extended by both build development and production configurations. 
+Webpack configuration is located in the `config/` directory. It includes configurations for development, production, and test builds, `config/webpack.dev.js`, `config/webpack.prod.js`, and `config/webpack.test.js`. File `config/webpack.base.js` contains base configuration extended by development and production configurations. A global variable `ENV` exists on the `window` object and describes the type of the environment and build.
 
 ### Build Process
 
@@ -85,11 +85,19 @@ This build should be used for production as it is optimised for performance.
 
 The build directory `build/` can be cleaned (permanently deleted) by running `npm run clean`.
 
+### Test Build 
+
+Test build differs from development and production in that it does not contain the application itself, but rather test suites from the `test/` directory. It should only be used for running unit test within a browser environment. Please refer to the next chapter for details about testing.
+
+## Testing
+
+Testing encompasses unit tests that are run in an actual browser environment - Firefox by default, but Chrome can also be used. Both need to be pre-installed on the host machine. A dedicated test exists for compiling the tests. Karma and Jasmine are used as testing frameworks. The test is run with `npm test`, but a dedicated build can be built with by running `npm run build:test`, though the use of the latter is discouraged. Linting is done before test are run when using `npm test`.
+
 ## Linting
 
 The project declares style guidelines, which should be followed to a reasonable extent. Linting is not a part of the build process as style guidelines are not enforced, however, they are recommended to be followed.
 
-Linting is done using [TSLint](https://palantir.github.io/tslint/). Configuration files for production and development linting are located in `config/` directory. Linting can be tested by running `npm test` or `npm run lint:prod` for production linting or by running `npm run lint:dev` for development linting. Production linting considers all issues as errors, while development regards them as warning. For other details and differences between the two builds, please refer to the configuration files.
+Linting is done using [TSLint](https://palantir.github.io/tslint/). Configuration files for production and development linting are located in `config/` directory. Linting can be tested by running `npm test` (also runs unit tests) or `npm run lint:prod` for production linting or by running `npm run lint:dev` for development linting. Production linting considers all issues as errors, while development regards them as warning. For other details and differences between the two builds, please refer to the configuration files.
 
 ## CLI
 
@@ -99,12 +107,20 @@ Below is a list of all commands available.
 | --- | --- |
 | `npm start`<br>`npm run webserver` | Runs the development build, runs a webserver at [localhost:8080](http://localhost:8080) and opens it in a browser. |
 | `npm run webserver:noopen` | Runs the development build and runs a webserver at [localhost:8080](http://localhost:8080). |
-| `npm run lan` | Runs the development build, runs a webserver at [0.0.0.0:8080](http://0.0.0.0:0000) and opens it in a browser. |
+| `npm run lan` | Runs the development build, runs a webserver at [0.0.0.0:8080](http://0.0.0.0:8080) and opens it in a browser. |
 | `npm run build`<br>`npm run build:prod` | Builds the project for production. |
 | `npm run build:dev` | Runs the production build. |
+| `npm run build:test` | Runs the test build. |
 | `npm run clean` | Cleans the build (deletes the `build/` directory). |
-| `npm test`<br>`npm run lint:prod` | Runs associated linter in production mode. |
-| `npm run lint:dev` | Runs associated linter in develpment mode. |
+| `npm run clean` | Cleans the test build (deletes the `build-test/` directory). |
+| `npm test` | Runs associated linter and carries out units tests. |
+| `npm test:chrome` | Runs units tests in Chrome. |
+| `npm test:firefox` | Runs units tests in Firefox. |
+| `npm test:all` | Runs units tests in all associated browsers. |
+| `npm run lint`<br>`npm run lint:prod` | Runs associated linter in production mode. |
+| `npm run lint:dev` | Runs associated linter in development mode. |
+| `npm run lint:test` | Runs associated linter in test mode. |
+| `npm run serve` | Creates a server to serve content in the `build/` directory on [localhost:9090](http://localhost:9090). |
 
 Please note:
 

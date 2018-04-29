@@ -1,16 +1,18 @@
 import * as ex from "excalibur";
-import {controlSets} from "../../code/src/Components/BasePlayer";
+import { controlSets } from "../../code/src/Components/BasePlayer";
 import Level1Player from "../../code/src/Scenes/Level1/Level1Player";
 import Vine from "../../code/src/Scenes/Level1/Vine";
+import { IGameBootstrapState } from "../../code/src/GameBootstrap";
 
 describe("Player and Vine interaction", () => {
 
-	const state = {
+	const state: IGameBootstrapState = {
 		title: "Some title",
 		loaded: true,
 		lives: 5,
 		score: 0,
 		oxygen: [0.5],
+		winner: null,
 		showOxygen: false,
 		names: ["Freddy"]
 	};
@@ -48,7 +50,7 @@ describe("Player and Vine interaction", () => {
 		expect(player.getWorldPos().x).toEqual(200);
 	});
 
-	it("Shoud detach after jump", () => {
+	it("Should detach after jump", () => {
 		let player = new Level1Player(199, 100, 2000, controlSets.controls1, state, true);
 		scene.add(player);
 		player.attachToVine(vine.getAllParts()[5]);
