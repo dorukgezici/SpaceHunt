@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 75);
+/******/ 	return __webpack_require__(__webpack_require__.s = 76);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -16142,38 +16142,38 @@ exports.initialResources = [
     MikelsonParts_1.textureDuck.src,
     MikelsonParts_1.textureBro.src,
     MikelsonParts_1.textureDuckBro.src,
-    __webpack_require__(87),
-    __webpack_require__(88)
+    __webpack_require__(88),
+    __webpack_require__(89)
 ];
 var resources = {
     level1: {
-        bg: new excalibur_1.Texture(__webpack_require__(89)),
-        ground: new excalibur_1.Texture(__webpack_require__(90)),
-        tree: new excalibur_1.Texture(__webpack_require__(91)),
-        arrow: new excalibur_1.Texture(__webpack_require__(92)),
-        vine: new excalibur_1.Texture(__webpack_require__(93))
+        bg: new excalibur_1.Texture(__webpack_require__(90)),
+        ground: new excalibur_1.Texture(__webpack_require__(91)),
+        tree: new excalibur_1.Texture(__webpack_require__(92)),
+        arrow: new excalibur_1.Texture(__webpack_require__(93)),
+        vine: new excalibur_1.Texture(__webpack_require__(94))
     },
     level2: {
-        crocodile: new excalibur_1.Texture(__webpack_require__(94)),
-        ground: new excalibur_1.Texture(__webpack_require__(95)),
-        bg: new excalibur_1.Texture(__webpack_require__(96)),
-        bubble: new excalibur_1.Texture(__webpack_require__(97))
+        crocodile: new excalibur_1.Texture(__webpack_require__(95)),
+        ground: new excalibur_1.Texture(__webpack_require__(96)),
+        bg: new excalibur_1.Texture(__webpack_require__(97)),
+        bubble: new excalibur_1.Texture(__webpack_require__(98))
     },
     level3: {
-        bg: new excalibur_1.Texture(__webpack_require__(98)),
-        ground: new excalibur_1.Texture(__webpack_require__(99)),
-        smallRock: new excalibur_1.Texture(__webpack_require__(100)),
-        bigRock: new excalibur_1.Texture(__webpack_require__(101))
+        bg: new excalibur_1.Texture(__webpack_require__(99)),
+        ground: new excalibur_1.Texture(__webpack_require__(100)),
+        smallRock: new excalibur_1.Texture(__webpack_require__(101)),
+        bigRock: new excalibur_1.Texture(__webpack_require__(102))
     },
     level4: {
-        bg: new excalibur_1.Texture(__webpack_require__(102)),
-        ground: new excalibur_1.Texture(__webpack_require__(103)),
-        pot: new excalibur_1.Texture(__webpack_require__(104))
+        bg: new excalibur_1.Texture(__webpack_require__(103)),
+        ground: new excalibur_1.Texture(__webpack_require__(104)),
+        pot: new excalibur_1.Texture(__webpack_require__(105))
     },
     fonts: {
-        fontO: new excalibur_1.Resource(__webpack_require__(105), "blob"),
-        fontAO: new excalibur_1.Resource(__webpack_require__(106), "blob"),
-        fontTS: new excalibur_1.Resource(__webpack_require__(107), "blob")
+        fontO: new excalibur_1.Resource(__webpack_require__(106), "blob"),
+        fontAO: new excalibur_1.Resource(__webpack_require__(107), "blob"),
+        fontTS: new excalibur_1.Resource(__webpack_require__(108), "blob")
     },
     textures: {
         michealsonTexture: MikelsonParts_1.texture.exTexture(),
@@ -16197,91 +16197,6 @@ exports.getLoadableResources = getLoadableResources;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ex = __webpack_require__(0);
-var MikelsonParts_1 = __webpack_require__(12);
-var Ground_1 = __webpack_require__(19);
-var BasePlayer = /** @class */ (function (_super) {
-    __extends(BasePlayer, _super);
-    function BasePlayer(x, y, controlSet, state) {
-        var _this = _super.call(this, x, y, BasePlayer.size.w, BasePlayer.size.h, ex.Color.Violet) || this;
-        _this.dead = false;
-        _this.won = false;
-        _this.collisionArea.body.useBoxCollision();
-        _this.collisionType = ex.CollisionType.Active;
-        _this.controls = controlSet;
-        _this.state = state;
-        _this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(_this, ex.Axis.X);
-        return _this;
-    }
-    BasePlayer.prototype.die = function (info) {
-        var _this = this;
-        if (!this.dead) {
-            if (this.state.lives > 1) {
-                this.state.lives -= 1;
-                this.dead = true;
-                this.scene.camera.shake(10, 10, 100);
-                setTimeout(function () { _this.dead = false; }, 800);
-            }
-            else {
-                this.state.lives = 0;
-                this.dead = true;
-                this.scene.camera.shake(50, 50, 500);
-                this.kill();
-                this.x = -1000;
-                this.emit("death");
-            }
-        }
-    };
-    BasePlayer.prototype.win = function (info) {
-        if (!this.won) {
-            this.won = true;
-            this.emit("won");
-        }
-    };
-    // check if the player is at ground level
-    BasePlayer.prototype.isGround = function () {
-        var groundLevel = this.scene.engine.getWorldBounds().bottom - Ground_1.default.height;
-        return groundLevel - this.getBottom() <= 5;
-    };
-    BasePlayer.size = MikelsonParts_1.modelSize;
-    return BasePlayer;
-}(ex.Actor));
-exports.default = BasePlayer;
-var controls1 = {
-    up: ex.Input.Keys.Up,
-    down: ex.Input.Keys.Down,
-    left: ex.Input.Keys.Left,
-    right: ex.Input.Keys.Right
-};
-var controls2 = {
-    up: ex.Input.Keys.W,
-    down: ex.Input.Keys.S,
-    left: ex.Input.Keys.A,
-    right: ex.Input.Keys.D
-};
-exports.controlSets = {
-    controls1: controls1,
-    controls2: controls2
-};
-
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16592,6 +16507,91 @@ var InterfaceBuilder;
 
 
 /***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ex = __webpack_require__(0);
+var MikelsonParts_1 = __webpack_require__(12);
+var Ground_1 = __webpack_require__(19);
+var BasePlayer = /** @class */ (function (_super) {
+    __extends(BasePlayer, _super);
+    function BasePlayer(x, y, controlSet, state) {
+        var _this = _super.call(this, x, y, BasePlayer.size.w, BasePlayer.size.h, ex.Color.Violet) || this;
+        _this.dead = false;
+        _this.won = false;
+        _this.collisionArea.body.useBoxCollision();
+        _this.collisionType = ex.CollisionType.Active;
+        _this.controls = controlSet;
+        _this.state = state;
+        _this.cameraStrategy = new ex.LockCameraToActorAxisStrategy(_this, ex.Axis.X);
+        return _this;
+    }
+    BasePlayer.prototype.die = function (info) {
+        var _this = this;
+        if (!this.dead) {
+            if (this.state.lives > 1) {
+                this.state.lives -= 1;
+                this.dead = true;
+                this.scene.camera.shake(10, 10, 100);
+                setTimeout(function () { _this.dead = false; }, 800);
+            }
+            else {
+                this.state.lives = 0;
+                this.dead = true;
+                this.scene.camera.shake(50, 50, 500);
+                this.kill();
+                this.x = -1000;
+                this.emit("death");
+            }
+        }
+    };
+    BasePlayer.prototype.win = function (info) {
+        if (!this.won) {
+            this.won = true;
+            this.emit("won");
+        }
+    };
+    // check if the player is at ground level
+    BasePlayer.prototype.isGround = function () {
+        var groundLevel = this.scene.engine.getWorldBounds().bottom - Ground_1.default.height;
+        return groundLevel - this.getBottom() <= 5;
+    };
+    BasePlayer.size = MikelsonParts_1.modelSize;
+    return BasePlayer;
+}(ex.Actor));
+exports.default = BasePlayer;
+var controls1 = {
+    up: ex.Input.Keys.Up,
+    down: ex.Input.Keys.Down,
+    left: ex.Input.Keys.Left,
+    right: ex.Input.Keys.Right
+};
+var controls2 = {
+    up: ex.Input.Keys.W,
+    down: ex.Input.Keys.S,
+    left: ex.Input.Keys.A,
+    right: ex.Input.Keys.D
+};
+exports.controlSets = {
+    controls1: controls1,
+    controls2: controls2
+};
+
+
+/***/ }),
 /* 7 */,
 /* 8 */,
 /* 9 */,
@@ -16612,10 +16612,10 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimationHelpers_1 = __webpack_require__(35);
-exports.image = __webpack_require__(82);
-exports.imageBro = __webpack_require__(83);
-exports.imageDuck = __webpack_require__(84);
-exports.imageDuckBro = __webpack_require__(85);
+exports.image = __webpack_require__(83);
+exports.imageBro = __webpack_require__(84);
+exports.imageDuck = __webpack_require__(85);
+exports.imageDuckBro = __webpack_require__(86);
 exports.texture = new AnimationHelpers_1.CustomTexture(exports.image);
 exports.textureBro = new AnimationHelpers_1.CustomTexture(exports.imageBro);
 exports.textureDuck = new AnimationHelpers_1.CustomTexture(exports.imageDuck);
@@ -17788,9 +17788,9 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var excalibur_1 = __webpack_require__(0);
 var Class_1 = __webpack_require__(17);
-var DrawAnimation_1 = __webpack_require__(123);
-var TransformDrawPart_1 = __webpack_require__(124);
-var TransformDrawSet_1 = __webpack_require__(125);
+var DrawAnimation_1 = __webpack_require__(124);
+var TransformDrawPart_1 = __webpack_require__(125);
+var TransformDrawSet_1 = __webpack_require__(126);
 var TransformDrawAnimationFactory = /** @class */ (function (_super) {
     __extends(TransformDrawAnimationFactory, _super);
     function TransformDrawAnimationFactory(sets) {
@@ -17854,8 +17854,8 @@ var ex = __webpack_require__(0);
 var Class_1 = __webpack_require__(17);
 var GameBootstrap_1 = __webpack_require__(34);
 var Ground_1 = __webpack_require__(19);
-var Background_1 = __webpack_require__(141);
-var LockLevelCameraStrategy_1 = __webpack_require__(142);
+var Background_1 = __webpack_require__(142);
+var LockLevelCameraStrategy_1 = __webpack_require__(143);
 var BaseLevel = /** @class */ (function (_super) {
     __extends(BaseLevel, _super);
     function BaseLevel(sceneKey, bootstrap, levelBounds, players, groundTexture, background, backgroundYSpeed) {
@@ -17962,6 +17962,14 @@ exports.default = BaseLevel;
 
 "use strict";
 
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -17999,12 +18007,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var excalibur_1 = __webpack_require__(0);
-var StateListener_1 = __webpack_require__(81);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var StateListener_1 = __webpack_require__(82);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var Resources_1 = __webpack_require__(4);
-var GameInterface_1 = __webpack_require__(108);
-var stories = __webpack_require__(133);
-var Level1_1 = __webpack_require__(134);
+var GameInterface_1 = __webpack_require__(109);
+var stories = __webpack_require__(134);
+var Level1_1 = __webpack_require__(135);
 var Level2_1 = __webpack_require__(59);
 var Level3_1 = __webpack_require__(60);
 var Level4_1 = __webpack_require__(61);
@@ -18030,6 +18038,7 @@ var defaultGameBootstrapState = {
     showOxygen: false,
     names: ["Freddy", "Bro"],
     loaded: false,
+    winner: null,
 };
 var INITIAL_LEVEL_INDEX = -1;
 var levels = [Level1_1.default, Level2_1.default, Level3_1.default, Level4_1.default];
@@ -18053,7 +18062,7 @@ var GameBootstrap = /** @class */ (function () {
         this.interface = null;
         this.levelIndex = INITIAL_LEVEL_INDEX;
         this.currentGameElement = null;
-        this.stateListener = new StateListener_1.default(defaultGameBootstrapState);
+        this.stateListener = new StateListener_1.default(__assign({}, defaultGameBootstrapState));
         this.state = this.stateListener.createListenableObject();
         this.loader = new excalibur_1.Loader();
         this.loader.addResources(Resources_1.getLoadableResources());
@@ -18075,6 +18084,11 @@ var GameBootstrap = /** @class */ (function () {
         this.levelIndex = 0;
         this.state.names = names;
         this.state.title = names.join(" & ");
+        this.state.lives = defaultGameBootstrapState.lives;
+        this.state.score = defaultGameBootstrapState.score;
+        this.state.oxygen = defaultGameBootstrapState.oxygen;
+        this.state.showOxygen = defaultGameBootstrapState.showOxygen;
+        this.state.winner = null;
         this.interface.showIntro();
     };
     GameBootstrap.prototype.onShowContent = function () {
@@ -18135,7 +18149,7 @@ var GameBootstrap = /** @class */ (function () {
             this.levelAborted();
     };
     GameBootstrap.prototype.levelFinished = function () {
-        var transition = transitionStories[this.levelIndex];
+        var transition = transitionStories[this.levelIndex](this.state);
         this.levelIndex++;
         if (this.levelIndex >= levels.length)
             this.levelIndex = INITIAL_LEVEL_INDEX;
@@ -18143,7 +18157,7 @@ var GameBootstrap = /** @class */ (function () {
     };
     GameBootstrap.prototype.levelAborted = function () {
         this.levelIndex = INITIAL_LEVEL_INDEX;
-        this.interface.showTransition(stories.death);
+        this.interface.showTransition(stories.death(this.state));
     };
     /**
      * Starts the game.
@@ -18297,7 +18311,7 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var excalibur_1 = __webpack_require__(0);
 var AnimationHelpers_1 = __webpack_require__(35);
-exports.image = __webpack_require__(86);
+exports.image = __webpack_require__(87);
 exports.texture = new excalibur_1.Texture(exports.image);
 exports.modelSize = {
     w: 38,
@@ -18950,10 +18964,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Color_1 = __webpack_require__(53);
-var Point_1 = __webpack_require__(116);
+var Point_1 = __webpack_require__(117);
 var SimplexNoise_1 = __webpack_require__(55);
 var Static_1 = __webpack_require__(18);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var PARTICLE_NUM = 500;
 var STEP = 3;
 var Z_INC = 0.001;
@@ -19107,7 +19121,7 @@ var Particle = /** @class */ (function (_super) {
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony export (immutable) */ __webpack_exports__["default"] = SimplexNoise;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__PerlinNoise__ = __webpack_require__(117);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__PerlinNoise__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ClassicNoise__ = __webpack_require__(56);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Static__ = __webpack_require__(18);
 
@@ -19501,7 +19515,7 @@ function fade(t) {
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = ClassicNoise;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Xorshift__ = __webpack_require__(118);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__Xorshift__ = __webpack_require__(119);
 
 
 /**
@@ -19795,11 +19809,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var Sky_1 = __webpack_require__(143);
-var Level2Player_1 = __webpack_require__(144);
-var BubbleCreator_1 = __webpack_require__(145);
-var CrocodileCreator_1 = __webpack_require__(147);
-var BasePlayer_1 = __webpack_require__(5);
+var Sky_1 = __webpack_require__(144);
+var Level2Player_1 = __webpack_require__(145);
+var BubbleCreator_1 = __webpack_require__(146);
+var CrocodileCreator_1 = __webpack_require__(148);
+var BasePlayer_1 = __webpack_require__(6);
 var BaseLevel_1 = __webpack_require__(28);
 var Resources_1 = __webpack_require__(4);
 var Level2 = /** @class */ (function (_super) {
@@ -19875,9 +19889,9 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var Level3Player_1 = __webpack_require__(149);
-var RockCreator_1 = __webpack_require__(150);
-var BasePlayer_1 = __webpack_require__(5);
+var Level3Player_1 = __webpack_require__(150);
+var RockCreator_1 = __webpack_require__(151);
+var BasePlayer_1 = __webpack_require__(6);
 var BaseLevel_1 = __webpack_require__(28);
 var Resources_1 = __webpack_require__(4);
 var Level3 = /** @class */ (function (_super) {
@@ -19934,13 +19948,13 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
 var GameBootstrap_1 = __webpack_require__(34);
-var Level4Player_1 = __webpack_require__(152);
+var Level4Player_1 = __webpack_require__(62);
 var Cannibal_1 = __webpack_require__(153);
 var Vine_1 = __webpack_require__(58);
 var Princess_1 = __webpack_require__(155);
 var Pot_1 = __webpack_require__(157);
 var EslanParts_1 = __webpack_require__(36);
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var BaseLevel_1 = __webpack_require__(28);
 var Resources_1 = __webpack_require__(4);
 var Ground_1 = __webpack_require__(19);
@@ -19951,7 +19965,7 @@ var Level4 = /** @class */ (function (_super) {
             ? ([new Level4Player_1.default(100, 400, BasePlayer_1.controlSets.controls1, bootstrap.state, true), new Level4Player_1.default(30, 250, BasePlayer_1.controlSets.controls2, bootstrap.state, false)]) // two players required
             : ([new Level4Player_1.default(100, 400, BasePlayer_1.controlSets.controls1, bootstrap.state, true)])), // just one player required
         Level4.groundTexture, Resources_1.default.level4.bg.asSprite()) || this;
-        _this.numCannibals = 3;
+        _this.numCannibals = 5;
         _this.cannibals = [];
         // modify multiplayer winning / losing: it's sufficient if one player reaches the princess here
         _this.losers = 0;
@@ -20015,6 +20029,153 @@ exports.default = Level4;
 
 /***/ }),
 /* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var BasePlayer_1 = __webpack_require__(6);
+var Level4_1 = __webpack_require__(61);
+var MikelsonAnimation_1 = __webpack_require__(14);
+var Ground_1 = __webpack_require__(19);
+var Level4Player = /** @class */ (function (_super) {
+    __extends(Level4Player, _super);
+    function Level4Player(x, y, controlSet, state, isFirst) {
+        var _this = _super.call(this, x, y, controlSet, state) || this;
+        _this.isFirst = isFirst;
+        _this.moveDir = 0;
+        _this.stateX = "right";
+        _this.stateY = "walk";
+        _this.isJumping = false;
+        _this.minX = Level4_1.default.levelBounds.left + Level4Player.size.w / 2;
+        _this.maxX = Level4_1.default.levelBounds.right - Level4Player.size.w / 2;
+        _this.anchor.setTo(0.5, 1);
+        _this.body.useBoxCollision();
+        _this.y += _this.getHeight() / 2;
+        _this.posYold = _this.pos.y;
+        if (isFirst)
+            _this.animation = MikelsonAnimation_1.playerAnimationFactory.attachTo(_this);
+        else
+            _this.animation = MikelsonAnimation_1.brotherAnimationFactory.attachTo(_this);
+        return _this;
+    }
+    Level4Player.prototype.update = function (engine, delta) {
+        var _this = this;
+        var stateChanged = false;
+        var updateStateX = function (x) {
+            stateChanged = true;
+            _this.stateX = x;
+        };
+        var updateStateY = function (y) {
+            stateChanged = true;
+            _this.stateY = y;
+        };
+        _super.prototype.update.call(this, engine, delta);
+        // change movement if not currently in the air
+        if (this.isGround()) {
+            // just landed
+            var groundLevel = this.scene.engine.getWorldBounds().bottom - Ground_1.default.height;
+            if (this.stateY === "jump" && this.posYold < (groundLevel - 5)) {
+                // just landed
+                // console.log("just landed");
+                updateStateY("walk");
+            }
+            if (engine.input.keyboard.wasPressed(this.controls.up) && this.stateY !== "jump") {
+                if (this.jump()) {
+                    updateStateY("jump");
+                }
+            }
+            if (this.stateY !== "jump") {
+                if (engine.input.keyboard.isHeld(this.controls.left)) {
+                    this.moveDir = 1;
+                    if (this.stateX !== "left") {
+                        updateStateX("left");
+                        // console.log("just turned left");
+                    }
+                    if (this.stateY !== "walk") {
+                        updateStateY("walk");
+                        // console.log("just started walking");
+                    }
+                }
+                else {
+                    if (engine.input.keyboard.isHeld(this.controls.right)) {
+                        this.moveDir = -1;
+                        if (this.stateX !== "right") {
+                            updateStateX("right");
+                            // console.log("just turned right");
+                        }
+                        if (this.stateY !== "walk") {
+                            updateStateY("walk");
+                            // console.log("just started walking");
+                        }
+                    }
+                    else {
+                        this.moveDir = 0;
+                        if (this.stateY !== "idle") {
+                            updateStateY("idle");
+                            // console.log("just entered idle");
+                        }
+                    }
+                }
+            }
+            // check if state changed and update animation accordingly
+            if (stateChanged)
+                this.changeAnimationState(this.stateX, this.stateY);
+        }
+        // move according to direction of movement
+        this.pos.x -= Level4Player.speed * this.moveDir;
+        this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
+        this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
+        this.posYold = this.pos.y;
+    };
+    Level4Player.prototype.jump = function () {
+        if (this.isGround()) {
+            this.vel.setTo(this.vel.x, Level4Player.jumpingVelocity);
+            if (!this.isJumping && this.animation) {
+                this.isJumping = true;
+            }
+            return true; // returns true to signalise that this.stateY has changed
+        }
+        return false;
+    };
+    Level4Player.prototype.goLeft = function () {
+        this.pos.x -= Level4Player.speed;
+        this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
+    };
+    Level4Player.prototype.goRight = function () {
+        this.pos.x += Level4Player.speed;
+        this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
+    };
+    Level4Player.prototype.declareWinner = function () {
+        this.state.winner = this.isFirst ? this.state.names[0] : this.state.names[1];
+    };
+    // convert separated states to animation state
+    Level4Player.prototype.changeAnimationState = function (stateX, stateY) {
+        if (stateX === void 0) { stateX = this.stateX; }
+        if (stateY === void 0) { stateY = this.stateY; }
+        var state = stateY + "-" + stateX;
+        // console.log(state);
+        this.animation.changeState(state);
+    };
+    Level4Player.jumpingVelocity = -900;
+    Level4Player.speed = 8;
+    return Level4Player;
+}(BasePlayer_1.default));
+exports.default = Level4Player;
+
+
+/***/ }),
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20139,7 +20300,6 @@ exports.sprites = _sprites;
 
 
 /***/ }),
-/* 63 */,
 /* 64 */,
 /* 65 */,
 /* 66 */,
@@ -20151,20 +20311,21 @@ exports.sprites = _sprites;
 /* 72 */,
 /* 73 */,
 /* 74 */,
-/* 75 */
+/* 75 */,
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // environment declarations
-__webpack_require__(76);
-// base assets
 __webpack_require__(77);
+// base assets
+__webpack_require__(78);
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20174,26 +20335,26 @@ window.ENV = "prod";
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
 // base assets
-__webpack_require__(78);
-// main application
 __webpack_require__(79);
+// main application
+__webpack_require__(80);
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20221,7 +20382,7 @@ function init() {
          * that are thrown when imports are loaded. Instead, we want to
          * display the browser support message as shown above.
          */
-        var gameInit = __webpack_require__(80).default;
+        var gameInit = __webpack_require__(81).default;
         gameInit();
     }
 }
@@ -20232,7 +20393,7 @@ else
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20321,7 +20482,7 @@ function initEnv(env, gb) {
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20378,163 +20539,163 @@ exports.default = StateListener;
 
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/c93e79fa12641dd0cab9642acdfc920a.png";
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/b91b53261dea0034a21860f3ed748cb1.png";
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/c72077d857fd5a0a1e467624e5c58d21.png";
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/5e5a7df7f6c3b51aeb3da1d64aacec39.png";
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/9a37bd9933e31961757d5ee089633d6b.png";
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/a3197fccf6426e16064ab848ac2045cd.png";
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/c93180ff50d3c1cbfcb8f7df37ca26be.png";
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/4e5d8a9452c3fb69b88ecf87d6ba4e93.png";
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/147551d6942cc2c2ac58a98ef8d0fc4d.png";
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/866b0d8936e4082a7855aed704c4b1df.png";
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/b73ad6b58bcb76ac9ed0cb378cc3cefd.png";
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/6c097bf454a5dc86f25c327acc980679.png";
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/b1af393cf814f70d9e5917d79ed61809.png";
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/3e08ac19633622f3ab350e3436fd8882.jpg";
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/6a1a406e9476b3f2a6ff2979be7cd83f.png";
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/d7c94c6941a8bc38329178482db8f022.png";
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/f4245afa5a3faada255d6dd88c3127be.png";
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/cd93e0d00d9c3b2b931016a5db0b3c84.png";
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/d5adaf8bfeff5c4d467f4902c0f07a53.png";
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/ad49e26b8d8e76112d09995c7279e693.png";
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/1fa5e767ffc5e48cb63213865edc19e1.png";
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/2db8817258f7b94cf3077578425c036e.png";
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/0bfb33b643ebbe3348c0024f9ffdfb25.png";
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/ef8c152a55ec13d9b008b1788938b1c1.ttf";
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/f0b6ea67ba06de3f6770e5d93555fef7.ttf";
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/a8e5f4531051cc0cb621d51e875775c0.TTF";
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -20586,14 +20747,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimationSequence_1 = __webpack_require__(26);
-var ParticlesJS_1 = __webpack_require__(109);
-var InterfaceBuilder_1 = __webpack_require__(6);
-var GameBar_1 = __webpack_require__(111);
-var Modal_1 = __webpack_require__(115);
-var NameEnquiry_1 = __webpack_require__(120);
-var StarWarsIntro_1 = __webpack_require__(129);
-__webpack_require__(131);
-var particlesJSConfig = __webpack_require__(132);
+var ParticlesJS_1 = __webpack_require__(110);
+var InterfaceBuilder_1 = __webpack_require__(5);
+var GameBar_1 = __webpack_require__(112);
+var Modal_1 = __webpack_require__(116);
+var NameEnquiry_1 = __webpack_require__(121);
+var StarWarsIntro_1 = __webpack_require__(130);
+__webpack_require__(132);
+var particlesJSConfig = __webpack_require__(133);
 var audioURL = __webpack_require__(57);
 var transitionDuration = 2000;
 var homeParticlesID = "home-particles";
@@ -20752,14 +20913,14 @@ var GameInterface = /** @class */ (function (_super) {
                                 InterfaceBuilder_1.InterfaceBuilder.createElement("button", { className: "control small", onclick: function () { return _this.menuClick(i, 2); } }, "2p"))); }))))),
                     InterfaceBuilder_1.InterfaceBuilder.createElement(Modal_1.ModalContentWrapper, null,
                         InterfaceBuilder_1.InterfaceBuilder.createElement("div", null,
-                            InterfaceBuilder_1.InterfaceBuilder.createElement("h1", null, "About SpaceHunt"),
-                            InterfaceBuilder_1.InterfaceBuilder.createElement("p", null, "Game developed by:"),
+                            InterfaceBuilder_1.InterfaceBuilder.createElement("h1", null, "SpaceHunt"),
+                            InterfaceBuilder_1.InterfaceBuilder.createElement("p", null, "This game was developed as an assignment in spring 2018, within course Software Engineering Methodologies in TUT, by:"),
                             InterfaceBuilder_1.InterfaceBuilder.createElement("ul", null,
-                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Ali Doruk Gezici"),
-                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Anna Vankova"),
-                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Milos Svana"),
                                 InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Nejc Ma\u010Dek"),
-                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Wladimir Hofmann")),
+                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Milo\u0161 \u0160va\u0148a"),
+                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Wladimir Hofmann"),
+                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Ali Doruk Gezici"),
+                                InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Anna Va\u0148kov\u00E1")),
                             InterfaceBuilder_1.InterfaceBuilder.createElement("p", { style: { textAlign: "right" } },
                                 InterfaceBuilder_1.InterfaceBuilder.createElement("button", { className: "control", onclick: function () { return _this.modal.hide(); } }, "\uD83E\uDC70"))))))));
         window.requestAnimationFrame(function () {
@@ -20775,13 +20936,13 @@ exports.default = GameInterface;
 
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-__webpack_require__(110);
+__webpack_require__(111);
 var ParticlesJS = /** @class */ (function () {
     function ParticlesJS(holderID, config) {
         if (window.pJSDom === null)
@@ -20804,7 +20965,7 @@ exports.default = ParticlesJS;
 
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports) {
 
 /* -----------------------------------------------
@@ -22350,7 +22511,7 @@ window.particlesJS.load = function(tag_id, path_config_json, callback){
 };
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22366,9 +22527,9 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var RerendererComponent_1 = __webpack_require__(112);
-var InterfaceBuilder_1 = __webpack_require__(6);
-__webpack_require__(114);
+var RerendererComponent_1 = __webpack_require__(113);
+var InterfaceBuilder_1 = __webpack_require__(5);
+__webpack_require__(115);
 function range(n) {
     var arr = new Array(n);
     for (var i = 0; i < n; i++)
@@ -22452,7 +22613,7 @@ exports.default = GameBar;
 
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22468,8 +22629,8 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var InterfaceBuilder_1 = __webpack_require__(6);
-var Rerenderer_1 = __webpack_require__(113);
+var InterfaceBuilder_1 = __webpack_require__(5);
+var Rerenderer_1 = __webpack_require__(114);
 var RerendererComponent = /** @class */ (function (_super) {
     __extends(RerendererComponent, _super);
     function RerendererComponent(baseElement, attrs) {
@@ -22497,7 +22658,7 @@ exports.default = RerendererComponent;
 
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22513,7 +22674,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var Rerenderer = /** @class */ (function (_super) {
     __extends(Rerenderer, _super);
     function Rerenderer() {
@@ -22542,13 +22703,13 @@ exports.default = Rerenderer;
 
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22574,9 +22735,9 @@ var __assign = (this && this.__assign) || Object.assign || function(t) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimationSequence_1 = __webpack_require__(26);
 var Color_1 = __webpack_require__(53);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var CanvasAbstraction_1 = __webpack_require__(54);
-__webpack_require__(119);
+__webpack_require__(120);
 var modalSize = 400;
 exports.ModalContentWrapper = function (attrs, children) { return (InterfaceBuilder_1.InterfaceBuilder.createElement("div", __assign({}, attrs, { className: (attrs.className || "") + " modal-content-wrapper" }), children)); };
 /**
@@ -22639,7 +22800,7 @@ exports.default = Modal;
 
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22811,7 +22972,7 @@ Point.prototype = {
 // global.Point = Point;
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22863,7 +23024,7 @@ var GRAD4 = [[0, 1, 1, 1], [0, 1, 1, -1], [0, 1, -1, 1], [0, 1, -1, -1], [0, -1,
 var SIMPLEX = [[0, 1, 2, 3], [0, 1, 3, 2], [0, 0, 0, 0], [0, 2, 3, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 2, 3, 0], [0, 2, 1, 3], [0, 0, 0, 0], [0, 3, 1, 2], [0, 3, 2, 1], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 3, 2, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [1, 2, 0, 3], [0, 0, 0, 0], [1, 3, 0, 2], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 3, 0, 1], [2, 3, 1, 0], [1, 0, 2, 3], [1, 0, 3, 2], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 3, 1], [0, 0, 0, 0], [2, 1, 3, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [2, 0, 1, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [3, 0, 1, 2], [3, 0, 2, 1], [0, 0, 0, 0], [3, 1, 2, 0], [2, 1, 0, 3], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [3, 1, 0, 2], [0, 0, 0, 0], [3, 2, 0, 1], [3, 2, 1, 0]];
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22933,13 +23094,13 @@ function mash(data) {
 // global.Xorshift = Xorshift;
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -22992,10 +23153,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimationSequence_1 = __webpack_require__(26);
 var MikelsonParts_1 = __webpack_require__(12);
-var BasePlayer_1 = __webpack_require__(5);
-var InterfaceBuilder_1 = __webpack_require__(6);
-var PlayerBox_1 = __webpack_require__(121);
-__webpack_require__(128);
+var BasePlayer_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
+var PlayerBox_1 = __webpack_require__(122);
+__webpack_require__(129);
 var NameEnquiry = /** @class */ (function (_super) {
     __extends(NameEnquiry, _super);
     function NameEnquiry() {
@@ -23141,7 +23302,7 @@ var NameEnquiry = /** @class */ (function (_super) {
         setTimeout(this.start.bind(this));
         var ret = (InterfaceBuilder_1.InterfaceBuilder.createElement("div", { id: "name-enquiry" },
             InterfaceBuilder_1.InterfaceBuilder.createElement("div", { className: "container" },
-                InterfaceBuilder_1.InterfaceBuilder.createElement(PlayerBox_1.default, { position: "left", isBro: false, keys: BasePlayer_1.controlSets.controls1, keyNames: { left: "⬅", right: "⮕", up: "⬆", down: "⬇" }, value: attrs.bootstrap.state.names[0], ref: function (pb) { return _this.pb1 = pb; }, refCA: function (ca) { return _this.ca1 = ca; }, refPC: function (pc) { return _this.pc1 = pc; }, refPAMC: function (pamc) { return _this.pamc1 = pamc; }, refInput: function (input) { return _this.input1 = input; }, onBlur: function () { return _this.blurInputP1(); }, onFocus: function () { return _this.focusInputP1(); } }, "Player #1"),
+                InterfaceBuilder_1.InterfaceBuilder.createElement(PlayerBox_1.default, { position: "left", isBro: false, keys: BasePlayer_1.controlSets.controls1, keyNames: { left: "⬅", right: "➡", up: "⬆", down: "⬇" }, value: attrs.bootstrap.state.names[0], ref: function (pb) { return _this.pb1 = pb; }, refCA: function (ca) { return _this.ca1 = ca; }, refPC: function (pc) { return _this.pc1 = pc; }, refPAMC: function (pamc) { return _this.pamc1 = pamc; }, refInput: function (input) { return _this.input1 = input; }, onBlur: function () { return _this.blurInputP1(); }, onFocus: function () { return _this.focusInputP1(); } }, "Player #1"),
                 InterfaceBuilder_1.InterfaceBuilder.createElement("div", { className: "separator", ref: function (e) { return _this.separator = e; } },
                     InterfaceBuilder_1.InterfaceBuilder.createElement("div", null),
                     InterfaceBuilder_1.InterfaceBuilder.createElement("div", { className: "start", onmousedown: function (e) { return e.currentTarget.classList.add("toggled"); }, onmouseleave: function (e) { return e.currentTarget.classList.remove("toggled"); }, onclick: this.onStart.bind(this) },
@@ -23214,7 +23375,7 @@ exports.default = NameEnquiry;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23231,10 +23392,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var excalibur_1 = __webpack_require__(0);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var CanvasAbstraction_1 = __webpack_require__(54);
-var PlayerAnimationMovementCanvas_1 = __webpack_require__(122);
-var PlayerControls_1 = __webpack_require__(127);
+var PlayerAnimationMovementCanvas_1 = __webpack_require__(123);
+var PlayerControls_1 = __webpack_require__(128);
 var PlayerBox = /** @class */ (function (_super) {
     __extends(PlayerBox, _super);
     function PlayerBox() {
@@ -23292,7 +23453,7 @@ exports.default = PlayerBox;
 
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23309,7 +23470,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var MikelsonAnimation_1 = __webpack_require__(14);
-var PlayerAnimationCanvas_1 = __webpack_require__(126);
+var PlayerAnimationCanvas_1 = __webpack_require__(127);
 var PlayerAnimationMovementCanvas = /** @class */ (function (_super) {
     __extends(PlayerAnimationMovementCanvas, _super);
     function PlayerAnimationMovementCanvas(canvas, keys, isBro, location) {
@@ -23397,7 +23558,7 @@ exports.default = PlayerAnimationMovementCanvas;
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23434,7 +23595,7 @@ exports.DrawAnimation = DrawAnimation;
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23597,7 +23758,7 @@ exports.TransformDrawPart = TransformDrawPart;
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23650,7 +23811,7 @@ exports.TransformDrawSet = TransformDrawSet;
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23697,7 +23858,7 @@ exports.default = PlayerAnimationCanvas;
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23714,7 +23875,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var excalibur_1 = __webpack_require__(0);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var PlayerControls = /** @class */ (function (_super) {
     __extends(PlayerControls, _super);
     function PlayerControls() {
@@ -23797,13 +23958,13 @@ exports.default = PlayerControls;
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -23821,9 +23982,9 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var AnimationSequence_1 = __webpack_require__(26);
 var Preloader_1 = __webpack_require__(52);
-var InterfaceBuilder_1 = __webpack_require__(6);
+var InterfaceBuilder_1 = __webpack_require__(5);
 var audioURL = __webpack_require__(57);
-__webpack_require__(130);
+__webpack_require__(131);
 var preludeText = "Let me tell you a story from our distant future...";
 var episodeText = "Episode 1";
 var titleText = "Unexpected kidnap";
@@ -23831,10 +23992,10 @@ var storyText = function (_a) {
     var names = _a.state.names;
     return [
         "The year 3020 is written, and travel between planets and galaxies is finally becoming common, but this fact carries some pitfalls. The technological war between the Earth and the planet Eslan from a nearby galaxy broke out.",
-        "During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of Lucy's husband " + (names[1]
-            ? "and his brother, " + names[0] + " and " + names[1] + " Mikelson."
-            : names[0] + " Mikelson."),
-        "After a long intergalactic flight, " + (names[1] ? names[0] + " and " + names[1] + " finally find themselves" : names[0] + " finally finds himself") + " on the planet Eslan, which, except for the absence of animals, does not differ from Earth. The landing was not smooth and " + (names[1] ? "their" : "his") + " first task is to get away from the crowns of huge trees in the jungle."
+        "During this battle, one of the respected biologists, Lucy Mikelson was abducted for unknown reasons. However, the government refuses to take part in any rescue action. Thus, everything remains in the hands of " + (names[1]
+            ? names[0] + " and " + names[1] + "."
+            : names[0] + "."),
+        "After a long intergalactic flight, " + (names[1] ? names[0] + " and " + names[1] + " finally arrive" : names[0] + " finally arrives") + " to the planet Eslan, which, except for the absence of animals, does not differ from Earth. The landing was not smooth and the first task is to get away from the crowns of huge trees in the jungle."
     ];
 };
 var timing = {
@@ -23937,7 +24098,8 @@ var StarWarsIntro = /** @class */ (function (_super) {
         _this.fadeAudioId = NaN;
         _this.audioEnabled = true;
         _this.onKey = function (e) {
-            if (e.keyCode === 32 || e.keyCode === 27)
+            var code = e.which || e.charCode || e.keyCode || 0;
+            if (code === 32 || code === 27)
                 _this.skip();
         };
         _this.audio = Preloader_1.preloadAudio(audioURL).audio;
@@ -24123,12 +24285,6 @@ exports.default = StarWarsIntro;
 
 
 /***/ }),
-/* 130 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 131 */
 /***/ (function(module, exports) {
 
@@ -24138,24 +24294,47 @@ exports.default = StarWarsIntro;
 /* 132 */
 /***/ (function(module, exports) {
 
-module.exports = {"particles":{"number":{"value":120,"density":{"enable":true,"value_area":473.4885849793636}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":0,"random":false,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":1,"direction":"top","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false,"mode":"repulse"},"onclick":{"enable":true,"mode":"repulse"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true}
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 133 */
+/***/ (function(module, exports) {
+
+module.exports = {"particles":{"number":{"value":120,"density":{"enable":true,"value_area":473.4885849793636}},"color":{"value":"#ffffff"},"shape":{"type":"circle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":0,"random":false,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":1,"direction":"top","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false,"mode":"repulse"},"onclick":{"enable":true,"mode":"repulse"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true}
+
+/***/ }),
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.level1 = "It seems he has mastered the jungle easily, but the river, which stands in his way now, is full of crocodiles, robotic crocodiles. The kidnapping of Lucy suddenly starts to make sense.";
-exports.level2 = "Local inhabitants detect his presence and they are trying to stop him by rolling and bouncing boulders.";
-exports.level3 = "The exhausted Freddy eventually meets a few Eslans who hold his Lucy and use her knowledge of animals to create their own. However, the Eslans are not very friendly, and Freddy confronts them in the struggle for life and death.";
-exports.level4 = "After long fight, Freddy has handled to save love of his life. Then they have stolen Eslan's spaceship to be able to get back to the Earth, where they live happily ever after.";
-exports.death = "Such a tragedy! Poor Freddy lost his life within trying to set free love of his life from the hands of the evil Eslans.";
+var addS = function (name) { return name.toLowerCase().endsWith("s") ? name + "'" : name + "'s"; };
+var nameText = function (names) { return names[1] ? names[0] + " and " + names[1] : names[0]; };
+exports.level1 = function (_a) {
+    var names = _a.names;
+    return "It seems " + nameText(names) + " mastered the jungle easily, but a river, which stands on the way, is full of crocodiles, robotic crocodiles. The kidnapping of Lucy suddenly starts to make sense.";
+};
+exports.level2 = function (_a) {
+    var names = _a.names;
+    return "Local inhabitants detect presence of our " + (names[1] ? "heroes" : "hero") + " and they are now rolling and bouncing boulders.";
+};
+exports.level3 = function (_a) {
+    var names = _a.names;
+    return "Exhausted " + (names[1] ? names[0] + " and " + names[1] : names[0]) + " eventually " + (names[1] ? "meet" : "meets") + " a few Eslans who hold Lucy and use her knowledge of animals to create their own. The Eslans are not very friendly, and " + (names[1] ? names[0] + " and " + names[1] + " confront" : names[0] + " confronts") + " them in the struggle for life and death.";
+};
+exports.level4 = function (_a) {
+    var names = _a.names, winner = _a.winner;
+    return "After a long fight, " + winner + " has managed to save Lucy. Then they stole Eslans' spaceship to get back to Earth, where they live happily ever after.";
+};
+exports.death = function (_a) {
+    var names = _a.names;
+    return "Such a tragedy! Poor " + nameText(names) + " lost " + (names[1] ? "lives" : "life") + " trying to set Lucy free from the hands of the evil Eslans.";
+};
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24172,12 +24351,12 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var Arrow_1 = __webpack_require__(135);
-var Level1Player_1 = __webpack_require__(136);
-var TreeBranch_1 = __webpack_require__(139);
-var VineCreator_1 = __webpack_require__(140);
+var Arrow_1 = __webpack_require__(136);
+var Level1Player_1 = __webpack_require__(137);
+var TreeBranch_1 = __webpack_require__(140);
+var VineCreator_1 = __webpack_require__(141);
 var Resources_1 = __webpack_require__(4);
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var BaseLevel_1 = __webpack_require__(28);
 var Level1 = /** @class */ (function (_super) {
     __extends(Level1, _super);
@@ -24232,7 +24411,7 @@ exports.default = Level1;
 
 
 /***/ }),
-/* 135 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24268,7 +24447,7 @@ exports.default = Arrow;
 
 
 /***/ }),
-/* 136 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24285,10 +24464,10 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var BasePlayer_1 = __webpack_require__(5);
-var PlayerAnimations_1 = __webpack_require__(137);
+var BasePlayer_1 = __webpack_require__(6);
+var PlayerAnimations_1 = __webpack_require__(138);
 var MikelsonAnimation_1 = __webpack_require__(14);
-var AnimationStateHandler_1 = __webpack_require__(138);
+var AnimationStateHandler_1 = __webpack_require__(139);
 var Level1Player = /** @class */ (function (_super) {
     __extends(Level1Player, _super);
     function Level1Player(x, y, levelLength, controlSet, state, isFirst) {
@@ -24335,7 +24514,7 @@ var Level1Player = /** @class */ (function (_super) {
             }
         }
         if (this.getWorldPos().x > this.levelLength + 10) {
-            this.emit("won");
+            this.win("won by reaching the level ending");
         }
     };
     Level1Player.prototype.jump = function () {
@@ -24407,24 +24586,10 @@ var Level1Player = /** @class */ (function (_super) {
         console.log(this.timeOnVine);
     };
     Level1Player.prototype.die = function (info) {
-        var _this = this;
-        if (!this.dead) {
-            if (this.state.lives > 1) {
-                this.state.lives -= 1;
-                this.dead = true;
-                this.scene.camera.shake(10, 10, 100);
-                this.reset();
-                setTimeout(function () { _this.dead = false; }, 800);
-            }
-            else {
-                this.state.lives = 0;
-                this.dead = true;
-                this.scene.camera.shake(50, 50, 500);
-                this.kill();
-                this.x = -1000;
-                this.emit("death");
-            }
+        if (!this.dead && this.state.lives > 1) {
+            this.reset();
         }
+        _super.prototype.die.call(this, info);
     };
     Level1Player.prototype.reset = function () {
         this.inJump = false;
@@ -24446,7 +24611,7 @@ exports.default = Level1Player;
 
 
 /***/ }),
-/* 137 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24487,7 +24652,7 @@ exports.attachPlayerAnimations = attachPlayerAnimations;
 
 
 /***/ }),
-/* 138 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24554,7 +24719,7 @@ exports.default = AnimationStateHandler;
 
 
 /***/ }),
-/* 139 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24591,7 +24756,7 @@ exports.default = TreeBranch;
 
 
 /***/ }),
-/* 140 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24637,7 +24802,7 @@ exports.default = VineCreator;
 
 
 /***/ }),
-/* 141 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24694,7 +24859,7 @@ exports.default = Background;
 
 
 /***/ }),
-/* 142 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24718,7 +24883,7 @@ exports.default = LockLevelCameraStrategy;
 
 
 /***/ }),
-/* 143 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24748,7 +24913,7 @@ exports.default = Sky;
 
 
 /***/ }),
-/* 144 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -24767,7 +24932,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
 var MikelsonParts_1 = __webpack_require__(12);
 var MikelsonAnimation_1 = __webpack_require__(14);
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var Level2_1 = __webpack_require__(59);
 var Level2Player = /** @class */ (function (_super) {
     __extends(Level2Player, _super);
@@ -24918,13 +25083,13 @@ exports.default = Level2Player;
 
 
 /***/ }),
-/* 145 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Bubble_1 = __webpack_require__(146);
+var Bubble_1 = __webpack_require__(147);
 // class for cyclically creating new bubbles and adding them to the scene, in front of the player
 var BubbleCreator = /** @class */ (function () {
     function BubbleCreator(engine, scene, bounds, players, bubbles) {
@@ -24986,7 +25151,7 @@ exports.default = BubbleCreator;
 
 
 /***/ }),
-/* 146 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25083,13 +25248,13 @@ exports.default = Bubble;
 
 
 /***/ }),
-/* 147 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Crocodile_1 = __webpack_require__(148);
+var Crocodile_1 = __webpack_require__(149);
 // class for cyclically creating new crocodiles and adding them to the scene, in front of the player
 var CrocodileCreator = /** @class */ (function () {
     function CrocodileCreator(bootstrap, scene, bounds, level, crocodiles) {
@@ -25150,7 +25315,7 @@ exports.default = CrocodileCreator;
 
 
 /***/ }),
-/* 148 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25206,7 +25371,7 @@ exports.default = Crocodile;
 
 
 /***/ }),
-/* 149 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25222,7 +25387,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var MikelsonAnimation_1 = __webpack_require__(14);
 var Level3_1 = __webpack_require__(60);
 var Ground_1 = __webpack_require__(19);
@@ -25363,13 +25528,13 @@ exports.default = Level3Player;
 
 
 /***/ }),
-/* 150 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Rock_1 = __webpack_require__(151);
+var Rock_1 = __webpack_require__(152);
 // class for cyclically creating new rocks and adding them to the scene, in front of the player
 var RockCreator = /** @class */ (function () {
     function RockCreator(engine, scene, bounds, level, rocks) {
@@ -25427,7 +25592,7 @@ exports.default = RockCreator;
 
 
 /***/ }),
-/* 151 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25444,7 +25609,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var Resources_1 = __webpack_require__(4);
 exports.Rocktypes = { "small": 1, "big": 2 };
 var Rock = /** @class */ (function (_super) {
@@ -25519,149 +25684,6 @@ exports.default = Rock;
 
 
 /***/ }),
-/* 152 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var BasePlayer_1 = __webpack_require__(5);
-var Level4_1 = __webpack_require__(61);
-var MikelsonAnimation_1 = __webpack_require__(14);
-var Ground_1 = __webpack_require__(19);
-var Level4Player = /** @class */ (function (_super) {
-    __extends(Level4Player, _super);
-    function Level4Player(x, y, controlSet, state, isFirst) {
-        var _this = _super.call(this, x, y, controlSet, state) || this;
-        _this.moveDir = 0;
-        _this.stateX = "right";
-        _this.stateY = "walk";
-        _this.isJumping = false;
-        _this.minX = Level4_1.default.levelBounds.left + Level4Player.size.w / 2;
-        _this.maxX = Level4_1.default.levelBounds.right - Level4Player.size.w / 2;
-        _this.anchor.setTo(0.5, 1);
-        _this.body.useBoxCollision();
-        _this.y += _this.getHeight() / 2;
-        _this.posYold = _this.pos.y;
-        if (isFirst)
-            _this.animation = MikelsonAnimation_1.playerAnimationFactory.attachTo(_this);
-        else
-            _this.animation = MikelsonAnimation_1.brotherAnimationFactory.attachTo(_this);
-        return _this;
-    }
-    Level4Player.prototype.update = function (engine, delta) {
-        var _this = this;
-        var stateChanged = false;
-        var updateStateX = function (x) {
-            stateChanged = true;
-            _this.stateX = x;
-        };
-        var updateStateY = function (y) {
-            stateChanged = true;
-            _this.stateY = y;
-        };
-        _super.prototype.update.call(this, engine, delta);
-        // change movement if not currently in the air
-        if (this.isGround()) {
-            // just landed
-            var groundLevel = this.scene.engine.getWorldBounds().bottom - Ground_1.default.height;
-            if (this.stateY === "jump" && this.posYold < (groundLevel - 5)) {
-                // just landed
-                // console.log("just landed");
-                updateStateY("walk");
-            }
-            if (engine.input.keyboard.wasPressed(this.controls.up) && this.stateY !== "jump") {
-                if (this.jump()) {
-                    updateStateY("jump");
-                }
-            }
-            if (this.stateY !== "jump") {
-                if (engine.input.keyboard.isHeld(this.controls.left)) {
-                    this.moveDir = 1;
-                    if (this.stateX !== "left") {
-                        updateStateX("left");
-                        // console.log("just turned left");
-                    }
-                    if (this.stateY !== "walk") {
-                        updateStateY("walk");
-                        // console.log("just started walking");
-                    }
-                }
-                else {
-                    if (engine.input.keyboard.isHeld(this.controls.right)) {
-                        this.moveDir = -1;
-                        if (this.stateX !== "right") {
-                            updateStateX("right");
-                            // console.log("just turned right");
-                        }
-                        if (this.stateY !== "walk") {
-                            updateStateY("walk");
-                            // console.log("just started walking");
-                        }
-                    }
-                    else {
-                        this.moveDir = 0;
-                        if (this.stateY !== "idle") {
-                            updateStateY("idle");
-                            // console.log("just entered idle");
-                        }
-                    }
-                }
-            }
-            // check if state changed and update animation accordingly
-            if (stateChanged)
-                this.changeAnimationState(this.stateX, this.stateY);
-        }
-        // move according to direction of movement
-        this.pos.x -= Level4Player.speed * this.moveDir;
-        this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
-        this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
-        this.posYold = this.pos.y;
-    };
-    Level4Player.prototype.jump = function () {
-        if (this.isGround()) {
-            this.vel.setTo(this.vel.x, Level4Player.jumpingVelocity);
-            if (!this.isJumping && this.animation) {
-                this.isJumping = true;
-            }
-            return true; // returns true to signalise that this.stateY has changed
-        }
-        return false;
-    };
-    Level4Player.prototype.goLeft = function () {
-        this.pos.x -= Level4Player.speed;
-        this.pos.x = this.pos.x < this.minX ? this.minX : this.pos.x;
-    };
-    Level4Player.prototype.goRight = function () {
-        this.pos.x += Level4Player.speed;
-        this.pos.x = this.pos.x > this.maxX ? this.maxX : this.pos.x;
-    };
-    // convert seperated states to animation state
-    Level4Player.prototype.changeAnimationState = function (stateX, stateY) {
-        if (stateX === void 0) { stateX = this.stateX; }
-        if (stateY === void 0) { stateY = this.stateY; }
-        var state = stateY + "-" + stateX;
-        // console.log(state);
-        this.animation.changeState(state);
-    };
-    Level4Player.jumpingVelocity = -900;
-    Level4Player.speed = 8;
-    return Level4Player;
-}(BasePlayer_1.default));
-exports.default = Level4Player;
-
-
-/***/ }),
 /* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -25679,7 +25701,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var BasePlayer_1 = __webpack_require__(5);
+var BasePlayer_1 = __webpack_require__(6);
 var EslanAnimation_1 = __webpack_require__(154);
 var Cannibal = /** @class */ (function (_super) {
     __extends(Cannibal, _super);
@@ -26153,13 +26175,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var ex = __webpack_require__(0);
-var PrincessParts_1 = __webpack_require__(62);
+var PrincessParts_1 = __webpack_require__(63);
 var PrincessAnimation_1 = __webpack_require__(156);
-var BasePlayer_1 = __webpack_require__(5);
+var Level4Player_1 = __webpack_require__(62);
 var Princess = /** @class */ (function (_super) {
     __extends(Princess, _super);
     function Princess(vine) {
         var _this = _super.call(this, 0, 0, 50, 50, ex.Color.Chartreuse) || this;
+        _this.hasWinner = false;
         _this.anchor.setTo(0.5, 0.5);
         _this.vine = vine;
         _this.vLast = _this.vine.getAllParts()[_this.vine.getAllParts().length - 1];
@@ -26175,8 +26198,14 @@ var Princess = /** @class */ (function (_super) {
         this.rotation = this.vLast.rotation;
     };
     Princess.prototype.onPrecollision = function (ev) {
-        if (ev.other instanceof BasePlayer_1.default) {
+        if (ev.other instanceof Level4Player_1.default) {
             var player = ev.other;
+            player.state.score += 200;
+            player.state.score += player.state.lives * 100;
+            if (!this.hasWinner) {
+                this.hasWinner = true;
+                player.declareWinner();
+            }
             player.win("you won by saving the princess");
         }
     };
@@ -26194,7 +26223,7 @@ exports.default = Princess;
 
 Object.defineProperty(exports, "__esModule", { value: true });
 var DrawAnimationFactory_1 = __webpack_require__(27);
-var PrincessParts_1 = __webpack_require__(62);
+var PrincessParts_1 = __webpack_require__(63);
 var drawBaseFactory = function (part) { return function (ctx) {
     var _a = PrincessParts_1.bodyParts[part].anchor, x = _a.x, y = _a.y;
     PrincessParts_1.sprites[part].draw(ctx, -x, -y);
