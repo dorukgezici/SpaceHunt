@@ -49,7 +49,7 @@ export default class Bubble extends ex.Actor {
 				this.collidedPlayer.trapped = true;
 				this.collidedPlayer.vel = this.vel;
 
-				this.collidedPlayer.state.score += 15;
+				this.collidedPlayer.state.score += 50;
 
 				// player position: to be moved towards the center of the bubble within tImbibe seconds
 				// extra velocity for tImbibe seconds

@@ -148,15 +148,22 @@ export default class Level2Player extends BasePlayer {
 			if (!this.timer)
 				this.timer = setInterval(() => {
 					if (this.pos.y > this.deepestWaterPosY)
-						this.state.score += 15;
+						this.state.score += 65;
 					clearInterval(this.timer);
 					this.timer = null;
-				}, 1000);
+				}, 500);
 		} else if (this.pos.y > this.mediumDeepWaterPosY) {
 			if (!this.timer)
 				this.timer = setInterval(() => {
 					if (this.pos.y > this.mediumDeepWaterPosY)
-						this.state.score += 5;
+						this.state.score += 25;
+					clearInterval(this.timer);
+					this.timer = null;
+				}, 750);
+		} else {
+			if (!this.timer)
+				this.timer = setInterval(() => {
+					this.state.score += 5;
 					clearInterval(this.timer);
 					this.timer = null;
 				}, 1000);
