@@ -5,6 +5,7 @@ import Rock from "./Rock";
 import RockCreator from "./RockCreator";
 import { controlSets } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
+import BasePlayer from "../../Components/BasePlayer";
 import Resources from "../../Resources";
 
 export default class Level3 extends BaseLevel {
@@ -13,6 +14,8 @@ export default class Level3 extends BaseLevel {
 	static readonly levelBounds: ex.BoundingBox = new ex.BoundingBox(0, 0, 5000, 600);
 
 	static readonly groundTexture: ex.Texture = Resources.level3.ground;
+
+	public pubPlayers: BasePlayer[];
 
 	// rocks
 	rocks: Rock[] = [];
@@ -32,6 +35,7 @@ export default class Level3 extends BaseLevel {
 		);
 
 		this.state = bootstrap.state;
+		this.pubPlayers = this.players;
 
 		// RockCreator for cyclic generation of new rocks
 		this.rockCreator = new RockCreator(this.engine, this.scene, this.bounds, this, this.rocks);

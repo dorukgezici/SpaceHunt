@@ -12,11 +12,14 @@ export default class Rock extends ex.Actor {
 	sprite: ex.Sprite;
 	rotationTime: number = 0;
 	numberOfRotationsPerSecond: number;
+	players: BasePlayer[];
 
 	static readonly types: { "small": 1, "big": 2 };
 
-	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number, typ: number) {
+	constructor(x: number, y: number, d: number, speedX: number, accY: number, yVelBounce: number, typ: number, players: BasePlayer[]) {
 		super(x, y, d, d, ex.Color.White);
+
+		this.players = players;
 
 		this.d = d;
 
@@ -74,6 +77,14 @@ export default class Rock extends ex.Actor {
 	update(engine: ex.Engine, delta: number) {
 		super.update(engine, delta);
 
+		for (let player of this.players) {
+			if (Math.abs(player.getWorldPos().x - this.getWorldPos().x) < 5 && !player.dead) {
+				if (this.typ == Rocktypes.big)
+					player.state.score += 50;
+				else
+					player.state.score += 25;
+			}
+		}
 		// TODO: kill when far behind player ?
 
 	}
