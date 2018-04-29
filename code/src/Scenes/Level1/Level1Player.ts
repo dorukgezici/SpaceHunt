@@ -15,7 +15,7 @@ export default class Level1Player extends BasePlayer {
 	levelLength: number;
 	onVine: boolean = false;
 	timeOnVine: number = 500;
-	timer: any;
+	timer: number = NaN;
 	private animationStateHandler: AnimationStateHandler<IPlayerAnimations>;
 	private originalPosition: ex.IAbsolutePosition;
 
@@ -26,7 +26,7 @@ export default class Level1Player extends BasePlayer {
 		const animation = attachPlayerAnimations(this, !isFirst);
 		this.animationStateHandler = new AnimationStateHandler<IPlayerAnimations>(selectedState, animation);
 		this.levelLength = levelLength;
-		this.originalPosition = {left: x, top: y};
+		this.originalPosition = { left: x, top: y };
 	}
 
 	update(engine: ex.Engine, delta: number) {
@@ -39,13 +39,13 @@ export default class Level1Player extends BasePlayer {
 		}
 
 		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.left)) {
-			if(this.onBranch) {
+			if (this.onBranch) {
 				ash.changeState("idle-left");
 			}
 		}
 
 		if (!this.onVine && engine.input.keyboard.wasReleased(this.controls.right)) {
-			if(this.onBranch) {
+			if (this.onBranch) {
 				ash.changeState("idle-right");
 			}
 		}
@@ -53,7 +53,7 @@ export default class Level1Player extends BasePlayer {
 		if (engine.input.keyboard.isHeld(this.controls.left)) {
 			this.moveLeft();
 
-			if(this.onBranch) {
+			if (this.onBranch) {
 				ash.changeState("walk-left");
 			}
 		}
@@ -61,7 +61,7 @@ export default class Level1Player extends BasePlayer {
 		if (engine.input.keyboard.isHeld(this.controls.right)) {
 			this.moveRight();
 
-			if(this.onBranch) {
+			if (this.onBranch) {
 				ash.changeState("walk-right");
 			}
 		}
@@ -103,17 +103,22 @@ export default class Level1Player extends BasePlayer {
 		}
 	}
 
+	public dispose() {
+		if (!Number.isNaN(this.timer))
+			clearInterval(this.timer);
+	}
+
 	attachToVine(vine: Vine) {
 		let vineRoot = vine.getRoot();
 
-		if(vineRoot.alreadyCollidedWith.indexOf(this) !== -1) {
+		if (vineRoot.alreadyCollidedWith.indexOf(this) !== -1) {
 			return;
 		}
 
 		this.state.score += Math.round(50000 / this.timeOnVine); // Max 100, min 10 points
 		console.log(this.timeOnVine);
 		this.timeOnVine = 500;
-		if (this.timer)
+		if (!Number.isNaN(this.timer))
 			clearInterval(this.timer);
 		this.timer = setInterval(this.addTimeOnVine.bind(this), 500);
 
@@ -149,14 +154,12 @@ export default class Level1Player extends BasePlayer {
 		this.timeOnVine += 150;
 		if (this.timeOnVine > 5000)
 			this.timeOnVine = 5000;
-		console.log(this.timeOnVine);
 	}
 
 	die(info: string) {
-		if(!this.dead && this.state.lives > 1) {
+		if (!this.dead && this.state.lives > 1) {
 			this.reset();
 		}
-
 		super.die(info);
 	}
 

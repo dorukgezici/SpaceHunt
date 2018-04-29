@@ -43,6 +43,11 @@ export default class Level1 extends BaseLevel {
 		this.buildScene();
 	}
 
+	dispose() {
+		super.dispose();
+		(this.players as Level1Player[]).forEach(t => t.dispose());
+	}
+
 	buildScene(): void {
 		super.buildScene();
 
@@ -61,10 +66,10 @@ export default class Level1 extends BaseLevel {
 	}
 
 	private onPlayerReset(e: ex.GameEvent<Level1Player>) {
-		for(let vine of this.vines) {
+		for (let vine of this.vines) {
 			let indexInCollidedList = vine.alreadyCollidedWith.indexOf(e.target);
 
-			if(indexInCollidedList !== -1) {
+			if (indexInCollidedList !== -1) {
 				vine.alreadyCollidedWith.splice(indexInCollidedList, 1);
 			}
 		}
