@@ -29,12 +29,20 @@ export default class Level2Player extends BasePlayer {
 	public oxygenMeter: ex.Label;
 	public oxygenLevel: number = 100;
 
+	private timeInDeep: number = 0;
+	private timer: any;
+	private deepestWaterPosY: number;
+	private mediumDeepWaterPosY: number;
+
 	constructor(x: number, y: number, controlSet: IControlSet, oxygenMeter: ex.Label, state: IGameBootstrapState, isFirst: boolean) {
 		super(x, y, controlSet, state);
 		this.minX = Level2.levelBounds.left + modelSwimSize.w / 2;
 		this.maxX = Level2.levelBounds.right - modelSwimSize.w / 2;
 		this.minY = Level2.levelBounds.top + modelSwimSize.h / 2;
 		this.maxY = Level2.levelBounds.bottom - modelSwimSize.h / 2;
+
+		this.deepestWaterPosY = this.maxY - 135;
+		this.mediumDeepWaterPosY = this.maxY - 185;
 
 		this.oxygenMeter = oxygenMeter;
 		this.oxygenMeter.fontSize = 30;
@@ -136,26 +144,22 @@ export default class Level2Player extends BasePlayer {
 			this.win("won by reaching the level end");
 		}
 
-	}
-
-	public die(info: string) {
-		if (!this.dead) {
-			if (this.state.lives > 1) {
-				this.dead = true;
-				this.state.lives -= 1;
-				var fake_this = this;
-				setTimeout(function () { fake_this.dead = false; }, 1000);
-			} else {
-				this.dead = true;
-				this.kill();
-				this.emit("death");
-				/*
-				alert(info);
-				let restartLabel = new ex.Label("Game Over.", (this.minX + this.maxX) / 2, (this.minY + this.maxY) / 2);
-				restartLabel.fontSize = 30;
-				this.scene.addUIActor(restartLabel);
-				*/
-			}
+		if (this.pos.y > this.deepestWaterPosY) {
+			if (!this.timer)
+				this.timer = setInterval(() => {
+					if (this.pos.y > this.deepestWaterPosY)
+						this.state.score += 15;
+					clearInterval(this.timer);
+					this.timer = null;
+				}, 1000);
+		} else if (this.pos.y > this.mediumDeepWaterPosY) {
+			if (!this.timer)
+				this.timer = setInterval(() => {
+					if (this.pos.y > this.mediumDeepWaterPosY)
+						this.state.score += 5;
+					clearInterval(this.timer);
+					this.timer = null;
+				}, 1000);
 		}
 	}
 
