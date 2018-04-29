@@ -1,6 +1,6 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+// const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const configFactory = require("./webpack.base");
-const {	paths } = require("./helpers")
+const { paths } = require("./helpers");
 
 const config = configFactory({
 	assetName: "[hash].[ext]",
@@ -15,6 +15,6 @@ module.exports = {
 	},
 	plugins: [
 		...config.plugins,
-		new UglifyJsPlugin()
+		// new UglifyJsPlugin()
 	]
 };
