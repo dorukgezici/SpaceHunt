@@ -319,7 +319,8 @@ export default class StarWarsIntro extends Component<IAttrs, IEvents> {
 	}
 
 	onKey = (e: KeyboardEvent) => {
-		if (e.keyCode === 32 || e.keyCode === 27) // space or escape
+		const code = e.which || e.charCode || e.keyCode || 0;
+		if (code === 32 || code === 27) // space or escape
 			this.skip();
 	}
 
