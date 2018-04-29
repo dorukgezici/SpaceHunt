@@ -231,7 +231,7 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 									<li>Anna Vaňková</li>
 								</ul>
 								<p style={{ textAlign: "right" }}>
-									<button className="control" onclick={() => this.modal.hide()}>🡰</button>
+									<button className="control" onclick={() => this.modal.hide()}>⬅</button>
 								</p>
 							</div>
 						</ModalContentWrapper>

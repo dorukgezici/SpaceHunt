@@ -12,8 +12,8 @@ export const level2 = ({ names }: IGameBootstrapState) =>
 export const level3 = ({ names }: IGameBootstrapState) =>
 	`Exhausted ${names[1] ? `${names[0]} and ${names[1]}` : names[0]} eventually ${names[1] ? "meet" : "meets"} a few Eslans who hold Lucy and use her knowledge of animals to create their own. The Eslans are not very friendly, and ${names[1] ? `${names[0]} and ${names[1]} confront` : names[0] + " confronts"} them in the struggle for life and death.`;
 
-export const level4 = ({ names, winner }: IGameBootstrapState) =>
-	`After a long fight, ${winner} has managed to save Lucy. Then they stole Eslans' spaceship to get back to Earth, where they live happily ever after.`;
+export const level4 = ({ names, winner, score }: IGameBootstrapState) =>
+	`After a long fight, ${winner} has managed to save Lucy. Then they stole Eslans' spaceship to get back to Earth, where they live happily ever after.\n\nSCORE: ${score.toString()}`;
 
-export const death = ({ names }: IGameBootstrapState) =>
-	`Such a tragedy! Poor ${nameText(names)} lost ${names[1] ? "lives" : "life"} trying to set Lucy free from the hands of the evil Eslans.`;
+export const death = ({ names, score }: IGameBootstrapState) =>
+	`Such a tragedy! Poor ${nameText(names)} lost ${names[1] ? "lives" : "life"} trying to set Lucy free from the hands of the evil Eslans.\n\nSCORE: ${score.toString()}`;
