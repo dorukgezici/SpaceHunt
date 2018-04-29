@@ -20,6 +20,7 @@
     "autoprefixer": "^7.2.6",
     "copy-webpack-plugin": "^4.4.2",
     "css-loader": "^0.28.10",
+    "express": "^4.16.3",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.10",
     "html-loader": "^0.5.5",
@@ -67,6 +68,7 @@
     "webserver:noopen": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/",
     "webserver": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open",
     "lan": "webpack-dev-server --hot -d --colors --progress --watch --content-base code/ --open --host 0.0.0.0",
-    "start": "npm run webserver"
+    "start": "npm run webserver",
+    "serve": "node config/server"
   }
 }
