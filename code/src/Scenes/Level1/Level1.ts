@@ -1,10 +1,6 @@
 import * as ex from "excalibur";
-import { Class } from "../../Class";
-import { GameBootstrap, GameElementDoneType, IGameElement, IGameElementEvents } from "../../GameBootstrap";
-import LockLevelCameraStrategy from "../../Components/LockLevelCameraStrategy";
+import { GameBootstrap } from "../../GameBootstrap";
 import Arrow from "./Arrow";
-import Background from "../../Components/Background";
-import Ground from "../../Components/Ground";
 import Level1Player from "./Level1Player";
 import TreeBranch from "./TreeBranch";
 import VineCreator from "./VineCreator";
@@ -41,7 +37,6 @@ export default class Level1 extends BaseLevel {
 		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
 		this.treeBranch = new TreeBranch(this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
-
 		this.buildScene();
 	}
 

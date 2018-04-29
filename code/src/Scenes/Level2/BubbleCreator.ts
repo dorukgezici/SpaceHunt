@@ -56,12 +56,9 @@ export default class BubbleCreator {
 			// x of possible collision point = x position of player in t seconds
 			let xC = player.x + (t * player.vel.x);
 
-			// starting x of the bubble = collision x - x distance travelled by the bubble until collision
-			let xBStart = xC - speedXB * t;
-
 			// create new bubble in front of the player
 			// let x = player.x + 300;
-			let x = xBStart;
+			let x = xC - speedXB * t;
 			let newBubbleIndex = bubbles.push(new Bubble(x, bounds.bottom, speedXB, speedYB)) - 1;
 			scene.add(bubbles[newBubbleIndex]);
 		}
