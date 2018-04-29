@@ -49,7 +49,7 @@ export default class Level4 extends BaseLevel {
 			const xStart = this.randomIntFromInterval(500, 4500);
 			const speedX = this.randomIntFromInterval(100, 200);
 			const { w, h } = modelSize;
-			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Ground.height - h / 2, w, h, speedX, 400, 4600));
+			this.cannibals.push(new Cannibal(xStart, this.bounds.bottom - Ground.height - h / 2, w, h, speedX, 400, 4600, this.players));
 		}
 
 		// player handling - init level-specific animations

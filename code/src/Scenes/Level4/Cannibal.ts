@@ -10,13 +10,16 @@ export default class Cannibal extends ex.Actor {
 	maxX: number;
 	speedX: number;
 	private animation: DrawAnimation<IEslanAnimations>;
+	players: BasePlayer[];
 
-	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX: number) {
+	constructor(x: number, y: number, w: number, h: number, speedX: number, minX: number, maxX: number, players: BasePlayer[]) {
 		super(x, y, w, h, ex.Color.White);
 
 		this.minX = minX;
 		this.maxX = maxX;
 		this.speedX = speedX;
+
+		this.players = players;
 
 		// Anchor
 		this.anchor.setTo(0.5, 0.5); // set anchor to the center
@@ -58,6 +61,12 @@ export default class Cannibal extends ex.Actor {
 		if (this.pos.x + this.getWidth() > this.maxX) {
 			this.vel.x = - this.speedX;
 			this.animation.changeState("walk-left");
+		}
+
+		for (let player of this.players) {
+			if (Math.abs(player.getWorldPos().x - this.getWorldPos().x) < 5 && !player.dead) {
+				player.state.score += 100;
+			}
 		}
 
 	}
