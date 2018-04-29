@@ -3,11 +3,13 @@ import Vine from "../Level1/Vine";
 import { modelSize } from "../../Components/Animations/Models/PrincessParts";
 import { princessAnimationFactory } from "../../Components/Animations/Models/PrincessAnimation";
 import BasePlayer from "../../Components/BasePlayer";
+import Level4Player from "./Level4Player";
 
 export default class Princess extends ex.Actor {
 
 	private vine: Vine;
 	private vLast: Vine;
+	private hasWinner = false;
 	static size = modelSize;
 
 	constructor(vine: Vine) {
@@ -28,9 +30,14 @@ export default class Princess extends ex.Actor {
 	}
 
 	onPrecollision(ev: any) {
-		if (ev.other instanceof BasePlayer) {
-			let player: BasePlayer = ev.other;
+		if (ev.other instanceof Level4Player) {
+			let player: Level4Player = ev.other;
 			player.state.score += 200;
+			player.state.score += player.state.lives * 100;
+			if (!this.hasWinner) {
+				this.hasWinner = true;
+				player.declareWinner();
+			}
 			player.win("you won by saving the princess");
 		}
 	}

@@ -68,6 +68,7 @@ export interface IGameBootstrapState {
 	oxygen: ReadonlyArray<number>; // array of numbers from interval [0, 1]
 	showOxygen: boolean;
 	names: ReadonlyArray<string>;
+	winner: string | null;
 }
 
 const defaultGameBootstrapState: IGameBootstrapState = {
@@ -78,6 +79,7 @@ const defaultGameBootstrapState: IGameBootstrapState = {
 	showOxygen: false,
 	names: ["Freddy", "Bro"],
 	loaded: false,
+	winner: null,
 };
 
 const INITIAL_LEVEL_INDEX = -1;
@@ -114,7 +116,7 @@ export class GameBootstrap {
 	private currentGameElement: IGameElement | null = null;
 
 	constructor() {
-		this.stateListener = new StateListener<IGameBootstrapState>(defaultGameBootstrapState);
+		this.stateListener = new StateListener<IGameBootstrapState>({ ...defaultGameBootstrapState });
 		this.state = this.stateListener.createListenableObject();
 		this.loader = new Loader();
 		this.loader.addResources(getLoadableResources());
@@ -137,6 +139,11 @@ export class GameBootstrap {
 		this.levelIndex = 0;
 		this.state.names = names;
 		this.state.title = names.join(" & ");
+		this.state.lives = defaultGameBootstrapState.lives;
+		this.state.score = defaultGameBootstrapState.score;
+		this.state.oxygen = defaultGameBootstrapState.oxygen;
+		this.state.showOxygen = defaultGameBootstrapState.showOxygen;
+		this.state.winner = null;
 		this.interface.showIntro();
 	}
 
@@ -196,7 +203,7 @@ export class GameBootstrap {
 	}
 
 	private levelFinished() {
-		const transition = transitionStories[this.levelIndex];
+		const transition = transitionStories[this.levelIndex](this.state);
 		this.levelIndex++;
 		if (this.levelIndex >= levels.length)
 			this.levelIndex = INITIAL_LEVEL_INDEX;
@@ -205,11 +212,7 @@ export class GameBootstrap {
 
 	private levelAborted() {
 		this.levelIndex = INITIAL_LEVEL_INDEX;
-		this.state.lives = defaultGameBootstrapState.lives;
-		this.state.score = defaultGameBootstrapState.score;
-		this.state.oxygen = defaultGameBootstrapState.oxygen;
-		this.state.showOxygen = defaultGameBootstrapState.showOxygen;
-		this.interface.showTransition(stories.death);
+		this.interface.showTransition(stories.death(this.state));
 	}
 
 	/**

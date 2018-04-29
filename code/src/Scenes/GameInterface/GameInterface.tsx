@@ -221,14 +221,14 @@ export default class GameInterface extends Component<IAttrs, IEvents> {
 
 						<ModalContentWrapper>
 							<div>
-								<h1>About SpaceHunt</h1>
-								<p>Game developed by:</p>
+								<h1>SpaceHunt</h1>
+								<p>This game was developed as an assignment in spring 2018, within course Software Engineering Methodologies in TUT, by:</p>
 								<ul>
-									<li>Ali Doruk Gezici</li>
-									<li>Anna Vankova</li>
-									<li>Milos Svana</li>
 									<li>Nejc Maček</li>
+									<li>Miloš Švaňa</li>
 									<li>Wladimir Hofmann</li>
+									<li>Ali Doruk Gezici</li>
+									<li>Anna Vaňková</li>
 								</ul>
 								<p style={{ textAlign: "right" }}>
 									<button className="control" onclick={() => this.modal.hide()}>🡰</button>
