@@ -67,7 +67,7 @@ export default class Level1Player extends BasePlayer {
 		}
 
 		if (this.getWorldPos().x > this.levelLength + 10) {
-			this.emit("won");
+			this.win("won by reaching the level ending");
 		}
 	}
 
