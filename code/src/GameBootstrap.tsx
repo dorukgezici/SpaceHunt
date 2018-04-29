@@ -171,18 +171,28 @@ export class GameBootstrap {
 		const LevelClass = levels[this.levelIndex];
 		const level = new LevelClass(this);
 		this.currentGameElement = level;
-		level.once("done", ({ type }) => {
-			if (type === GameElementDoneType.Finished)
-				this.levelFinished();
-			else
-				this.levelAborted();
-		});
+		level.once("done", ({ type }) => this.onLevelDone(type));
 	}
 
-	// Doesn't work?
-	private resetLevel() {
-		this.stopCurrentElement();
-		this.startScene();
+	private resetLevel(levelIndex: number = this.levelIndex) {
+		this.levelIndex = levelIndex;
+		const cl = this.currentGameElement;
+		const LevelClass = levels[this.levelIndex];
+		const level = new LevelClass(this);
+		this.currentGameElement = level;
+		if (cl && cl.dispose)
+			cl.dispose();
+		level.once("done", ({ type }) => this.onLevelDone(type));
+	}
+
+	private onLevelDone(type: GameElementDoneType) {
+		if (type === GameElementDoneType.Finished)
+			this.levelFinished();
+		else
+			if (this.levelIndex === 0 && this.state.lives > 0)
+				this.resetLevel();
+			else
+				this.levelAborted();
 	}
 
 	private levelFinished() {
