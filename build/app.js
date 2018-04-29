@@ -20922,7 +20922,7 @@ var GameInterface = /** @class */ (function (_super) {
                                 InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Ali Doruk Gezici"),
                                 InterfaceBuilder_1.InterfaceBuilder.createElement("li", null, "Anna Va\u0148kov\u00E1")),
                             InterfaceBuilder_1.InterfaceBuilder.createElement("p", { style: { textAlign: "right" } },
-                                InterfaceBuilder_1.InterfaceBuilder.createElement("button", { className: "control", onclick: function () { return _this.modal.hide(); } }, "\uD83E\uDC70"))))))));
+                                InterfaceBuilder_1.InterfaceBuilder.createElement("button", { className: "control", onclick: function () { return _this.modal.hide(); } }, "\u2B05"))))))));
         window.requestAnimationFrame(function () {
             return _this.displayBelowShown();
         });
@@ -24324,12 +24324,12 @@ exports.level3 = function (_a) {
     return "Exhausted " + (names[1] ? names[0] + " and " + names[1] : names[0]) + " eventually " + (names[1] ? "meet" : "meets") + " a few Eslans who hold Lucy and use her knowledge of animals to create their own. The Eslans are not very friendly, and " + (names[1] ? names[0] + " and " + names[1] + " confront" : names[0] + " confronts") + " them in the struggle for life and death.";
 };
 exports.level4 = function (_a) {
-    var names = _a.names, winner = _a.winner;
-    return "After a long fight, " + winner + " has managed to save Lucy. Then they stole Eslans' spaceship to get back to Earth, where they live happily ever after.";
+    var names = _a.names, winner = _a.winner, score = _a.score;
+    return "After a long fight, " + winner + " has managed to save Lucy. Then they stole Eslans' spaceship to get back to Earth, where they live happily ever after.\n\nSCORE: " + score.toString();
 };
 exports.death = function (_a) {
-    var names = _a.names;
-    return "Such a tragedy! Poor " + nameText(names) + " lost " + (names[1] ? "lives" : "life") + " trying to set Lucy free from the hands of the evil Eslans.";
+    var names = _a.names, score = _a.score;
+    return "Such a tragedy! Poor " + nameText(names) + " lost " + (names[1] ? "lives" : "life") + " trying to set Lucy free from the hands of the evil Eslans.\n\nSCORE: " + score.toString();
 };
 
 
