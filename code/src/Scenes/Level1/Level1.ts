@@ -7,6 +7,7 @@ import VineCreator from "./VineCreator";
 import resources from "../../Resources";
 import { controlSets } from "../../Components/BasePlayer";
 import BaseLevel from "../../Components/BaseLevel";
+import Vine from "./Vine";
 
 
 export default class Level1 extends BaseLevel {
@@ -19,6 +20,7 @@ export default class Level1 extends BaseLevel {
 	arrow: Arrow;
 	treeBranch: TreeBranch;
 	vineCreator: VineCreator;
+	vines: Vine[] = [];
 
 	constructor(bootstrap: GameBootstrap) {
 		super(
@@ -37,14 +39,15 @@ export default class Level1 extends BaseLevel {
 		this.vineCreator = new VineCreator(this.levelBounds.left + 400, this.levelBounds.right - 80);
 		this.treeBranch = new TreeBranch(this.levelBounds.left + TreeBranch.BRANCH_LENGTH / 2, this.levelBounds.top + 250);
 		this.arrow = new Arrow(this.levelBounds.right - 200, this.levelBounds.top + 200);
+		this.players.map(p => { p.on("reset", this.onPlayerReset.bind(this)); });
 		this.buildScene();
 	}
 
 	buildScene(): void {
 		super.buildScene();
 
-		let vines = this.vineCreator.createVines();
-		for (let vine of vines) {
+		this.vines = this.vineCreator.createVines();
+		for (let vine of this.vines) {
 			for (let vinePart of vine.getAllParts()) {
 				this.scene.add(vinePart);
 			}
@@ -55,5 +58,15 @@ export default class Level1 extends BaseLevel {
 		this.scene.add(this.arrow);
 		this.arrow.z = -1;
 		this.background.z = -2;
+	}
+
+	private onPlayerReset(e: ex.GameEvent<Level1Player>) {
+		for(let vine of this.vines) {
+			let indexInCollidedList = vine.alreadyCollidedWith.indexOf(e.target);
+
+			if(indexInCollidedList !== -1) {
+				vine.alreadyCollidedWith.splice(indexInCollidedList, 1);
+			}
+		}
 	}
 }

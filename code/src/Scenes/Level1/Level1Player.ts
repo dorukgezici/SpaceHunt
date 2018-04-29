@@ -179,5 +179,10 @@ export default class Level1Player extends BasePlayer {
 		this.y = this.originalPosition.top as number;
 		this.vel.setTo(0, 0);
 		this.animationStateHandler.changeState("idle-right");
+
+		let event = new ex.GameEvent<Level1Player>();
+		event.target = this;
+
+		this.emit("reset", event);
 	}
 }
