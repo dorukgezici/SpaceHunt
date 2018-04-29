@@ -24376,6 +24376,10 @@ var Level1 = /** @class */ (function (_super) {
         _this.buildScene();
         return _this;
     }
+    Level1.prototype.dispose = function () {
+        _super.prototype.dispose.call(this);
+        this.players.forEach(function (t) { return t.dispose(); });
+    };
     Level1.prototype.buildScene = function () {
         _super.prototype.buildScene.call(this);
         this.vines = this.vineCreator.createVines();
@@ -24476,6 +24480,7 @@ var Level1Player = /** @class */ (function (_super) {
         _this.onBranch = true;
         _this.onVine = false;
         _this.timeOnVine = 500;
+        _this.timer = NaN;
         _this.on("precollision", _this.onPrecollision);
         _this.on("postcollision", _this.onPostcollision);
         var animation = PlayerAnimations_1.attachPlayerAnimations(_this, !isFirst);
@@ -24544,6 +24549,10 @@ var Level1Player = /** @class */ (function (_super) {
             this.die("died by falling on the ground");
         }
     };
+    Level1Player.prototype.dispose = function () {
+        if (!Number.isNaN(this.timer))
+            clearInterval(this.timer);
+    };
     Level1Player.prototype.attachToVine = function (vine) {
         var vineRoot = vine.getRoot();
         if (vineRoot.alreadyCollidedWith.indexOf(this) !== -1) {
@@ -24552,7 +24561,7 @@ var Level1Player = /** @class */ (function (_super) {
         this.state.score += Math.round(50000 / this.timeOnVine); // Max 100, min 10 points
         console.log(this.timeOnVine);
         this.timeOnVine = 500;
-        if (this.timer)
+        if (!Number.isNaN(this.timer))
             clearInterval(this.timer);
         this.timer = setInterval(this.addTimeOnVine.bind(this), 500);
         this.inJump = false;
@@ -24583,7 +24592,6 @@ var Level1Player = /** @class */ (function (_super) {
         this.timeOnVine += 150;
         if (this.timeOnVine > 5000)
             this.timeOnVine = 5000;
-        console.log(this.timeOnVine);
     };
     Level1Player.prototype.die = function (info) {
         if (!this.dead && this.state.lives > 1) {
